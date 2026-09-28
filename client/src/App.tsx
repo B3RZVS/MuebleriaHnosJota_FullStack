@@ -21,9 +21,11 @@ function App() {
 
     const obtenerProductos = async () => {
       try {
-        const respuesta = await fetch(API_PRODUCTOS)
+        // Si el servidor no responde en 10 segundos se corta la petición y se muestra el error
+        const respuesta = await fetch(API_PRODUCTOS, { signal: AbortSignal.timeout(10000) })
 
-        // fetch solo falla si no hay conexión; un 404 o 500 se detecta con respuesta.ok
+        // fetch solo falla si la respuesta no llega (sin conexión, CORS, timeout);
+        // un 404 o 500 sí llega, por eso se revisa respuesta.ok
         if (!respuesta.ok) {
           throw new Error(`El servidor respondió ${respuesta.status}`)
         }
@@ -41,7 +43,7 @@ function App() {
       } catch (err) {
         if (!cancelado) {
           console.error(err)
-          setError('No pudimos cargar los productos. Revisá tu conexión e intentá de nuevo.')
+          setError('No pudimos cargar los productos en este momento. Intentá de nuevo.')
         }
       } finally {
         if (!cancelado) {
