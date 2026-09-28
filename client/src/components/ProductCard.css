@@ -38,8 +38,9 @@
   font-weight: 500;
 }
 
-/* Con 2 columnas en celular la card es más angosta: se achican espacios y el nombre */
-@media (max-width: 480px) {
+/* Con 2 columnas en pantallas chicas la card es más angosta: se achican espacios y el nombre
+   (mismo corte que la grilla en ProductList.css) */
+@media (max-width: 600px) {
   .producto-card-imagen {
     padding: 0.5rem;
   }

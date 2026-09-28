@@ -19,7 +19,7 @@
   text-align: center;
 }
 
-/* auto-fill arma tantas columnas de al menos 240px como entren; en celular queda una sola */
+/* auto-fill arma tantas columnas de al menos 240px como entren (en pantallas chicas ver el @media de abajo) */
 .catalogo-grilla {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
@@ -29,9 +29,10 @@
   list-style: none;
 }
 
-/* En celulares se muestran 2 productos por fila para no hacer tan largo el scroll.
+/* Hasta 600px se fuerzan 2 productos por fila: con auto-fill entraría una sola columna
+   (2 × 240px no entran) y el scroll sería muy largo.
    minmax(0, 1fr) evita que un nombre largo ensanche una columna más que la otra */
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .catalogo-grilla {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
