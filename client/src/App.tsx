@@ -22,11 +22,17 @@ function App() {
           throw new Error(`El servidor respondió ${respuesta.status}`)
         }
 
-        const datos: Producto[] = await respuesta.json()
+        const datos = await respuesta.json()
+
+        // Si la respuesta no es una lista, se trata como error para no dejar la página en blanco
+        if (!Array.isArray(datos)) {
+          throw new Error('La respuesta no es una lista de productos')
+        }
+
         setProductos(datos)
       } catch (err) {
         console.error(err)
-        setError('No pudimos cargar los productos. Revisá tu conexión o intentá de nuevo en unos minutos.')
+        setError('No pudimos cargar los productos. Revisá tu conexión e intentá de nuevo.')
       } finally {
         setCargando(false)
       }

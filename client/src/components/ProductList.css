@@ -36,8 +36,46 @@
   text-align: center;
 }
 
-.catalogo-mensaje-error {
-  border-left: 4px solid var(--color-rosa);
+.catalogo-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 40ch;
+  margin: 0 auto;
+  padding: 1.5rem;
+  text-align: center;
   background-color: var(--color-superficie);
-  text-align: left;
+  border: 1px solid var(--color-rosa);
+  border-radius: 12px;
+}
+
+.catalogo-error-texto {
+  margin: 0;
+}
+
+/* Botones según el manual: Inter Medium, mayúsculas, espaciado 0.08em */
+.catalogo-boton {
+  min-height: 44px;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-superficie);
+  background-color: var(--color-siena);
+  cursor: pointer;
+  transition: background-color 0.2s ease-out;
+}
+
+.catalogo-boton:hover {
+  background-color: var(--color-texto);
+}
+
+.catalogo-boton:focus-visible {
+  outline: 2px solid var(--color-siena);
+  outline-offset: 3px;
 }
