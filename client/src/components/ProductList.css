@@ -29,6 +29,15 @@
   list-style: none;
 }
 
+/* En celulares se muestran 2 productos por fila para no hacer tan largo el scroll.
+   minmax(0, 1fr) evita que un nombre largo ensanche una columna más que la otra */
+@media (max-width: 480px) {
+  .catalogo-grilla {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
 .catalogo-mensaje {
   max-width: 40ch;
   margin: 0 auto;

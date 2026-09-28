@@ -37,3 +37,18 @@
   margin: auto 0 0;
   font-weight: 500;
 }
+
+/* Con 2 columnas en celular la card es más angosta: se achican espacios y el nombre */
+@media (max-width: 480px) {
+  .producto-card-imagen {
+    padding: 0.5rem;
+  }
+
+  .producto-card-info {
+    padding: 0.75rem;
+  }
+
+  .producto-card-nombre {
+    font-size: 1rem;
+  }
+}
