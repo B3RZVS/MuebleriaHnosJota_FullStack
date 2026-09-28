@@ -14,8 +14,11 @@ function App() {
   const [error, setError] = useState<string | null>(null)
 
   // Pide los productos una sola vez, al montar la app ([] = sin dependencias).
-  // En desarrollo StrictMode ejecuta el efecto dos veces: es normal ver 2 GET en la consola del backend.
+  // En desarrollo StrictMode monta, desmonta y vuelve a montar: es normal ver 2 GET en la consola del backend.
   useEffect(() => {
+    // Se pone en true al desmontar: así la respuesta de una petición vieja no pisa el estado actual
+    let cancelado = false
+
     const obtenerProductos = async () => {
       try {
         const respuesta = await fetch(API_PRODUCTOS)
@@ -32,16 +35,27 @@ function App() {
           throw new Error('La respuesta no es una lista de productos')
         }
 
-        setProductos(datos)
+        if (!cancelado) {
+          setProductos(datos)
+        }
       } catch (err) {
-        console.error(err)
-        setError('No pudimos cargar los productos. Revisá tu conexión e intentá de nuevo.')
+        if (!cancelado) {
+          console.error(err)
+          setError('No pudimos cargar los productos. Revisá tu conexión e intentá de nuevo.')
+        }
       } finally {
-        setCargando(false)
+        if (!cancelado) {
+          setCargando(false)
+        }
       }
     }
 
     obtenerProductos()
+
+    // Función de limpieza: React la ejecuta cuando el componente se desmonta
+    return () => {
+      cancelado = true
+    }
   }, [])
 
   return (
