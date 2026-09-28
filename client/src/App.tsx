@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react'
 import ProductList from './components/ProductList.tsx'
 import type { Producto } from './types/producto.ts'
 
-// Endpoint del backend (el puerto está definido en backend/server.js)
-const API_PRODUCTOS = 'http://localhost:3000/api/productos'
+// URL del backend: se puede cambiar con la variable VITE_API_URL en un archivo client/.env
+// (ej: VITE_API_URL=https://mi-api.com, sin "/" al final).
+// Si no está definida o está vacía, se usa el servidor local (el puerto está en backend/server.js)
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_PRODUCTOS = `${API_URL}/api/productos`
 
 function App() {
   const [productos, setProductos] = useState<Producto[]>([])
