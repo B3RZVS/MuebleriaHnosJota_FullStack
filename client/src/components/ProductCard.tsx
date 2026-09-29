@@ -5,7 +5,7 @@ type ProductCardProps = {
   producto: Producto
 }
 
-// Da formato de moneda argentina al precio: 185000 -> "$ 185.000"
+// Da formato a la moneda del precio: 185000 -> "$ 185.000"
 const formatoPrecio = new Intl.NumberFormat('es-AR', {
   style: 'currency',
   currency: 'ARS',

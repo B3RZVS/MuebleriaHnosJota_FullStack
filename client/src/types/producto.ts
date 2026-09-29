@@ -1,4 +1,4 @@
-// Estructura de cada producto que devuelve la API (backend/src/data/productos.js)
+// Estructura de cada producto que devuelve la API
 export type Producto = {
   id: string
   nombre: string

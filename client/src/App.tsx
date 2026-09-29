@@ -4,7 +4,7 @@ import type { Producto } from './types/producto.ts'
 
 // URL del backend: se puede cambiar con la variable VITE_API_URL en un archivo client/.env
 // (ej: VITE_API_URL=https://mi-api.com, sin "/" al final).
-// Si no está definida o está vacía, se usa el servidor local (el puerto está en backend/server.js)
+// Si no está definida o está vacía, se usa el servidor local
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 const API_PRODUCTOS = `${API_URL}/api/productos`
 
@@ -13,8 +13,8 @@ function App() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Pide los productos una sola vez, al montar la app ([] = sin dependencias).
-  // En desarrollo StrictMode monta, desmonta y vuelve a montar: es normal ver 2 GET en la consola del backend.
+  // Pide los productos una sola vez
+  // En desarrollo StrictMode ejecuta el efecto dos veces: es normal ver 2 GET en la consola del backend :p
   useEffect(() => {
     // Se pone en true al desmontar: así la respuesta de una petición vieja no pisa el estado actual
     let cancelado = false

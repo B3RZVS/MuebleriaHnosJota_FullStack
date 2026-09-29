@@ -7,7 +7,7 @@
   overflow: hidden;
 }
 
-/* Las imágenes son cuadradas y con fondo transparente: se muestran enteras sin recortar.
+/* Las imágenes son cuadradas y con fondo transparente, se muestran enteras y sin recortar.
    El fondo se ve detrás del mueble y, mientras la imagen carga, marca dónde va a aparecer */
 .producto-card-imagen {
   width: 100%;
