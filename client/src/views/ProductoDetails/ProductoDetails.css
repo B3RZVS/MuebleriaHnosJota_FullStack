@@ -1,0 +1,286 @@
+/* Estilos propios de producto.html: ficha de una pieza.
+   El header, el footer y los botones vienen de css/styles.css.
+   Mobile first: la base es celular, las media queries agrandan. */
+
+/* --- Estructura de la página --- */
+
+.product-page {
+  padding: 28px 0 64px;
+}
+
+/* Volver al catálogo. Es el camino de salida más usado de esta página. */
+.migas {
+  margin-bottom: 24px;
+}
+
+.migas a {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-dark);
+}
+
+.migas a:hover {
+  color: var(--color-primary);
+}
+
+.product-status {
+  font-weight: 300;
+  color: var(--color-text-dark);
+  padding: 48px 0;
+}
+
+.product-detail {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+/* --- Foto --- */
+
+/* Cuadrada como el archivo original: así el panel termina donde termina la
+   imagen y no queda un bloque beige vacío debajo del texto. */
+.product-gallery {
+  background-color: var(--color-bg-main);
+  border-radius: var(--radius-md);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.product-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 24px;
+}
+
+/* --- Texto y compra --- */
+
+/* Ficha vacía mientras corre la espera simulada. La galería ya tiene su
+   aspect-ratio, así que sola reserva el alto de la imagen. */
+.product-gallery--esqueleto {
+  background-color: var(--color-border-subtle);
+}
+
+.product-copy {
+  align-self: start;
+}
+
+.product-eyebrow {
+  margin-bottom: 12px;
+}
+
+.product-copy h1 {
+  font-size: 1.875rem;
+  margin-bottom: 18px;
+}
+
+.product-description {
+  font-weight: 300;
+  font-size: 1.0625rem;
+  max-width: 56ch;
+  margin-bottom: 24px;
+}
+
+.product-price {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  color: var(--color-primary);
+  margin-bottom: 24px;
+}
+
+.purchase-row {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.quantity-control__boton {
+  width: 44px;
+  height: 100%;
+  min-height: 48px;
+  background-color: transparent;
+  border: 0;
+  color: var(--color-text-dark);
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.quantity-control__boton:hover:enabled {
+  color: var(--color-primary);
+}
+
+.quantity-control__boton:disabled {
+  color: var(--color-border-subtle);
+  cursor: not-allowed;
+}
+
+.quantity-control__valor {
+  min-width: 32px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+
+/* Mismo lenguaje que .boton--primario, pero ocupando el ancho que queda. */
+.add-button {
+  flex: 1;
+  min-height: 48px;
+  padding: 0 24px;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  color: var(--color-bg-main);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.add-button:hover {
+  background-color: var(--color-accent-gold);
+  border-color: var(--color-accent-gold);
+  color: var(--color-text-dark);
+}
+
+/* Confirmación al agregar: verde salvia, el color de la marca para lo que salió bien. */
+.add-button.is-agregado {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: var(--color-text-dark);
+}
+
+.purchase-note {
+  font-weight: 300;
+  font-size: 0.875rem;
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: 18px;
+}
+
+/* --- Especificaciones --- */
+
+.specs {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: 40px;
+}
+
+.specs h2 {
+  font-size: 1.25rem;
+  margin-bottom: 28px;
+}
+
+.spec-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.spec-list__item {
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: 16px 0;
+}
+
+.spec-list__item:last-child {
+  border-bottom: 0;
+}
+
+.spec-list dt {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+
+.spec-list dd {
+  font-weight: 300;
+  font-size: 0.9375rem;
+}
+
+/* --- Pieza no encontrada --- */
+
+.product-detail--error {
+  grid-template-columns: 1fr;
+}
+
+.product-error {
+  padding: 56px 0 72px;
+  max-width: 46ch;
+}
+
+.product-error h1 {
+  font-size: 1.75rem;
+  margin-bottom: 16px;
+}
+
+.product-error p {
+  font-weight: 300;
+  margin-bottom: 28px;
+}
+
+/* --- Tablet --- */
+
+@media (min-width: 700px) {
+  .product-page {
+    padding: 36px 0 80px;
+  }
+
+  .product-detail {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  .product-copy h1 {
+    font-size: 2.25rem;
+  }
+
+  .spec-list {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 40px;
+  }
+}
+
+/* --- Escritorio --- */
+
+@media (min-width: 1000px) {
+  .product-detail {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 64px;
+  }
+
+  .product-copy h1 {
+    font-size: 2.75rem;
+  }
+
+  .specs {
+    margin-top: 24px;
+  }
+
+  .spec-list {
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 48px;
+  }
+}
