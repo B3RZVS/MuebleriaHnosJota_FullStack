@@ -1,4 +1,5 @@
 import { useCart } from '../context/useCart'
+import '../cart.css'
 
 interface NavbarProps {
   onAbrirCarrito: () => void
