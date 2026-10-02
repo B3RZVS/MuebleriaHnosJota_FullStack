@@ -1,4 +1,4 @@
-import productos from '../data/productos.js';
+import productos from "../data/productos.js";
 
 const obtenerTodos = () => productos;
 

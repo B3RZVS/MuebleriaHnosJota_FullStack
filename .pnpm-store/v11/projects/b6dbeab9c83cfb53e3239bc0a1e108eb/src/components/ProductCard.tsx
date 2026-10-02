@@ -1,9 +1,6 @@
-
 import { useNavigate } from "react-router-dom";
-import type { Producto } from '../types/producto.ts'
-import './ProductCard.css'
-import AddToCartButton from '../cart/components/AddToCartButton'
-
+import type { Producto } from "../types/producto.ts";
+import "./ProductCard.css";
 
 type ProductCardProps = {
   producto: Producto;
@@ -45,10 +42,6 @@ function ProductCard({ producto }: ProductCardProps) {
         >
           Ver más
         </button>
-
-        <p className="producto-card-precio">{formatoPrecio.format(producto.precio)}</p>
-        <AddToCartButton productoId={producto.id} />
-
       </div>
     </article>
   );
