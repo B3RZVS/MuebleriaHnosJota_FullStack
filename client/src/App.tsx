@@ -1,121 +1,69 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
+import ProductList from './components/ProductList.tsx'
+import type { Producto } from './types/producto.ts'
+
+// URL del backend: se puede cambiar con la variable VITE_API_URL en un archivo client/.env
+// (ej: VITE_API_URL=https://mi-api.com, sin "/" al final).
+// Si no está definida o está vacía, se usa el servidor local
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_PRODUCTOS = `${API_URL}/api/productos`
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [productos, setProductos] = useState<Producto[]>([])
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Pide los productos una sola vez
+  // En desarrollo StrictMode ejecuta el efecto dos veces: es normal ver 2 GET en la consola del backend :p
+  useEffect(() => {
+    // Se pone en true al desmontar: así la respuesta de una petición vieja no pisa el estado actual
+    let cancelado = false
+
+    const obtenerProductos = async () => {
+      try {
+        // Si el servidor no responde en 10 segundos se corta la petición y se muestra el error
+        const respuesta = await fetch(API_PRODUCTOS, { signal: AbortSignal.timeout(10000) })
+
+        // fetch solo falla si la respuesta no llega (sin conexión, CORS, timeout);
+        // un 404 o 500 sí llega, por eso se revisa respuesta.ok
+        if (!respuesta.ok) {
+          throw new Error(`El servidor respondió ${respuesta.status}`)
+        }
+
+        const datos = await respuesta.json()
+
+        // Si la respuesta no es una lista, se trata como error para no dejar la página en blanco
+        if (!Array.isArray(datos)) {
+          throw new Error('La respuesta no es una lista de productos')
+        }
+
+        if (!cancelado) {
+          setProductos(datos)
+        }
+      } catch (err) {
+        if (!cancelado) {
+          console.error(err)
+          setError('No pudimos cargar los productos en este momento. Intentá de nuevo.')
+        }
+      } finally {
+        if (!cancelado) {
+          setCargando(false)
+        }
+      }
+    }
+
+    obtenerProductos()
+
+    // Función de limpieza: React la ejecuta cuando el componente se desmonta
+    return () => {
+      cancelado = true
+    }
+  }, [])
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <main>
+      <ProductList productos={productos} cargando={cargando} error={error} />
+    </main>
   )
 }
 
