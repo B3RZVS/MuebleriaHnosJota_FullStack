@@ -1,0 +1,45 @@
+/* Paleta y tipografías del Manual de Marca de Hermanos Jota */
+:root {
+  --color-siena: #a0522d; /* principal de títulos y botones */
+  --color-salvia: #87a96b; /* acento secundario */
+  --color-alabastro: #f5e6d3; /* fondo principal */
+  --color-oro: #d4a437; /* detalles """premium""" (varias comillas porque "oro" no es premium :p) */
+  --color-rosa: #c47a6d; /* acentos suaves */
+
+  /* No están en el manual*/
+  --color-texto: #3e2a1f;
+  --color-superficie: #fbf5ec;
+  --color-fondo-foto: #efdcc4;
+
+  --fuente-texto: 'Inter', system-ui, sans-serif;
+  --fuente-titulos: 'Playfair Display', Georgia, serif;
+
+  font-family: var(--fuente-texto);
+  line-height: 1.6;
+  color: var(--color-texto);
+  background-color: var(--color-alabastro);
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fuente-titulos);
+  font-weight: 400;
+  color: var(--color-siena);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
