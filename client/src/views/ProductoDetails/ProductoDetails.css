@@ -145,10 +145,46 @@
   transition: background-color 160ms ease, border-color 160ms ease;
 }
 
+.add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.add-button svg {
+  width: 17px;
+  height: 17px;
+}
+
 .add-button:hover,
 .product-error button:hover {
   background: #7f3f25;
   border-color: #7f3f25;
+}
+
+.add-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.purchase-feedback {
+  min-height: 26px;
+  margin-top: -10px;
+}
+
+.purchase-feedback p {
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.purchase-feedback--success {
+  color: #55733e;
+}
+
+.purchase-feedback--error {
+  color: #9b2c20;
 }
 
 .purchase-note {

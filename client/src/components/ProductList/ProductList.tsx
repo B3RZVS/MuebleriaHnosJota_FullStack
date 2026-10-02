@@ -1,20 +1,26 @@
-import type { Producto } from '../types/producto.ts'
-import ProductCard from './ProductCard.tsx'
-import './ProductList.css'
+import type { Producto } from "../../types/producto.ts";
+import ProductCard from "../ProductCard/ProductCard.tsx";
+import "./ProductList.css";
 
 type ProductListProps = {
-  productos: Producto[]
-  cargando: boolean
-  error: string | null
-}
+  productos: Producto[];
+  cargando: boolean;
+  error: Error | null;
+};
 
 function ProductList({ productos, cargando, error }: ProductListProps) {
-  const sinProductos = !cargando && !error && productos.length === 0
-  const hayProductos = !cargando && !error && productos.length > 0
+  const sinProductos = !cargando && !error && productos.length === 0;
+  const hayProductos = !cargando && !error && productos.length > 0;
 
   return (
-    <section id="catalogo" className="catalogo" aria-labelledby="catalogo-titulo">
-      <h1 id="catalogo-titulo" className="catalogo-titulo">Nuestro catálogo</h1>
+    <section
+      id="catalogo"
+      className="catalogo"
+      aria-labelledby="catalogo-titulo"
+    >
+      <h1 id="catalogo-titulo" className="catalogo-titulo">
+        Nuestro catálogo
+      </h1>
       <p className="catalogo-bajada">
         Cada pieza cuenta la historia de manos expertas y materiales nobles.
       </p>
@@ -28,17 +34,23 @@ function ProductList({ productos, cargando, error }: ProductListProps) {
       {error && (
         <div className="catalogo-error">
           <p className="catalogo-error-texto" role="alert">
-            {error}
+            {error.message}
           </p>
           {/* Recargar la página vuelve a montar App y repite el fetch */}
-          <button type="button" className="catalogo-boton" onClick={() => window.location.reload()}>
+          <button
+            type="button"
+            className="catalogo-boton"
+            onClick={() => window.location.reload()}
+          >
             Reintentar
           </button>
         </div>
       )}
 
       {sinProductos && (
-        <p className="catalogo-mensaje">Por ahora no hay productos para mostrar.</p>
+        <p className="catalogo-mensaje">
+          Por ahora no hay productos para mostrar.
+        </p>
       )}
 
       {hayProductos && (
@@ -52,7 +64,7 @@ function ProductList({ productos, cargando, error }: ProductListProps) {
         </ul>
       )}
     </section>
-  )
+  );
 }
 
-export default ProductList
+export default ProductList;

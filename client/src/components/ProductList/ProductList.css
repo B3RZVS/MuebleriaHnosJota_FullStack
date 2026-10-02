@@ -34,7 +34,7 @@
    minmax(0, 1fr) evita que un nombre largo ensanche una columna más que la otra */
 @media (max-width: 600px) {
   .catalogo-grilla {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 1rem;
   }
 }

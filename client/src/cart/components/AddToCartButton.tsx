@@ -1,26 +1,35 @@
-import { useCart } from '../context/useCart'
-
+import { useCart } from "../context/useCart";
+import { BsCartPlus } from "react-icons/bs";
 interface AddToCartButtonProps {
-  productoId: string
-  etiqueta?: string
+  productoId: string;
+  etiqueta?: string;
 }
 
 function AddToCartButton({
   productoId,
-  etiqueta = 'Agregar al carrito',
+  etiqueta = "Agregar al carrito",
 }: AddToCartButtonProps) {
-  const { agregar, actualizando, cargando } = useCart()
+  const { agregar, productosAgregando, cargando } = useCart();
+  const agregando = productosAgregando.includes(productoId);
 
   return (
     <button
-      className="boton boton--principal"
-      disabled={actualizando || cargando}
+      className="producto-card-boton producto-card-boton--principal"
+      disabled={agregando || cargando}
       onClick={() => void agregar(productoId)}
       type="button"
+      aria-label={`${etiqueta}, producto ${productoId}`}
     >
-      {actualizando ? 'Agregando…' : etiqueta}
+      {agregando ? (
+        "Agregando…"
+      ) : (
+        <>
+          <BsCartPlus aria-hidden="true" />
+          <span>{etiqueta}</span>
+        </>
+      )}
     </button>
-  )
+  );
 }
 
-export default AddToCartButton
+export default AddToCartButton;

@@ -1,8 +1,11 @@
+import { useState } from "react";
+import { BsCartPlus } from "react-icons/bs";
 import { Link, useParams } from "react-router-dom";
+import { useCart } from "../../cart/context/useCart";
 import { useProductoApi } from "../../hooks/useProductoApi";
 import type { Producto } from "../../types/producto";
-import "./ProductoDetails.css";
 import { formatoPrecio } from "../../utils/formatoPrecio";
+import "./ProductoDetails.css";
 
 const etiquetasEspecificaciones: Record<string, string> = {
   medidas: "Medidas",
@@ -18,7 +21,7 @@ export const ProductoDetails = () => {
 
   return (
     <main id="contenido" className="product-page">
-      <Link className="product-back" to="/">
+      <Link className="product-back" to="/productos">
         <span aria-hidden="true">←</span> Volver al catálogo
       </Link>
 
@@ -40,14 +43,40 @@ export const ProductoDetails = () => {
         </section>
       )}
 
-      {!isLoading && !error && producto && (
-        <ProductContent producto={producto as Producto} />
-      )}
+      {!isLoading && !error && producto && <ProductContent producto={producto} />}
     </main>
   );
 };
 
 function ProductContent({ producto }: { producto: Producto }) {
+  const [cantidad, setCantidad] = useState(1);
+  const [confirmacion, setConfirmacion] = useState("");
+  const {
+    agregar,
+    productosAgregando,
+    cargando: cargandoCarrito,
+    error: errorCarrito,
+  } = useCart();
+  const agregando = productosAgregando.includes(producto.id);
+
+  const cambiarCantidad = (nuevaCantidad: number) => {
+    setCantidad(Math.min(99, Math.max(1, nuevaCantidad)));
+    setConfirmacion("");
+  };
+
+  const agregarAlCarrito = async () => {
+    setConfirmacion("");
+    const agregado = await agregar(producto.id, cantidad);
+
+    if (agregado) {
+      setConfirmacion(
+        cantidad === 1
+          ? "Producto agregado al carrito."
+          : `${cantidad} unidades agregadas al carrito.`,
+      );
+    }
+  };
+
   return (
     <article className="product-detail">
       <div className="product-gallery">
@@ -66,24 +95,43 @@ function ProductContent({ producto }: { producto: Producto }) {
               className="quantity-control__button"
               type="button"
               aria-label="Quitar una unidad"
-              disabled
+              disabled={cantidad === 1 || agregando}
+              onClick={() => cambiarCantidad(cantidad - 1)}
             >
               −
             </button>
             <span className="quantity-control__value" aria-live="polite">
-              1
+              {cantidad}
             </span>
             <button
               className="quantity-control__button"
               type="button"
               aria-label="Agregar una unidad"
+              disabled={cantidad === 99 || agregando}
+              onClick={() => cambiarCantidad(cantidad + 1)}
             >
               +
             </button>
           </div>
-          <button className="add-button" type="button">
-            Agregar al carrito
+
+          <button
+            className="add-button"
+            type="button"
+            disabled={agregando || cargandoCarrito}
+            onClick={() => void agregarAlCarrito()}
+          >
+            {!agregando && <BsCartPlus aria-hidden="true" />}
+            {agregando ? "Agregando…" : "Agregar al carrito"}
           </button>
+        </div>
+
+        <div className="purchase-feedback" aria-live="polite">
+          {confirmacion && (
+            <p className="purchase-feedback--success">{confirmacion}</p>
+          )}
+          {!confirmacion && errorCarrito && (
+            <p className="purchase-feedback--error">{errorCarrito}</p>
+          )}
         </div>
 
         <p className="purchase-note">

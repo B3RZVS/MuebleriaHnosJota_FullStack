@@ -8,8 +8,8 @@
   --color-texto: #3e2a1f;
   --color-superficie: #fbf5ec;
   --color-fondo-foto: #efdcc4;
-  --fuente-texto: 'Inter', system-ui, sans-serif;
-  --fuente-titulos: 'Playfair Display', Georgia, serif;
+  --fuente-texto: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --fuente-titulos: "Playfair Display", Georgia, serif;
 
   font-family: var(--fuente-texto);
   line-height: 1.6;
@@ -50,4 +50,21 @@ h3 {
 img {
   display: block;
   max-width: 100%;
+}
+@media (max-width: 96rem) {
+  html {
+    font-size: 87.5%;
+  }
+}
+
+@media (max-width: 80rem) {
+  html {
+    font-size: 75%;
+  }
+}
+
+@media (max-width: 45.625rem) {
+  html {
+    font-size: 87.5%;
+  }
 }

@@ -1,17 +1,18 @@
-import { useEffect } from 'react'
-import { useCart } from '../context/useCart'
+import { useEffect } from "react";
+import { useCart } from "../context/useCart";
+import "../cart.css";
 
 interface CartModalProps {
-  abierto: boolean
-  onCerrar: () => void
+  abierto: boolean;
+  onCerrar: () => void;
 }
 
 const formatoPrecio = (monto: number) =>
-  new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
+  new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
     maximumFractionDigits: 0,
-  }).format(monto)
+  }).format(monto);
 
 function CartModal({ abierto, onCerrar }: CartModalProps) {
   const {
@@ -23,20 +24,20 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
     vaciar,
     error,
     limpiarError,
-  } = useCart()
+  } = useCart();
 
   useEffect(() => {
-    if (!abierto) return
+    if (!abierto) return;
 
     const cerrarConEscape = (evento: KeyboardEvent) => {
-      if (evento.key === 'Escape') onCerrar()
-    }
+      if (evento.key === "Escape") onCerrar();
+    };
 
-    document.addEventListener('keydown', cerrarConEscape)
-    return () => document.removeEventListener('keydown', cerrarConEscape)
-  }, [abierto, onCerrar])
+    document.addEventListener("keydown", cerrarConEscape);
+    return () => document.removeEventListener("keydown", cerrarConEscape);
+  }, [abierto, onCerrar]);
 
-  if (!abierto) return null
+  if (!abierto) return null;
 
   return (
     <div className="modal-carrito">
@@ -87,7 +88,11 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
         ) : carrito.items.length === 0 ? (
           <div className="carrito-vacio">
             <p>Tu carrito está vacío.</p>
-            <button className="boton boton--secundario" onClick={onCerrar} type="button">
+            <button
+              className="boton boton--secundario"
+              onClick={onCerrar}
+              type="button"
+            >
               Seguir mirando
             </button>
           </div>
@@ -128,7 +133,10 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                         aria-label={`Sumar una unidad de ${item.nombre}`}
                         disabled={actualizando}
                         onClick={() =>
-                          void cambiarCantidad(item.productoId, item.cantidad + 1)
+                          void cambiarCantidad(
+                            item.productoId,
+                            item.cantidad + 1,
+                          )
                         }
                         type="button"
                       >
@@ -168,7 +176,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                 className="boton boton--principal boton--ancho"
                 onClick={() =>
                   window.alert(
-                    'Error: el proceso de pago todavía no está habilitado en este boceto.',
+                    "Error: el proceso de pago todavía no está habilitado en este boceto.",
                   )
                 }
                 type="button"
@@ -183,7 +191,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
         )}
       </section>
     </div>
-  )
+  );
 }
 
-export default CartModal
+export default CartModal;
