@@ -1,5 +1,6 @@
 import type { Producto } from '../types/producto.ts'
 import './ProductCard.css'
+import AddToCartButton from '../cart/components/AddToCartButton'
 
 type ProductCardProps = {
   producto: Producto
@@ -28,6 +29,7 @@ function ProductCard({ producto }: ProductCardProps) {
       <div className="producto-card-info">
         <h2 className="producto-card-nombre">{producto.nombre}</h2>
         <p className="producto-card-precio">{formatoPrecio.format(producto.precio)}</p>
+        <AddToCartButton productoId={producto.id} />
       </div>
     </article>
   )
