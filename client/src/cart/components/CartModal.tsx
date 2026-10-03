@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { formatoPrecio } from "../../utils/formatoPrecio";
 import { useCart } from "../context/useCart";
 import "../cart.css";
 
@@ -6,13 +7,6 @@ interface CartModalProps {
   abierto: boolean;
   onCerrar: () => void;
 }
-
-const formatoPrecio = (monto: number) =>
-  new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    maximumFractionDigits: 0,
-  }).format(monto);
 
 function CartModal({ abierto, onCerrar }: CartModalProps) {
   const {
@@ -108,7 +102,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                   />
                   <div className="item-carrito__detalle">
                     <h3>{item.nombre}</h3>
-                    <p>{formatoPrecio(item.precio)}</p>
+                    <p>{formatoPrecio.format(item.precio)}</p>
                     <div
                       aria-label={`Cantidad de ${item.nombre}`}
                       className="control-cantidad"
@@ -145,7 +139,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                     </div>
                   </div>
                   <div className="item-carrito__acciones">
-                    <strong>{formatoPrecio(item.subtotal)}</strong>
+                    <strong>{formatoPrecio.format(item.subtotal)}</strong>
                     <button
                       className="enlace-quitar"
                       disabled={actualizando}
@@ -170,21 +164,18 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
               </button>
               <div className="resumen-carrito__total">
                 <span>Total</span>
-                <strong>{formatoPrecio(carrito.total)}</strong>
+                <strong>{formatoPrecio.format(carrito.total)}</strong>
               </div>
               <button
                 className="boton boton--principal boton--ancho"
-                onClick={() =>
-                  window.alert(
-                    "Error: el proceso de pago todavía no está habilitado en este boceto.",
-                  )
-                }
                 type="button"
+                disabled
+                aria-describedby="nota-pago"
               >
                 Ir a pagar
               </button>
-              <p className="resumen-carrito__nota">
-                El pago todavía no está disponible en este boceto.
+              <p className="resumen-carrito__nota" id="nota-pago">
+                El pago online todavía no está disponible.
               </p>
             </footer>
           </>

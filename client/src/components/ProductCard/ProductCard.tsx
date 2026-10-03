@@ -1,18 +1,12 @@
 import { Link } from "react-router-dom";
 import AddToCartButton from "../../cart/components/AddToCartButton.tsx";
 import type { Producto } from "../../types/producto.ts";
+import { formatoPrecio } from "../../utils/formatoPrecio.ts";
 import "./ProductCard.css";
 
 type ProductCardProps = {
   producto: Producto;
 };
-
-const formatoPrecio = new Intl.NumberFormat("es-AR", {
-  style: "currency",
-  currency: "ARS",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
 
 function ProductCard({ producto }: ProductCardProps) {
   const detalleUrl = `/productos/${producto.id}`;
@@ -50,7 +44,7 @@ function ProductCard({ producto }: ProductCardProps) {
         </p>
 
         <div className="producto-card-acciones">
-          <AddToCartButton productoId={producto.id} />
+          <AddToCartButton productoId={producto.id} nombre={producto.nombre} />
           <Link
             className="producto-card-boton producto-card-boton--secundario"
             to={detalleUrl}
