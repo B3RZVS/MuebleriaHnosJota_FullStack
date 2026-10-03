@@ -1,3 +1,4 @@
+import createError from "http-errors";
 import productosService from "../services/productos.service.js";
 
 const obtenerProductos = (req, res, next) => {
@@ -12,16 +13,10 @@ const obtenerProductos = (req, res, next) => {
 
 const obtenerProductoPorId = (req, res, next) => {
   try {
-    const id = req.params.id;
-
-    // if (!Number.isInteger(id) || id <= 0) {
-    //   return res.status(400).json({ mensaje: 'El ID debe ser un número entero positivo' });
-    // }
-
-    const producto = productosService.obtenerPorId(id);
+    const producto = productosService.obtenerPorId(req.params.id);
 
     if (!producto) {
-      return res.status(404).json({ mensaje: "Producto no encontrado" });
+      return next(createError(404, "Producto no encontrado"));
     }
 
     return res.status(200).json(producto);

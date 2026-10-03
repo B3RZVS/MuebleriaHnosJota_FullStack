@@ -1,8 +1,11 @@
 const errorMiddleware = (error, req, res, next) => {
   console.error(error);
 
-  res.status(error.statusCode || 500).json({
-    mensaje: error.message || 'Error interno del servidor',
+  const status = error.status || 500;
+
+  // En un error 500 no se manda el mensaje real: puede mostrar datos internos, como rutas de archivos
+  res.status(status).json({
+    mensaje: status < 500 ? error.message : 'Error interno del servidor',
   });
 };
 
