@@ -6,7 +6,7 @@
 .home-eyebrow {
   margin: 0 0 0.75rem;
   color: var(--color-siena);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -38,7 +38,7 @@
   max-width: 52ch;
   margin: 0 0 2rem;
   font-size: 1rem;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.75;
 }
 
@@ -56,7 +56,7 @@
   padding: 0.7rem 1.35rem;
   border: 1px solid var(--color-siena);
   border-radius: 4px;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-decoration: none;
@@ -115,7 +115,7 @@
 
 .home-hero__figura figcaption a {
   color: var(--color-texto);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-decoration: none;
@@ -189,7 +189,7 @@
 .home-destacados__encabezado > p:last-child {
   max-width: 60ch;
   margin: 0;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .home-destacados__grilla {

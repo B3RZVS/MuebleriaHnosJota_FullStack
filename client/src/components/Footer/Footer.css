@@ -44,7 +44,7 @@
   margin: 0 0 1rem;
   color: var(--color-superficie);
   font-family: var(--fuente-texto);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -81,8 +81,8 @@
   gap: 1rem;
   padding-block: 1.15rem;
   border-top: 1px solid rgb(251 245 236 / 14%);
-  color: rgb(251 245 236 / 55%);
-  font-size: 0.68rem;
+  color: rgb(251 245 236 / 70%);
+  font-size: 0.75rem;
 }
 
 .site-footer__creditos p { margin: 0; }

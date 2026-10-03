@@ -50,7 +50,7 @@
   border-radius: 999px;
   background: rgb(251 245 236 / 92%);
   color: var(--color-siena);
-  font-size: 0.63rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -69,8 +69,8 @@
 
 .producto-card-categoria {
   margin: 0 0 0.25rem;
-  color: rgb(62 42 31 / 65%);
-  font-size: 0.65rem;
+  color: rgb(62 42 31 / 80%);
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -125,7 +125,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-family: var(--fuente-texto);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.045em;
   line-height: 1.2;
@@ -151,6 +151,14 @@
   background: var(--color-texto);
 }
 
+/* Confirmación al agregar: salvia del manual con texto oscuro para que se lea (contraste 5:1) */
+.producto-card-boton--agregado,
+.producto-card-boton--agregado:hover:not(:disabled) {
+  border-color: var(--color-salvia);
+  background: var(--color-salvia);
+  color: var(--color-texto);
+}
+
 .producto-card-boton--secundario {
   background: transparent;
   color: var(--color-siena);
@@ -172,32 +180,6 @@
 .producto-card-boton:disabled {
   cursor: wait;
   opacity: 0.58;
-}
-
-@media (max-width: 600px) {
-  .producto-card-imagen { padding: 0.6rem; }
-
-  .producto-card-etiqueta {
-    top: 0.45rem;
-    left: 0.45rem;
-    font-size: 0.52rem;
-  }
-
-  .producto-card-info { padding: 0.75rem; }
-  .producto-card-encabezado { min-height: 3.9rem; }
-  .producto-card-nombre { font-size: 0.98rem; }
-
-  .producto-card-precio {
-    margin: 0.4rem 0 0.75rem;
-    font-size: 0.98rem;
-  }
-
-  .producto-card-boton {
-    min-height: 38px;
-    padding-inline: 0.45rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.025em;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

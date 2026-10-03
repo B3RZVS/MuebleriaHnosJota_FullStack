@@ -15,7 +15,7 @@
 
 .catalogo-bajada {
   margin: 0 0 2.5rem;
-  font-weight: 300;
+  font-weight: 400;
   text-align: center;
 }
 
@@ -29,9 +29,8 @@
   list-style: none;
 }
 
-/* Hasta 600px se fuerzan 2 productos por fila: con auto-fill entraría una sola columna
-   (2 × 240px no entran) y el scroll sería muy largo.
-   minmax(0, 1fr) evita que un nombre largo ensanche una columna más que la otra */
+/* Hasta 600px va un producto por fila, con la card a todo el ancho.
+   minmax(0, 1fr) evita que un nombre largo ensanche la columna */
 @media (max-width: 600px) {
   .catalogo-grilla {
     grid-template-columns: repeat(1, minmax(0, 1fr));
