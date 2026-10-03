@@ -1,10 +1,13 @@
 import type { Producto } from "../types/producto";
 import { API_PRODUCTOS } from "../utils/urls";
 
-export const obtenerProductoId = async (id: string): Promise<Producto> => {
-  const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, {
-    signal: AbortSignal.timeout(10000),
-  });
+// Si el producto no existe (404) devuelve null, para mostrar "no encontramos esta pieza"
+export const obtenerProductoId = async (id: string): Promise<Producto | null> => {
+  const respuesta = await fetch(`${API_PRODUCTOS}/${id}`);
+
+  if (respuesta.status === 404) {
+    return null;
+  }
 
   // fetch no lanza error automáticamente ante 4xx o 5xx
   if (!respuesta.ok) {
@@ -16,12 +19,9 @@ export const obtenerProductoId = async (id: string): Promise<Producto> => {
 };
 
 export const obtenerProductos = async (): Promise<Producto[]> => {
-  // Si el servidor no responde en 10 segundos se corta la petición y se muestra el error
-  const respuesta = await fetch(API_PRODUCTOS, {
-    signal: AbortSignal.timeout(10000),
-  });
+  const respuesta = await fetch(API_PRODUCTOS);
 
-  // fetch solo falla si la respuesta no llega (sin conexión, CORS, timeout);
+  // fetch solo falla si la respuesta no llega (sin conexión, CORS);
   // un 404 o 500 sí llega, por eso se revisa respuesta.ok
   if (!respuesta.ok) {
     throw new Error(`El servidor respondió ${respuesta.status}`);
