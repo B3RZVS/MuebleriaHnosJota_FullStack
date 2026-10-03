@@ -27,16 +27,16 @@ function ProductList({ productos, cargando, error }: ProductListProps) {
 
       {cargando && (
         <p className="catalogo-mensaje" role="status">
-          Cargando productos...
+          Cargando productos…
         </p>
       )}
 
       {error && (
         <div className="catalogo-error">
           <p className="catalogo-error-texto" role="alert">
-            {error.message}
+            No pudimos cargar los productos en este momento. Intentá de nuevo.
           </p>
-          {/* Recargar la página vuelve a montar App y repite el fetch */}
+          {/* Recargar la página vuelve a montar la vista y repite el pedido */}
           <button
             type="button"
             className="catalogo-boton"

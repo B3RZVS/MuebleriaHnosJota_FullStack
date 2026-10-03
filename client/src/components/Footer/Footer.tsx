@@ -10,7 +10,7 @@ function Footer() {
             <span aria-hidden="true">HJ</span>
             Hermanos Jota
           </Link>
-          <p>Muebles que no sólo cumplen una función: alimentan el alma.</p>
+          <p>Muebles que no solo cumplen una función: alimentan el alma.</p>
         </div>
 
         <div className="site-footer__bloque">
