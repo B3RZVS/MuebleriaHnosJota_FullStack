@@ -30,6 +30,17 @@ body {
   margin: 0;
 }
 
+/* El footer queda abajo aunque la página tenga poco contenido */
+#root {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+#contenido {
+  flex: 1;
+}
+
 button {
   font: inherit;
 }
@@ -50,21 +61,4 @@ h3 {
 img {
   display: block;
   max-width: 100%;
-}
-@media (max-width: 96rem) {
-  html {
-    font-size: 87.5%;
-  }
-}
-
-@media (max-width: 80rem) {
-  html {
-    font-size: 75%;
-  }
-}
-
-@media (max-width: 45.625rem) {
-  html {
-    font-size: 87.5%;
-  }
 }
