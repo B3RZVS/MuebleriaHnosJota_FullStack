@@ -6,14 +6,12 @@ import HomeView from "./views/HomeView/HomeView.tsx";
 
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<HomeView />} />
-        <Route path="/productos" element={<ProductosView />} />
-        <Route path="/productos/:id" element={<ProductoDetails />} />
-        <Route path="/contacto" element={<ContactForm />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/" element={<HomeView />} />
+      <Route path="/productos" element={<ProductosView />} />
+      <Route path="/productos/:id" element={<ProductoDetails />} />
+      <Route path="/contacto" element={<ContactForm />} />
+    </Routes>
   );
 }
 

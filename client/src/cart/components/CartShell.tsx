@@ -13,7 +13,8 @@ function CartShell({ children }: CartShellProps) {
   return (
     <>
       <Navbar onAbrirCarrito={() => setCarritoAbierto(true)} />
-      {children}
+      {/* Un solo <main> para todas las páginas: cada vista va adentro */}
+      <main id="contenido">{children}</main>
       <CartModal
         abierto={carritoAbierto}
         onCerrar={() => setCarritoAbierto(false)}

@@ -20,7 +20,7 @@ export const ProductoDetails = () => {
   const { data: producto, isLoading, error } = useProductoApi(id ?? "");
 
   return (
-    <main id="contenido" className="product-page">
+    <div className="product-page">
       <Link className="product-back" to="/productos">
         <span aria-hidden="true">←</span> Volver al catálogo
       </Link>
@@ -43,8 +43,16 @@ export const ProductoDetails = () => {
         </section>
       )}
 
+      {!isLoading && !error && producto === null && (
+        <section className="product-error" role="alert">
+          <p className="product-eyebrow">Pieza no encontrada</p>
+          <h1>No encontramos esta pieza</h1>
+          <p>Puede que el enlace esté mal escrito o que ya no esté en el catálogo.</p>
+        </section>
+      )}
+
       {!isLoading && !error && producto && <ProductContent producto={producto} />}
-    </main>
+    </div>
   );
 };
 
