@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { API_URL } from "../../utils/urls";
 import "./ContactForm.css";
 
 type ContactValues = {
@@ -30,7 +31,11 @@ function ContactForm() {
   const validate = () => {
     const nextErrors: ContactErrors = {};
 
-    if (!values.nombre.trim()) nextErrors.nombre = "Ingresá tu nombre.";
+    if (!values.nombre.trim()) {
+      nextErrors.nombre = "Ingresá tu nombre.";
+    } else if (values.nombre.trim().length < 3) {
+      nextErrors.nombre = "El nombre tiene que tener al menos 3 caracteres.";
+    }
     if (!values.email.trim()) {
       nextErrors.email = "Ingresá tu email.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
@@ -52,7 +57,7 @@ function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/contacto", {
+      const response = await fetch(`${API_URL}/api/contacto`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,18 +69,16 @@ function ContactForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.mensaje || "No pudimos enviar tu consulta.");
+        setFeedback(result.mensaje || "No pudimos enviar tu consulta.");
+        return;
       }
 
       setValues(initialValues);
       setErrors({});
       setFeedback(result.mensaje || "Recibimos tu consulta. ¡Gracias!");
-    } catch (error) {
-      setFeedback(
-        error instanceof Error
-          ? error.message
-          : "No pudimos enviar tu consulta. Intentá nuevamente.",
-      );
+    } catch {
+      // Llega acá si el servidor no responde: el error del navegador es técnico y en inglés
+      setFeedback("No pudimos enviar tu consulta. Intentá nuevamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -88,16 +91,51 @@ function ContactForm() {
       aria-labelledby="contact-title"
     >
       <div className="contact-section__intro">
-        <p className="eyebrow">Estamos para ayudarte</p>
+        <p className="contact-section__eyebrow">Estamos para ayudarte</p>
         <h1 id="contact-title">Hablemos de tu próximo espacio</h1>
         <p className="contact-section__description">
           Contanos qué estás buscando. Nuestro equipo te responderá para
           ayudarte a encontrar la mejor opción para tu casa.
         </p>
-        <div className="contact-section__note">
-          <span aria-hidden="true">01</span>
-          <p>Diseño, calidad y atención cercana en cada detalle.</p>
-        </div>
+        {/* Datos de contacto del Manual de Marca */}
+        <ul className="contact-section__datos">
+          <li>
+            <span aria-hidden="true">01</span>
+            <div>
+              <h2>Showroom y taller</h2>
+              <p>
+                Av. San Juan 2847, San Cristóbal (CABA).
+                <br />
+                Lunes a viernes de 10 a 19 h y sábados de 10 a 14 h.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span aria-hidden="true">02</span>
+            <div>
+              <h2>Escribinos directo</h2>
+              <p>
+                <a href="mailto:ventas@hermanosjota.com.ar">
+                  ventas@hermanosjota.com.ar
+                </a>
+                <br />
+                <a href="https://wa.me/541145678900" target="_blank" rel="noreferrer">
+                  WhatsApp +54 11 4567-8900
+                </a>
+              </p>
+            </div>
+          </li>
+          <li>
+            <span aria-hidden="true">03</span>
+            <div>
+              <h2>Programa Herencia Viva</h2>
+              <p>
+                También podés consultarnos por la restauración de piezas, el
+                taller de cuidados y la recompra de muebles bien cuidados.
+              </p>
+            </div>
+          </li>
+        </ul>
       </div>
 
       <form className="contact-form" onSubmit={handleSubmit} noValidate>
@@ -168,11 +206,11 @@ function ContactForm() {
         </div>
 
         <button
-          className="boton boton--primario contact-form__submit"
+          className="contact-form__submit"
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Enviando..." : "Enviar consulta"}
+          {isSubmitting ? "Enviando…" : "Enviar consulta"}
         </button>
         <p className="contact-form__feedback" aria-live="polite" role="status">
           {feedback}
