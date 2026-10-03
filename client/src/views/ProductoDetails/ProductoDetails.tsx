@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsCartPlus } from "react-icons/bs";
 import { Link, useParams } from "react-router-dom";
 import { useCart } from "../../cart/context/useCart";
@@ -18,6 +18,11 @@ const etiquetasEspecificaciones: Record<string, string> = {
 export const ProductoDetails = () => {
   const { id } = useParams();
   const { data: producto, isLoading, error } = useProductoApi(id ?? "");
+
+  // React Router no vuelve arriba al cambiar de página; depende de id por si se pasa de una pieza a otra
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   return (
     <div className="product-page">
@@ -59,22 +64,21 @@ export const ProductoDetails = () => {
 function ProductContent({ producto }: { producto: Producto }) {
   const [cantidad, setCantidad] = useState(1);
   const [confirmacion, setConfirmacion] = useState("");
-  const {
-    agregar,
-    productosAgregando,
-    cargando: cargandoCarrito,
-    error: errorCarrito,
-  } = useCart();
+  const [falloAlAgregar, setFalloAlAgregar] = useState(false);
+  const { agregar, productosAgregando, cargando: cargandoCarrito } = useCart();
   const agregando = productosAgregando.includes(producto.id);
 
   const cambiarCantidad = (nuevaCantidad: number) => {
     setCantidad(Math.min(99, Math.max(1, nuevaCantidad)));
     setConfirmacion("");
+    setFalloAlAgregar(false);
   };
 
   const agregarAlCarrito = async () => {
     setConfirmacion("");
+    setFalloAlAgregar(false);
     const agregado = await agregar(producto.id, cantidad);
+    setFalloAlAgregar(!agregado);
 
     if (agregado) {
       setConfirmacion(
@@ -137,8 +141,11 @@ function ProductContent({ producto }: { producto: Producto }) {
           {confirmacion && (
             <p className="purchase-feedback--success">{confirmacion}</p>
           )}
-          {!confirmacion && errorCarrito && (
-            <p className="purchase-feedback--error">{errorCarrito}</p>
+          {/* Mensaje fijo: el error del carrito puede ser técnico o venir en inglés */}
+          {falloAlAgregar && (
+            <p className="purchase-feedback--error">
+              No pudimos agregar la pieza al carrito. Intentá de nuevo.
+            </p>
           )}
         </div>
 
