@@ -1,14 +1,9 @@
+import createError from 'http-errors';
 import carritoService from '../services/carrito.service.js';
-
-const crearErrorSolicitud = (mensaje) => {
-  const error = new Error(mensaje);
-  error.statusCode = 400;
-  return error;
-};
 
 const validarProductoId = (productoId) => {
   if (typeof productoId !== 'string' || productoId.trim() === '') {
-    throw crearErrorSolicitud('productoId debe ser un texto no vacío');
+    throw createError(400, 'productoId debe ser un texto no vacío');
   }
 
   return productoId.trim();
@@ -16,7 +11,7 @@ const validarProductoId = (productoId) => {
 
 const validarCantidad = (cantidad) => {
   if (!Number.isInteger(cantidad) || cantidad < 1) {
-    throw crearErrorSolicitud('La cantidad debe ser un entero mayor que cero');
+    throw createError(400, 'La cantidad debe ser un entero mayor que cero');
   }
 
   return cantidad;

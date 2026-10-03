@@ -5,8 +5,9 @@ export interface CartContextValue {
   carrito: Carrito
   cargando: boolean
   actualizando: boolean
+  productosAgregando: string[]
   error: string
-  agregar: (productoId: string) => Promise<void>
+  agregar: (productoId: string, cantidad?: number) => Promise<boolean>
   cambiarCantidad: (productoId: string, cantidad: number) => Promise<void>
   quitar: (productoId: string) => Promise<void>
   vaciar: () => Promise<void>

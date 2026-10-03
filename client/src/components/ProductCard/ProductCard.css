@@ -1,0 +1,189 @@
+.producto-card {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  flex-direction: column;
+  border: 1px solid rgb(62 42 31 / 10%);
+  border-radius: 12px;
+  background: var(--color-superficie);
+  box-shadow: 0 4px 16px rgb(62 42 31 / 5%);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.producto-card:hover {
+  border-color: rgb(160 82 45 / 25%);
+  box-shadow: 0 14px 30px rgb(62 42 31 / 11%);
+  transform: translateY(-4px);
+}
+
+.producto-card-imagen-enlace {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--color-fondo-foto);
+}
+
+.producto-card-imagen-enlace:focus-visible {
+  outline: 3px solid var(--color-oro);
+  outline-offset: -3px;
+}
+
+.producto-card-imagen {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  padding: 1.25rem;
+  object-fit: contain;
+  transition: transform 300ms ease;
+}
+
+.producto-card:hover .producto-card-imagen {
+  transform: scale(1.035);
+}
+
+.producto-card-etiqueta {
+  position: absolute;
+  z-index: 1;
+  top: 0.8rem;
+  left: 0.8rem;
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  background: rgb(251 245 236 / 92%);
+  color: var(--color-siena);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.producto-card-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.1rem 1.15rem 1.2rem;
+}
+
+.producto-card-encabezado {
+  min-height: 4.4rem;
+}
+
+.producto-card-categoria {
+  margin: 0 0 0.25rem;
+  color: rgb(62 42 31 / 80%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.producto-card-nombre {
+  margin: 0;
+  font-size: 1.24rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.producto-card-nombre a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.producto-card-nombre a:hover {
+  color: var(--color-texto);
+}
+
+.producto-card-nombre a:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid var(--color-oro);
+  outline-offset: 3px;
+}
+
+.producto-card-precio {
+  margin: 0.55rem 0 1rem;
+  color: var(--color-texto);
+  font-family: var(--fuente-titulos);
+  font-size: 1.14rem;
+  font-weight: 500;
+}
+
+.producto-card-acciones {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+  margin-top: auto;
+}
+
+.producto-card-boton {
+  display: inline-flex;
+  width: 100%;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--color-siena);
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--fuente-texto);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.producto-card-boton svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+}
+
+.producto-card-boton--principal {
+  background: var(--color-siena);
+  color: var(--color-superficie);
+}
+
+.producto-card-boton--principal:hover:not(:disabled) {
+  border-color: var(--color-texto);
+  background: var(--color-texto);
+}
+
+/* Confirmación al agregar: salvia del manual con texto oscuro para que se lea (contraste 5:1) */
+.producto-card-boton--agregado,
+.producto-card-boton--agregado:hover:not(:disabled) {
+  border-color: var(--color-salvia);
+  background: var(--color-salvia);
+  color: var(--color-texto);
+}
+
+.producto-card-boton--secundario {
+  background: transparent;
+  color: var(--color-siena);
+}
+
+.producto-card-boton--secundario:hover {
+  background: rgb(160 82 45 / 8%);
+}
+
+.producto-card-boton:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.producto-card-boton:focus-visible {
+  outline: 3px solid var(--color-oro);
+  outline-offset: 2px;
+}
+
+.producto-card-boton:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .producto-card,
+  .producto-card-imagen,
+  .producto-card-boton { transition: none; }
+}

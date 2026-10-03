@@ -1,17 +1,12 @@
+import createError from 'http-errors';
 import carritoRepository from '../repositories/carrito.repository.js';
 import productosRepository from '../repositories/productos.repository.js';
-
-const crearError = (mensaje, statusCode) => {
-  const error = new Error(mensaje);
-  error.statusCode = statusCode;
-  return error;
-};
 
 const buscarProducto = (productoId) => {
   const producto = productosRepository.obtenerPorId(productoId);
 
   if (!producto) {
-    throw crearError('Producto no encontrado', 404);
+    throw createError(404, 'Producto no encontrado');
   }
 
   return producto;
@@ -59,7 +54,7 @@ const actualizarCantidad = (sesion, productoId, cantidad) => {
   const itemExistente = items.find((item) => item.productoId === productoId);
 
   if (!itemExistente) {
-    throw crearError('El producto no está en el carrito', 404);
+    throw createError(404, 'El producto no está en el carrito');
   }
 
   itemExistente.cantidad = cantidad;
@@ -71,7 +66,7 @@ const eliminar = (sesion, productoId) => {
   const items = carritoRepository.obtenerItems(sesion);
 
   if (!items.some((item) => item.productoId === productoId)) {
-    throw crearError('El producto no está en el carrito', 404);
+    throw createError(404, 'El producto no está en el carrito');
   }
 
   carritoRepository.guardarItems(
