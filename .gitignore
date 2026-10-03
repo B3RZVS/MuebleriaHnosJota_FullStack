@@ -1,1 +1,3 @@
 backend/src/data/consultas.json
+node_modules/
+.pnpm-store/

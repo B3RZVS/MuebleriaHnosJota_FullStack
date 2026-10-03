@@ -6,7 +6,16 @@ let colaDeEscrituras = Promise.resolve();
 
 const guardar = (consulta) => {
   const escritura = colaDeEscrituras.then(async () => {
-    const consultas = JSON.parse(await readFile(archivoConsultas, 'utf8'));
+    let consultas;
+    try {
+      consultas = JSON.parse(await readFile(archivoConsultas, 'utf8'));
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        throw error;
+      }
+      consultas = [];
+      await writeFile(archivoConsultas, '[]\n');
+    }
     consultas.push({ ...consulta, fecha: new Date().toISOString() });
     await writeFile(archivoConsultas, `${JSON.stringify(consultas, null, 2)}\n`);
   });

@@ -53,7 +53,7 @@
 .product-eyebrow {
   margin: 0 0 15px;
   color: var(--color-texto);
-  font-size: 0.67rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.055em;
   text-transform: uppercase;
@@ -72,8 +72,8 @@
 .product-description {
   max-width: 52ch;
   margin: 0 0 23px;
-  font-size: 0.86rem;
-  font-weight: 300;
+  font-size: 1rem;
+  font-weight: 400;
   line-height: 1.65;
 }
 
@@ -138,11 +138,23 @@
   color: #fff;
   cursor: pointer;
   font-family: var(--fuente-texto);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.025em;
   text-transform: uppercase;
   transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.add-button svg {
+  width: 17px;
+  height: 17px;
 }
 
 .add-button:hover,
@@ -151,12 +163,37 @@
   border-color: #7f3f25;
 }
 
+.add-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.purchase-feedback {
+  min-height: 26px;
+  margin-top: -10px;
+}
+
+.purchase-feedback p {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Verde un poco más oscuro que el salvia para llegar al contraste mínimo (4.5:1) */
+.purchase-feedback--success {
+  color: #4a6535;
+}
+
+.purchase-feedback--error {
+  color: #9b2c20;
+}
+
 .purchase-note {
   margin: 0;
   padding-top: 14px;
   border-top: 1px solid #dfcdbf;
-  font-size: 0.7rem;
-  font-weight: 300;
+  font-size: 0.85rem;
+  font-weight: 400;
   line-height: 1.5;
 }
 
@@ -190,7 +227,7 @@
 .spec-list dt {
   margin-bottom: 5px;
   color: var(--color-siena);
-  font-size: 0.61rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -198,8 +235,8 @@
 
 .spec-list dd {
   margin: 0;
-  font-size: 0.75rem;
-  font-weight: 300;
+  font-size: 0.9rem;
+  font-weight: 400;
   line-height: 1.5;
 }
 
@@ -217,7 +254,7 @@
 .product-loading p,
 .product-error > p {
   margin-top: 0;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .product-error {
