@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import ProductCard from "../../components/ProductCard/ProductCard";
@@ -24,6 +25,10 @@ const compromisos = [
 
 function HomeView() {
   const { data: productos = [], isLoading, error } = useProductosApi();
+  // React Router no vuelve arriba al cambiar de página: sin esto se abre a mitad del scroll
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const destacados = productos
     .filter((producto) => producto.destacado)
     .slice(0, 4);

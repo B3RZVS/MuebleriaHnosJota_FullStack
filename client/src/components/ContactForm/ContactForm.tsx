@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { API_URL } from "../../utils/urls";
 import "./ContactForm.css";
 
@@ -21,6 +21,11 @@ function ContactForm() {
   const [errors, setErrors] = useState<ContactErrors>({});
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // React Router no vuelve arriba al cambiar de página: sin esto se abre a mitad del scroll
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const updateField = (field: keyof ContactValues, value: string) => {
     setValues((currentValues) => ({ ...currentValues, [field]: value }));
