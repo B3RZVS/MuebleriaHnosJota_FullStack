@@ -17,9 +17,9 @@ const validarCantidad = (cantidad) => {
   return cantidad;
 };
 
-const responderConCarrito = (res, next, operacion) => {
+const responderConCarrito = async (res, next, operacion) => {
   try {
-    return res.status(200).json(operacion());
+    return res.status(200).json(await operacion());
   } catch (error) {
     return next(error);
   }

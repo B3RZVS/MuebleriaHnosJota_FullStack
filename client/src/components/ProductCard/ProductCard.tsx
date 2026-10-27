@@ -23,7 +23,7 @@ function ProductCard({ producto }: ProductCardProps) {
         )}
         <img
           className="producto-card-imagen"
-          src={producto.imagen}
+          src={producto.imagenUrl}
           alt=""
           width="1024"
           height="1024"

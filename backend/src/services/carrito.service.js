@@ -2,8 +2,8 @@ import createError from 'http-errors';
 import carritoRepository from '../repositories/carrito.repository.js';
 import productosRepository from '../repositories/productos.repository.js';
 
-const buscarProducto = (productoId) => {
-  const producto = productosRepository.obtenerPorId(productoId);
+const buscarProducto = async (productoId) => {
+  const producto = await productosRepository.obtenerPorId(productoId);
 
   if (!producto) {
     throw createError(404, 'Producto no encontrado');
@@ -12,19 +12,21 @@ const buscarProducto = (productoId) => {
   return producto;
 };
 
-const obtener = (sesion) => {
-  const items = carritoRepository.obtenerItems(sesion).map((item) => {
-    const producto = buscarProducto(item.productoId);
+const obtener = async (sesion) => {
+  const items = await Promise.all(
+    carritoRepository.obtenerItems(sesion).map(async (item) => {
+      const producto = await buscarProducto(item.productoId);
 
-    return {
-      productoId: producto.id,
-      nombre: producto.nombre,
-      imagen: producto.imagen,
-      precio: producto.precio,
-      cantidad: item.cantidad,
-      subtotal: producto.precio * item.cantidad,
-    };
-  });
+      return {
+        productoId: producto.id,
+        nombre: producto.nombre,
+        imagen: producto.imagenUrl ?? '',
+        precio: producto.precio,
+        cantidad: item.cantidad,
+        subtotal: producto.precio * item.cantidad,
+      };
+    }),
+  );
 
   return {
     items,
@@ -33,8 +35,8 @@ const obtener = (sesion) => {
   };
 };
 
-const agregar = (sesion, productoId, cantidad) => {
-  buscarProducto(productoId);
+const agregar = async (sesion, productoId, cantidad) => {
+  await buscarProducto(productoId);
 
   const items = carritoRepository.obtenerItems(sesion);
   const itemExistente = items.find((item) => item.productoId === productoId);
@@ -49,7 +51,7 @@ const agregar = (sesion, productoId, cantidad) => {
   return obtener(sesion);
 };
 
-const actualizarCantidad = (sesion, productoId, cantidad) => {
+const actualizarCantidad = async (sesion, productoId, cantidad) => {
   const items = carritoRepository.obtenerItems(sesion);
   const itemExistente = items.find((item) => item.productoId === productoId);
 
@@ -62,7 +64,7 @@ const actualizarCantidad = (sesion, productoId, cantidad) => {
   return obtener(sesion);
 };
 
-const eliminar = (sesion, productoId) => {
+const eliminar = async (sesion, productoId) => {
   const items = carritoRepository.obtenerItems(sesion);
 
   if (!items.some((item) => item.productoId === productoId)) {
@@ -76,7 +78,7 @@ const eliminar = (sesion, productoId) => {
   return obtener(sesion);
 };
 
-const vaciar = (sesion) => {
+const vaciar = async (sesion) => {
   carritoRepository.guardarItems(sesion, []);
   return obtener(sesion);
 };

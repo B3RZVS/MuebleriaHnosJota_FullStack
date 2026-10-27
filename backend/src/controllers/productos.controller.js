@@ -1,9 +1,9 @@
-import createError from "http-errors";
-import productosService from "../services/productos.service.js";
+import createError from 'http-errors';
+import productosService from '../services/productos.service.js';
 
-const obtenerProductos = (req, res, next) => {
+const obtenerProductos = async (req, res, next) => {
   try {
-    const productos = productosService.obtenerTodos();
+    const productos = await productosService.obtenerTodos();
 
     res.status(200).json(productos);
   } catch (error) {
@@ -11,9 +11,9 @@ const obtenerProductos = (req, res, next) => {
   }
 };
 
-const obtenerProductoPorId = (req, res, next) => {
+const obtenerProductoPorId = async (req, res, next) => {
   try {
-    const producto = productosService.obtenerPorId(req.params.id);
+    const producto = await productosService.obtenerPorId(req.params.id);
 
     if (!producto) {
       return next(createError(404, "Producto no encontrado"));

@@ -92,7 +92,7 @@ function ProductContent({ producto }: { producto: Producto }) {
   return (
     <article className="product-detail">
       <div className="product-gallery">
-        <img src={producto.imagen} alt={producto.nombre} />
+        <img src={producto.imagenUrl} alt={producto.nombre} />
       </div>
 
       <div className="product-copy">
@@ -158,7 +158,7 @@ function ProductContent({ producto }: { producto: Producto }) {
       <section className="specs" aria-labelledby="specs-title">
         <h2 id="specs-title">Detalles de la pieza</h2>
         <dl className="spec-list">
-          {Object.entries(producto.especificaciones).map(([nombre, valor]) => (
+          {Object.entries(producto.especificaciones ?? {}).map(([nombre, valor]) => (
             <div className="spec-list__item" key={nombre}>
               <dt>{etiquetasEspecificaciones[nombre] ?? nombre}</dt>
               <dd>{valor}</dd>

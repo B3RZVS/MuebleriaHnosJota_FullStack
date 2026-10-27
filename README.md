@@ -42,7 +42,7 @@ P4 - Ezequiel Monterichel (equiezel)
 
 | Capa | Tecnologías |
 |---|---|
-| **Backend** | Node.js, Express 5, `express-session`, `cors`, `dotenv`, `http-errors` (ES Modules) |
+| **Backend** | Node.js, Express 5, Mongoose, MongoDB, `express-session`, `cors`, `dotenv`, `http-errors` (ES Modules) |
 | **Frontend** | React 19, TypeScript, Vite, React Router 7, TanStack Query 5, react-icons |
 | **Despliegue** | Render (API) y Netlify (frontend) |
 
@@ -62,7 +62,10 @@ MuebleriaHnosJota_FullStack/
 │       ├── services/             # Lógica de negocio (carrito, productos)
 │       ├── repositories/         # Acceso a datos (catálogo, carrito en sesión, consultas)
 │       ├── middlewares/          # logger, sesión, validación de contacto, 404 y errores
-│       └── data/productos.js     # Catálogo de productos
+│       ├── data/productos.js     # Datos iniciales para cargar el catálogo
+│       ├── models/               # Esquema Product de Mongoose
+│       ├── config/database.js    # Conexión con MongoDB
+│       └── scripts/              # Carga inicial del catálogo
 └── client/
     ├── public/_redirects         # Fallback de la SPA para Netlify
     └── src/
@@ -97,9 +100,13 @@ cd MuebleriaHnosJota_FullStack
 ```bash
 cd backend
 npm install
-cp .env.example .env      # en Windows (PowerShell): copy .env.example .env
+Copy-Item .env.example .env
+# Completar MONGODB_URI en .env antes de iniciar el servidor
+npm run seed:products     # carga el catálogo una vez, solo si la colección está vacía
 npm run dev               # con recarga automática (nodemon)
 ```
+
+El mismo comando carga el catálogo en Atlas si `MONGODB_URI` apunta a esa base. Ejecutalo una sola vez por base vacía; si ya hay productos, el script termina con un error sin sobrescribirlos.
 
 Para correrlo sin recarga automática: `npm start`.
 
@@ -134,6 +141,7 @@ Abrí http://localhost:5173. Sin configuración adicional, el cliente apunta a `
 | `PORT` | No (default `3000`) | Puerto del servidor. Render lo inyecta automáticamente. |
 | `CLIENT_ORIGIN` | No en local, **sí en producción** | Origen(es) del frontend autorizados por CORS, separados por coma. Sin `/` al final. Ej: `https://quiet-douhua-d3c51b.netlify.app` |
 | `SESSION_SECRET` | **Sí si `NODE_ENV=production`** | Texto largo y secreto para firmar la cookie de sesión. |
+| `MONGODB_URI` | **Sí** | URI de conexión a MongoDB. Mantenerla privada y no subir `.env` al repositorio. |
 | `NODE_ENV` | En producción | Debe ser `production` para activar la cookie segura. |
 
 Si `CLIENT_ORIGIN` no está definida, se permiten `http://localhost:5173` y `http://127.0.0.1:5173`.
@@ -155,7 +163,9 @@ Base URL: `http://localhost:3000` (local) o la URL de Render (producción).
 | Método | Ruta | Descripción |
 |---|---|---|
 | `GET` | `/api/productos` | Lista todos los productos |
-| `GET` | `/api/productos/:id` | Detalle de un producto (`404` si no existe) |
+| `GET` | `/api/productos/:id` | Detalle de un producto (`400` si el id no es válido, `404` si no existe) |
+
+Los productos devuelven un `id` de MongoDB como texto y los campos `nombre`, `descripcion`, `precio`, `stock` e `imagenUrl`. `destacado` y `especificaciones` son opcionales para mantener la interfaz actual.
 
 ### Carrito
 
@@ -186,7 +196,7 @@ flowchart LR
     U[Navegador] -->|HTML / JS / CSS| N[Netlify<br/>React SPA]
     U -->|fetch + cookie de sesión| R[Render<br/>API Express]
     R --> S[(Sesión<br/>carrito)]
-    R --> P[(Catálogo<br/>productos.js)]
+    R --> P[(MongoDB<br/>productos)]
     R --> C[(consultas.json)]
 ```
 
@@ -199,7 +209,7 @@ El backend separa responsabilidades en cuatro capas: **routes → controllers �
 - **Services**: contienen las reglas de negocio, como calcular subtotales y totales o verificar que el producto exista.
 - **Repositories**: son el único lugar que sabe de dónde salen los datos.
 
-Hoy los datos viven en un array en memoria, en la sesión y en un archivo JSON. Gracias a esta separación, migrar a una base de datos implica modificar solo la capa de repositories.
+Los productos se leen desde MongoDB mediante Mongoose. La carga inicial del catálogo se ejecuta con `npm run seed:products` y solo se permite cuando la colección está vacía.
 
 ### Carrito en la sesión del servidor
 
@@ -253,6 +263,7 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
    NODE_ENV=production
    SESSION_SECRET=<texto largo y aleatorio>
    CLIENT_ORIGIN=https://quiet-douhua-d3c51b.netlify.app
+   MONGODB_URI=<URI privada de MongoDB Atlas>
    ```
 
    `PORT` lo asigna Render automáticamente. `CLIENT_ORIGIN` va sin barra final: CORS compara el origen de forma exacta.
@@ -286,10 +297,9 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 
 - **Carrito no persistente ante reinicios**: la sesión se guarda en la memoria del servidor (store por defecto de `express-session`), por lo que se pierde cuando Render reinicia o duerme el servicio. Una mejora natural es usar un store externo (por ejemplo Redis).
 - **Consultas de contacto en archivo local**: se guardan en `backend/src/data/consultas.json` (ignorado por git). El disco de Render es efímero, así que se borran en cada despliegue. Lo adecuado sería una base de datos o un servicio de email.
-- **Catálogo fijo**: los productos están hardcodeados en `data/productos.js`; no hay panel de administración ni base de datos.
+- **Sin administración de productos**: el catálogo se lee desde MongoDB, pero su creación, edición y eliminación mediante endpoints todavía no están implementadas.
 - **Cookies de terceros**: al ser cross-site, algunos navegadores (por ejemplo Safari, o Chrome con bloqueo de cookies de terceros) pueden impedir que el carrito se mantenga. Servir frontend y API bajo un mismo dominio lo resolvería.
 - **Sin checkout ni pagos**: el carrito no llega a una instancia de compra.
 - **Sin tests automatizados.**
 
 ---
-
