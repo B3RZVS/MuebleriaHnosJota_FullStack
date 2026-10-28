@@ -5,5 +5,7 @@ const router = Router();
 
 router.get('/', productosController.obtenerProductos);
 router.get('/:id', productosController.obtenerProductoPorId);
+router.put('/:id', productosController.actualizarProducto);
+router.delete('/:id', productosController.eliminarProducto);
 
 export default router;
