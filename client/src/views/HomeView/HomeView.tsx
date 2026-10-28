@@ -32,9 +32,7 @@ function HomeView() {
   const destacados = productos
     .filter((producto) => producto.destacado)
     .slice(0, 4);
-  const productoHero =
-    productos.find((producto) => producto.id === "sillon-copacabana") ??
-    destacados[0];
+  const productoHero = destacados[0];
 
   return (
     <div className="home">
@@ -71,7 +69,7 @@ function HomeView() {
             <div className="home-hero__imagen">
               {productoHero ? (
                 <img
-                  src={productoHero.imagen}
+                  src={productoHero.imagenUrl}
                   alt={productoHero.nombre}
                   width="1024"
                   height="1024"

@@ -1,8 +1,29 @@
-import productos from "../data/productos.js";
+import mongoose from 'mongoose';
+import createError from 'http-errors';
+import Product from '../models/product.model.js';
 
-const obtenerTodos = () => productos;
+const serializarProducto = (producto) => {
+  const { _id, ...datosProducto } = producto;
 
-const obtenerPorId = (id) => productos.find((producto) => producto.id === id);
+  return {
+    ...datosProducto,
+    id: _id.toString(),
+  };
+};
+
+const obtenerTodos = async () => {
+  const productos = await Product.find().lean();
+  return productos.map(serializarProducto);
+};
+
+const obtenerPorId = async (id) => {
+  if (!mongoose.isValidObjectId(id)) {
+    throw createError(400, 'El id del producto no es válido');
+  }
+
+  const producto = await Product.findById(id).lean();
+  return producto ? serializarProducto(producto) : null;
+};
 
 export default {
   obtenerTodos,
