@@ -164,8 +164,11 @@ Base URL: `http://localhost:3000` (local) o la URL de Render (producción).
 |---|---|---|
 | `GET` | `/api/productos` | Lista todos los productos |
 | `GET` | `/api/productos/:id` | Detalle de un producto (`400` si el id no es válido, `404` si no existe) |
+| `POST` | `/api/productos` | Crea y persiste un producto (`201`); requiere `nombre` y `precio`, y devuelve `400` ante errores de validación |
 
 Los productos devuelven un `id` de MongoDB como texto y los campos `nombre`, `descripcion`, `precio`, `stock` e `imagenUrl`. `destacado` y `especificaciones` son opcionales para mantener la interfaz actual.
+
+El cuerpo de `POST /api/productos` es un objeto JSON con `nombre` y `precio` obligatorios. También admite los campos opcionales `descripcion`, `stock`, `imagenUrl`, `destacado` y `especificaciones`.
 
 ### Carrito
 
@@ -297,7 +300,7 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 
 - **Carrito no persistente ante reinicios**: la sesión se guarda en la memoria del servidor (store por defecto de `express-session`), por lo que se pierde cuando Render reinicia o duerme el servicio. Una mejora natural es usar un store externo (por ejemplo Redis).
 - **Consultas de contacto en archivo local**: se guardan en `backend/src/data/consultas.json` (ignorado por git). El disco de Render es efímero, así que se borran en cada despliegue. Lo adecuado sería una base de datos o un servicio de email.
-- **Sin administración de productos**: el catálogo se lee desde MongoDB, pero su creación, edición y eliminación mediante endpoints todavía no están implementadas.
+- **Administración parcial de productos**: el catálogo permite crear productos mediante la API, pero todavía no cuenta con endpoints para editarlos o eliminarlos.
 - **Cookies de terceros**: al ser cross-site, algunos navegadores (por ejemplo Safari, o Chrome con bloqueo de cookies de terceros) pueden impedir que el carrito se mantenga. Servir frontend y API bajo un mismo dominio lo resolvería.
 - **Sin checkout ni pagos**: el carrito no llega a una instancia de compra.
 - **Sin tests automatizados.**
