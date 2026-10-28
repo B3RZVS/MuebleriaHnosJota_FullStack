@@ -164,6 +164,8 @@ Base URL: `http://localhost:3000` (local) o la URL de Render (producción).
 |---|---|---|
 | `GET` | `/api/productos` | Lista todos los productos |
 | `GET` | `/api/productos/:id` | Detalle de un producto (`400` si el id no es válido, `404` si no existe) |
+| `PUT` | `/api/productos/:id` | Actualiza los campos enviados y devuelve el producto actualizado (`400` si el id o los datos no son válidos, `404` si no existe) |
+| `DELETE` | `/api/productos/:id` | Elimina el producto y lo devuelve (`400` si el id no es válido, `404` si no existe) |
 
 Los productos devuelven un `id` de MongoDB como texto y los campos `nombre`, `descripcion`, `precio`, `stock` e `imagenUrl`. `destacado` y `especificaciones` son opcionales para mantener la interfaz actual.
 
