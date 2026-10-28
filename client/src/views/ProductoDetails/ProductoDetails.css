@@ -22,6 +22,15 @@
   color: var(--color-siena);
 }
 
+.product-created-feedback {
+  margin: 0 0 24px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--color-salvia);
+  background: #f1f5ed;
+  color: #36502b;
+  font-size: 0.9rem;
+}
+
 .product-detail {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 0.91fr);
