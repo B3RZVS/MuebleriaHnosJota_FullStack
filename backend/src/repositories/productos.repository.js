@@ -32,7 +32,7 @@ const actualizar = async (id, datos) => {
 
   try {
     const producto = await Product.findByIdAndUpdate(id, datos, {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     }).lean();
 
