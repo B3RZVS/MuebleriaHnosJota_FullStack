@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { ProductoDetails } from "./views/ProductoDetails/ProductoDetails.tsx";
 import { ProductosView } from "./views/ProductosView/ProductosView.tsx";
 import ContactForm from "./components/ContactForm/ContactForm.tsx";
+import ProductoCreate from "./components/ProductoCreate/ProductoCreate.tsx";
 import HomeView from "./views/HomeView/HomeView.tsx";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <Route path="/" element={<HomeView />} />
       <Route path="/productos" element={<ProductosView />} />
       <Route path="/productos/:id" element={<ProductoDetails />} />
+      <Route path="/admin/crear-producto" element={<ProductoCreate />} />
       <Route path="/contacto" element={<ContactForm />} />
     </Routes>
   );
