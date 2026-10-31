@@ -186,7 +186,7 @@ El carrito pertenece a la sesión del visitante, por lo que las peticiones deben
 
 | Método | Ruta | Cuerpo | Descripción |
 |---|---|---|---|
-| `POST` | `/api/contacto` | `{ nombre, email, mensaje }` | Registra una consulta. Responde `202`. Nombre de al menos 3 caracteres, email válido y mensaje no vacío; si no, `400`. |
+| `POST` | `/api/contacto` | `{ nombre, email, mensaje }` | Guarda la consulta en MongoDB y responde `202`. Nombre de al menos 3 caracteres, email válido y mensaje no vacío; si no, `400`. |
 
 ### Formato de errores
 
@@ -199,8 +199,7 @@ flowchart LR
     U[Navegador] -->|HTML / JS / CSS| N[Netlify<br/>React SPA]
     U -->|fetch + cookie de sesión| R[Render<br/>API Express]
     R --> S[(Sesión<br/>carrito)]
-    R --> P[(MongoDB<br/>productos)]
-    R --> C[(consultas.json)]
+    R --> P[(MongoDB<br/>productos y consultas)]
 ```
 
 ### Backend en capas
@@ -212,7 +211,7 @@ El backend separa responsabilidades en cuatro capas: **routes → controllers �
 - **Services**: contienen las reglas de negocio, como calcular subtotales y totales o verificar que el producto exista.
 - **Repositories**: son el único lugar que sabe de dónde salen los datos.
 
-Los productos se leen desde MongoDB mediante Mongoose. La carga inicial del catálogo se ejecuta con `npm run seed:products` y solo se permite cuando la colección está vacía.
+Los productos y las consultas de contacto se persisten en MongoDB mediante Mongoose. La carga inicial del catálogo se ejecuta con `npm run seed:products` y solo se permite cuando la colección está vacía.
 
 ### Carrito en la sesión del servidor
 
@@ -299,7 +298,6 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 ## Limitaciones conocidas y mejoras futuras
 
 - **Carrito no persistente ante reinicios**: la sesión se guarda en la memoria del servidor (store por defecto de `express-session`), por lo que se pierde cuando Render reinicia o duerme el servicio. Una mejora natural es usar un store externo (por ejemplo Redis).
-- **Consultas de contacto en archivo local**: se guardan en `backend/src/data/consultas.json` (ignorado por git). El disco de Render es efímero, así que se borran en cada despliegue. Lo adecuado sería una base de datos o un servicio de email.
 - **Administración parcial de productos**: el catálogo permite crear productos mediante la API, pero todavía no cuenta con endpoints para editarlos o eliminarlos.
 - **Cookies de terceros**: al ser cross-site, algunos navegadores (por ejemplo Safari, o Chrome con bloqueo de cookies de terceros) pueden impedir que el carrito se mantenga. Servir frontend y API bajo un mismo dominio lo resolvería.
 - **Sin checkout ni pagos**: el carrito no llega a una instancia de compra.
