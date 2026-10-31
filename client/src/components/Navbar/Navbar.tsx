@@ -54,6 +54,13 @@ function Navbar({ onAbrirCarrito }: NavbarProps) {
         </NavLink>
         <NavLink
           className="link"
+          to="/admin/crear-producto"
+          onClick={() => setMenuAbierto(false)}
+        >
+          Crear producto
+        </NavLink>
+        <NavLink
+          className="link"
           to="/contacto"
           onClick={() => setMenuAbierto(false)}
         >
