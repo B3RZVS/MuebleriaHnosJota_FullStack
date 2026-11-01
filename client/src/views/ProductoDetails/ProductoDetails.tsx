@@ -19,9 +19,12 @@ const etiquetasEspecificaciones: Record<string, string> = {
 export const ProductoDetails = () => {
   const { id } = useParams();
   const location = useLocation();
-  const productoCreado =
-    (location.state as { productoCreado?: boolean } | null)?.productoCreado ===
-    true;
+  const estado = location.state as {
+    productoCreado?: boolean;
+    productoEditado?: boolean;
+  } | null;
+  const productoCreado = estado?.productoCreado === true;
+  const productoEditado = estado?.productoEditado === true;
   const { data: producto, isLoading, error } = useProductoApi(id ?? "");
 
   // React Router no vuelve arriba al cambiar de página; depende de id por si se pasa de una pieza a otra
@@ -38,6 +41,12 @@ export const ProductoDetails = () => {
       {productoCreado && (
         <p className="product-created-feedback" role="status">
           El producto se creó correctamente.
+        </p>
+      )}
+
+      {productoEditado && (
+        <p className="product-created-feedback" role="status">
+          Los cambios se guardaron correctamente.
         </p>
       )}
 
@@ -181,6 +190,12 @@ function ProductContent({ producto }: { producto: Producto }) {
         </p>
 
         <div className="product-admin">
+          <Link
+            className="product-admin__edit"
+            to={`/admin/editar-producto/${producto.id}`}
+          >
+            Editar producto
+          </Link>
           <button
             className="product-admin__delete"
             type="button"
