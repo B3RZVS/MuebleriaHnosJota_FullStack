@@ -3,6 +3,7 @@ import { ProductoDetails } from "./views/ProductoDetails/ProductoDetails.tsx";
 import { ProductosView } from "./views/ProductosView/ProductosView.tsx";
 import ContactForm from "./components/ContactForm/ContactForm.tsx";
 import ProductoCreate from "./components/ProductoCreate/ProductoCreate.tsx";
+import { ProductoEdit } from "./views/ProductoEdit/ProductoEdit.tsx";
 import HomeView from "./views/HomeView/HomeView.tsx";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <Route path="/productos" element={<ProductosView />} />
       <Route path="/productos/:id" element={<ProductoDetails />} />
       <Route path="/admin/crear-producto" element={<ProductoCreate />} />
+      <Route path="/admin/editar-producto/:id" element={<ProductoEdit />} />
       <Route path="/contacto" element={<ContactForm />} />
     </Routes>
   );

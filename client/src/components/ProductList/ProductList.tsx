@@ -6,9 +6,10 @@ type ProductListProps = {
   productos: Producto[];
   cargando: boolean;
   error: Error | null;
+  aviso?: string;
 };
 
-function ProductList({ productos, cargando, error }: ProductListProps) {
+function ProductList({ productos, cargando, error, aviso }: ProductListProps) {
   const sinProductos = !cargando && !error && productos.length === 0;
   const hayProductos = !cargando && !error && productos.length > 0;
 
@@ -24,6 +25,12 @@ function ProductList({ productos, cargando, error }: ProductListProps) {
       <p className="catalogo-bajada">
         Cada pieza cuenta la historia de manos expertas y materiales nobles.
       </p>
+
+      {aviso && (
+        <p className="catalogo-aviso" role="status">
+          {aviso}
+        </p>
+      )}
 
       {cargando && (
         <p className="catalogo-mensaje" role="status">
