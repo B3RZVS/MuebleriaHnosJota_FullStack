@@ -98,7 +98,8 @@ export const actualizarProducto = async (
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(cambios),
   });
-  const datos: unknown = await respuesta.json();
+  // si no llega JSON (ej: Render caído) queda en null y se muestra el status
+  const datos: unknown = await respuesta.json().catch(() => null);
 
   if (!respuesta.ok) {
     const mensaje =
