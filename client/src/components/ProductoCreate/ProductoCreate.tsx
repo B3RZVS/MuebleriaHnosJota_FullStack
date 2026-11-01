@@ -4,7 +4,7 @@ import { crearProducto } from "../../services/producto.api";
 import type { Producto } from "../../types/producto";
 import "./ProductoCreate.css";
 
-type ValoresFormulario = {
+export type ValoresFormulario = {
   nombre: string;
   descripcion: string;
   precio: string;
@@ -17,7 +17,7 @@ type ValoresFormulario = {
 type CampoFormulario = keyof ValoresFormulario;
 type ErroresFormulario = Partial<Record<CampoFormulario, string>>;
 
-const valoresIniciales: ValoresFormulario = {
+const valoresVacios: ValoresFormulario = {
   nombre: "",
   descripcion: "",
   precio: "",
@@ -27,7 +27,20 @@ const valoresIniciales: ValoresFormulario = {
   especificaciones: "",
 };
 
-function ProductoCreate() {
+// con estas props el mismo form sirve para editar :D
+type ProductoCreateProps = {
+  valoresIniciales?: ValoresFormulario;
+  titulo?: string;
+  textoBoton?: string;
+  onGuardar?: (producto: Omit<Producto, "id">) => Promise<void>;
+};
+
+function ProductoCreate({
+  valoresIniciales = valoresVacios,
+  titulo = "Agregar un producto",
+  textoBoton = "Crear producto",
+  onGuardar,
+}: ProductoCreateProps) {
   const navigate = useNavigate();
   const [valores, setValores] = useState(valoresIniciales);
   const [errores, setErrores] = useState<ErroresFormulario>({});
@@ -114,15 +127,19 @@ function ProductoCreate() {
 
     setEnviando(true);
     try {
-      const producto = await crearProducto(nuevoProducto);
-      navigate(`/productos/${producto.id}`, {
-        state: { productoCreado: true },
-      });
+      if (onGuardar) {
+        await onGuardar(nuevoProducto);
+      } else {
+        const producto = await crearProducto(nuevoProducto);
+        navigate(`/productos/${producto.id}`, {
+          state: { productoCreado: true },
+        });
+      }
     } catch (error) {
       setErrorEnvio(
         error instanceof Error
           ? error.message
-          : "No pudimos crear el producto. Intentá nuevamente.",
+          : "No pudimos guardar el producto. Intentá nuevamente.",
       );
     } finally {
       setEnviando(false);
@@ -133,7 +150,7 @@ function ProductoCreate() {
     <section className="producto-create" aria-labelledby="producto-create-title">
       <div className="producto-create__intro">
         <p className="producto-create__eyebrow">Administración del catálogo</p>
-        <h1 id="producto-create-title">Agregar un producto</h1>
+        <h1 id="producto-create-title">{titulo}</h1>
         <p>
           Completá los datos de la pieza. El nombre y el precio son obligatorios.
         </p>
@@ -285,7 +302,7 @@ function ProductoCreate() {
           type="submit"
           disabled={enviando}
         >
-          {enviando ? "Guardando…" : "Crear producto"}
+          {enviando ? "Guardando…" : textoBoton}
         </button>
       </form>
     </section>
