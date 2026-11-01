@@ -75,3 +75,11 @@ export const obtenerProductos = async (): Promise<Producto[]> => {
   }
   return datos as Producto[];
 };
+
+export const eliminarProducto = async (id: string): Promise<void> => {
+  const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, { method: "DELETE" });
+
+  if (!respuesta.ok) {
+    throw new Error(`El servidor respondió ${respuesta.status}`);
+  }
+};
