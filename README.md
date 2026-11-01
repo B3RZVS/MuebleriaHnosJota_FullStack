@@ -165,7 +165,7 @@ Base URL: `http://localhost:3000` (local) o la URL de Render (producción).
 | `GET` | `/api/productos` | Lista todos los productos |
 | `GET` | `/api/productos/:id` | Detalle de un producto (`400` si el id no es válido, `404` si no existe) |
 | `POST` | `/api/productos` | Crea y persiste un producto (`201`); requiere `nombre` y `precio`, y devuelve `400` ante errores de validación |
-| `PUT` | `/api/productos/:id` | Actualiza los campos enviados y devuelve el producto actualizado (`400` si el id o los datos no son válidos, `404` si no existe) |
+| `PUT` | `/api/productos/:id` | Actualiza los campos enviados (un campo opcional en `null` queda vacío) y devuelve el producto actualizado (`400` si el id o los datos no son válidos, `404` si no existe) |
 | `DELETE` | `/api/productos/:id` | Elimina el producto y lo devuelve (`400` si el id no es válido, `404` si no existe) |
 
 Los productos devuelven un `id` de MongoDB como texto y los campos `nombre`, `descripcion`, `precio`, `stock` e `imagenUrl`. `destacado` y `especificaciones` son opcionales para mantener la interfaz actual.
@@ -300,7 +300,7 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 ## Limitaciones conocidas y mejoras futuras
 
 - **Carrito no persistente ante reinicios**: la sesión se guarda en la memoria del servidor (store por defecto de `express-session`), por lo que se pierde cuando Render reinicia o duerme el servicio. Una mejora natural es usar un store externo (por ejemplo Redis).
-- **Administración parcial de productos**: el catálogo permite crear productos mediante la API, pero todavía no cuenta con endpoints para editarlos o eliminarlos.
+- **Administración sin login**: cualquier visitante puede crear, editar o eliminar productos, porque la API todavía no tiene autenticación.
 - **Cookies de terceros**: al ser cross-site, algunos navegadores (por ejemplo Safari, o Chrome con bloqueo de cookies de terceros) pueden impedir que el carrito se mantenga. Servir frontend y API bajo un mismo dominio lo resolvería.
 - **Sin checkout ni pagos**: el carrito no llega a una instancia de compra.
 - **Sin tests automatizados.**
