@@ -16,7 +16,8 @@ const aValoresFormulario = (producto: Producto): ValoresFormulario => ({
   imagenUrl: producto.imagenUrl ?? "",
   destacado: producto.destacado ?? false,
   especificaciones:
-    producto.especificaciones && Object.keys(producto.especificaciones).length > 0
+    producto.especificaciones &&
+    Object.keys(producto.especificaciones).length > 0
       ? JSON.stringify(producto.especificaciones, null, 2)
       : "",
 });
@@ -53,7 +54,9 @@ export const ProductoEdit = () => {
   if (error) {
     return (
       <div className="producto-edit" role="alert">
-        <p>No pudimos cargar el producto. Revisá que el servidor esté disponible.</p>
+        <p>
+          No pudimos cargar el producto. Revisá que el servidor esté disponible.
+        </p>
         <Link to="/productos">← Volver al catálogo</Link>
       </div>
     );
@@ -62,7 +65,9 @@ export const ProductoEdit = () => {
   if (!producto) {
     return (
       <div className="producto-edit" role="alert">
-        <p>No encontramos este producto. Puede que ya no esté en el catálogo.</p>
+        <p>
+          No encontramos este producto. Puede que ya no esté en el catálogo.
+        </p>
         <Link to="/productos">← Volver al catálogo</Link>
       </div>
     );
