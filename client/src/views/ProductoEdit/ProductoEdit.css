@@ -1,0 +1,15 @@
+.producto-edit {
+  width: min(100% - 40px, 1000px);
+  margin: 0 auto;
+  padding: 72px 0 96px;
+}
+
+.producto-edit p {
+  margin: 0 0 16px;
+}
+
+.producto-edit a {
+  color: var(--color-siena);
+  font-size: 0.875rem;
+  text-underline-offset: 3px;
+}
