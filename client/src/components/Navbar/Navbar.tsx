@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useCart } from "../../cart/context/useCart";
 import "./Navbar.css";
 
 interface NavbarProps {
+  cantidadCarrito: number;
   onAbrirCarrito: () => void;
 }
 
-function Navbar({ onAbrirCarrito }: NavbarProps) {
-  const { carrito } = useCart();
+function Navbar({ cantidadCarrito, onAbrirCarrito }: NavbarProps) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const etiquetaCantidad =
-    carrito.totalItems === 1 ? "1 producto" : `${carrito.totalItems} productos`;
+    cantidadCarrito === 1 ? "1 producto" : `${cantidadCarrito} productos`;
 
   useEffect(() => {
     if (!menuAbierto) return;
@@ -82,7 +81,7 @@ function Navbar({ onAbrirCarrito }: NavbarProps) {
             aria-label={etiquetaCantidad}
             className="boton-carrito__cantidad"
           >
-            {carrito.totalItems}
+            {cantidadCarrito}
           </span>
         </button>
 
