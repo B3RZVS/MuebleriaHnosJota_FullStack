@@ -5,7 +5,6 @@ import App from "./App.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 
-import CartShell from "./cart/components/CartShell";
 import { CartProvider } from "./cart/context/CartContext";
 
 // Por defecto React Query reintenta 3 veces y el error tarda varios segundos en aparecer
@@ -18,9 +17,7 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <CartProvider>
-          <CartShell>
-            <App />
-          </CartShell>
+          <App />
         </CartProvider>
       </BrowserRouter>
     </QueryClientProvider>
