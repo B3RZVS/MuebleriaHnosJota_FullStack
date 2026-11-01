@@ -16,6 +16,11 @@ const obtenerTodos = async () => {
   return productos.map(serializarProducto);
 };
 
+const crear = async (datosProducto) => {
+  const producto = await Product.create(datosProducto);
+  return serializarProducto(producto.toObject());
+};
+
 const obtenerPorId = async (id) => {
   if (!mongoose.isValidObjectId(id)) {
     throw createError(400, 'El id del producto no es válido');
@@ -60,6 +65,7 @@ const eliminar = async (id) => {
 };
 
 export default {
+  crear,
   obtenerTodos,
   obtenerPorId,
   actualizar,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BsCartPlus } from "react-icons/bs";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useCart } from "../../cart/context/useCart";
 import { useProductoApi } from "../../hooks/useProductoApi";
 import type { Producto } from "../../types/producto";
@@ -17,6 +17,10 @@ const etiquetasEspecificaciones: Record<string, string> = {
 
 export const ProductoDetails = () => {
   const { id } = useParams();
+  const location = useLocation();
+  const productoCreado =
+    (location.state as { productoCreado?: boolean } | null)?.productoCreado ===
+    true;
   const { data: producto, isLoading, error } = useProductoApi(id ?? "");
 
   // React Router no vuelve arriba al cambiar de página; depende de id por si se pasa de una pieza a otra
@@ -29,6 +33,12 @@ export const ProductoDetails = () => {
       <Link className="product-back" to="/productos">
         <span aria-hidden="true">←</span> Volver al catálogo
       </Link>
+
+      {productoCreado && (
+        <p className="product-created-feedback" role="status">
+          El producto se creó correctamente.
+        </p>
+      )}
 
       {isLoading && (
         <div className="product-loading" role="status" aria-live="polite">
