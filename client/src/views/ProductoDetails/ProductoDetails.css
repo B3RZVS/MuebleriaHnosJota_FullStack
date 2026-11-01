@@ -206,6 +206,52 @@
   line-height: 1.5;
 }
 
+.product-admin {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.product-admin__delete {
+  min-height: 41px;
+  padding: 0 22px;
+  background: transparent;
+  border: 1px solid #9b2c20;
+  border-radius: 2px;
+  color: #9b2c20;
+  cursor: pointer;
+  font-family: var(--fuente-texto);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.product-admin__delete:hover:not(:disabled) {
+  background: #9b2c20;
+  color: #fff;
+}
+
+.product-admin__delete:focus-visible {
+  outline: 2px solid var(--color-oro);
+  outline-offset: 2px;
+}
+
+.product-admin__delete:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.product-admin__error {
+  flex-basis: 100%;
+  margin: 0;
+  color: #9b2c20;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
 .specs {
   grid-column: 1 / -1;
   padding-top: 31px;

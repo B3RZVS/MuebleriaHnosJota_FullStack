@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { BsCartPlus } from "react-icons/bs";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCart } from "../../cart/context/useCart";
+import { useEliminarProducto } from "../../hooks/useEliminarProducto";
 import { useProductoApi } from "../../hooks/useProductoApi";
 import type { Producto } from "../../types/producto";
 import { formatoPrecio } from "../../utils/formatoPrecio";
@@ -77,6 +78,21 @@ function ProductContent({ producto }: { producto: Producto }) {
   const [falloAlAgregar, setFalloAlAgregar] = useState(false);
   const { agregar, productosAgregando, cargando: cargandoCarrito } = useCart();
   const agregando = productosAgregando.includes(producto.id);
+  const navigate = useNavigate();
+  const eliminacion = useEliminarProducto();
+
+  const eliminarProducto = () => {
+    // confirmación antes de borrar, no se puede deshacer :D
+    const confirmado = window.confirm(
+      `¿Querés eliminar "${producto.nombre}"? No se puede deshacer.`,
+    );
+    if (!confirmado) return;
+
+    eliminacion.mutate(producto.id, {
+      onSuccess: () =>
+        navigate("/productos", { state: { productoEliminado: true } }),
+    });
+  };
 
   const cambiarCantidad = (nuevaCantidad: number) => {
     setCantidad(Math.min(99, Math.max(1, nuevaCantidad)));
@@ -163,6 +179,22 @@ function ProductContent({ producto }: { producto: Producto }) {
           Envío coordinado a todo el país. Cada pieza se revisa y embala en la
           Casa Taller.
         </p>
+
+        <div className="product-admin">
+          <button
+            className="product-admin__delete"
+            type="button"
+            disabled={eliminacion.isPending}
+            onClick={eliminarProducto}
+          >
+            {eliminacion.isPending ? "Eliminando…" : "Eliminar producto"}
+          </button>
+          {eliminacion.isError && (
+            <p className="product-admin__error" role="alert">
+              No pudimos eliminar el producto. Intentá de nuevo.
+            </p>
+          )}
+        </div>
       </div>
 
       <section className="specs" aria-labelledby="specs-title">
