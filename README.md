@@ -1,6 +1,6 @@
 # Mueblería Hermanos Jota
 
-Aplicación web para una mueblería, sprint 3 y 4: catálogo de productos, detalle de cada pieza, carrito de compras y formulario de contacto.
+Aplicación web para una mueblería, sprint 5 y 6: catálogo guardado en MongoDB con alta, edición y baja de productos, detalle de cada pieza, carrito de compras y formulario de contacto.
 Integrantes
 P1 - Ramiro Berruezo (B3RZVS)
 P2 - Augusto Freire (Guss-dev-py)
@@ -33,10 +33,11 @@ P4 - Ezequiel Monterichel (equiezel)
 
 ## Funcionalidades
 
-- Catálogo de productos con listado y vista de detalle (especificaciones, materiales, medidas).
-- Carrito de compras: agregar, cambiar cantidad, quitar y vaciar. Se mantiene entre visitas mediante sesión.
+- Catálogo de productos con listado y vista de detalle (stock, especificaciones, materiales, medidas).
+- Administración del catálogo: crear, editar y eliminar productos desde formularios.
+- Carrito de compras: agregar, cambiar cantidad, quitar y vaciar, sin pasarse del stock. Se mantiene entre visitas mediante sesión.
 - Formulario de contacto con validación en el servidor.
-- Navegación SPA con rutas: `/`, `/productos`, `/productos/:id` y `/contacto`.
+- Navegación SPA con rutas: `/`, `/productos`, `/productos/:id`, `/contacto`, `/admin/crear-producto` y `/admin/editar-producto/:id`. Cualquier otra muestra una página 404.
 
 ## Stack tecnológico
 
