@@ -2,6 +2,27 @@ import createError from 'http-errors';
 import carritoRepository from '../repositories/carrito.repository.js';
 import productosRepository from '../repositories/productos.repository.js';
 
+const CANTIDAD_MAXIMA = 99;
+
+const validarDisponible = (producto, cantidad) => {
+  if (cantidad > CANTIDAD_MAXIMA) {
+    throw createError(
+      400,
+      `Podés llevar hasta ${CANTIDAD_MAXIMA} unidades por producto.`
+    );
+  }
+
+  if (producto.stock === 0) {
+    throw createError(400, `${producto.nombre} está sin stock.`);
+  }
+
+  if (producto.stock != null && cantidad > producto.stock) {
+    const unidades =
+      producto.stock === 1 ? '1 unidad' : `${producto.stock} unidades`;
+    throw createError(400, `Solo hay ${unidades} de ${producto.nombre}.`);
+  }
+};
+
 const buscarProducto = async (productoId) => {
   const producto = await productosRepository.obtenerPorId(productoId);
 
@@ -29,6 +50,7 @@ const obtener = async (sesion) => {
     nombre: producto.nombre,
     imagen: producto.imagenUrl ?? '',
     precio: producto.precio,
+    stock: producto.stock ?? null,
     cantidad: vigentes[indice].cantidad,
     subtotal: producto.precio * vigentes[indice].cantidad,
   }));
@@ -46,6 +68,8 @@ const agregar = async (sesion, productoId, cantidad) => {
   const items = carritoRepository.obtenerItems(sesion);
   const itemExistente = items.find((item) => item.productoId === producto.id);
 
+  validarDisponible(producto, (itemExistente?.cantidad ?? 0) + cantidad);
+
   if (itemExistente) {
     itemExistente.cantidad += cantidad;
   } else {
@@ -62,6 +86,11 @@ const actualizarCantidad = async (sesion, productoId, cantidad) => {
 
   if (!itemExistente) {
     throw createError(404, 'El producto no está en el carrito');
+  }
+
+  // bajar la cantidad siempre se puede, aunque el stock haya bajado
+  if (cantidad > itemExistente.cantidad) {
+    validarDisponible(await buscarProducto(productoId), cantidad);
   }
 
   itemExistente.cantidad = cantidad;
