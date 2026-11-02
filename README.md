@@ -1,11 +1,13 @@
 # Mueblería Hermanos Jota
 
 Aplicación web para una mueblería, sprint 5 y 6: catálogo guardado en MongoDB con alta, edición y baja de productos, detalle de cada pieza, carrito de compras y formulario de contacto.
-Integrantes
-P1 - Ramiro Berruezo (B3RZVS)
-P2 - Augusto Freire (Guss-dev-py)
-P3 - Agustin Rivero (AgussN1T)
-P4 - Ezequiel Monterichel (equiezel)
+
+**Integrantes**
+
+- P1 - Ramiro Berruezo (B3RZVS)
+- P2 - Augusto Freire (Guss-dev-py)
+- P3 - Agustin Rivero (AgussN1T)
+- P4 - Ezequiel Monterichel (equiezel)
 
 | | URL |
 |---|---|
