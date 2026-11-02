@@ -4,7 +4,7 @@ const recibirConsulta = async (req, res, next) => {
   try {
     await consultasRepository.guardar(req.body);
     res
-      .status(202)
+      .status(201)
       .json({ mensaje: 'Recibimos tu consulta. ¡Gracias por escribirnos!' });
   } catch (error) {
     next(error);
