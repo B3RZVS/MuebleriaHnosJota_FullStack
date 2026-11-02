@@ -66,11 +66,13 @@ const obtenerProductoPorId = async (req, res, next) => {
 
 const actualizarProducto = async (req, res, next) => {
   try {
-    const datos = tomarCamposEditables(req.body ?? {});
+    const cuerpo = req.body ?? {};
+    const datos = {};
 
-    if (Object.keys(datos).length === 0) {
-      return next(createError(400, 'No hay datos para actualizar'));
-    }
+    // PUT reemplaza el producto completo: lo que no viene queda vacío
+    camposEditables.forEach((campo) => {
+      datos[campo] = cuerpo[campo] ?? null;
+    });
 
     const producto = await productosService.actualizar(req.params.id, datos);
 
