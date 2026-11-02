@@ -33,7 +33,7 @@ const productSchema = new mongoose.Schema(
   },
   {
     versionKey: false,
-  },
+  }
 );
 
 export default mongoose.model('Product', productSchema);

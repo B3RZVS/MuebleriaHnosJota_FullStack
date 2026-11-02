@@ -1,7 +1,6 @@
 import productosRepository from '../repositories/productos.repository.js';
 
-const crear = async (datosProducto) =>
-  productosRepository.crear(datosProducto);
+const crear = async (datosProducto) => productosRepository.crear(datosProducto);
 
 const obtenerTodos = async () => productosRepository.obtenerTodos();
 

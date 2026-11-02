@@ -37,7 +37,7 @@ const obtenerProductoPorId = async (req, res, next) => {
     const producto = await productosService.obtenerPorId(req.params.id);
 
     if (!producto) {
-      return next(createError(404, "Producto no encontrado"));
+      return next(createError(404, 'Producto no encontrado'));
     }
 
     return res.status(200).json(producto);

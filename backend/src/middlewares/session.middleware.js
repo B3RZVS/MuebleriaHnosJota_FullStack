@@ -7,8 +7,7 @@ if (isProd && !process.env.SESSION_SECRET) {
   throw new Error('La variable SESSION_SECRET es obligatoria en producción');
 }
 
-const secret =
-  process.env.SESSION_SECRET || randomBytes(32).toString('hex');
+const secret = process.env.SESSION_SECRET || randomBytes(32).toString('hex');
 
 const sessionMiddleware = session({
   secret,
