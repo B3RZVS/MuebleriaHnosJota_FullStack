@@ -45,7 +45,11 @@ function ProductCard({ producto }: ProductCardProps) {
         </p>
 
         <div className="producto-card-acciones">
-          <AddToCartButton productoId={producto.id} nombre={producto.nombre} />
+          <AddToCartButton
+            productoId={producto.id}
+            nombre={producto.nombre}
+            sinStock={producto.stock === 0}
+          />
           <Link
             className="producto-card-boton producto-card-boton--secundario"
             to={detalleUrl}
