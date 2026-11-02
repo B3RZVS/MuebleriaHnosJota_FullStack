@@ -6,12 +6,14 @@ interface AddToCartButtonProps {
   productoId: string;
   nombre: string;
   etiqueta?: string;
+  sinStock?: boolean;
 }
 
 function AddToCartButton({
   productoId,
   nombre,
   etiqueta = 'Agregar al carrito',
+  sinStock = false,
 }: AddToCartButtonProps) {
   const { agregar, productosAgregando, cargando } = useCart();
   const agregando = productosAgregando.includes(productoId);
@@ -36,7 +38,10 @@ function AddToCartButton({
   let texto = etiqueta;
   let descripcion = `${etiqueta}: ${nombre}`;
 
-  if (agregando) {
+  if (sinStock) {
+    texto = 'Sin stock';
+    descripcion = `${nombre} está sin stock`;
+  } else if (agregando) {
     texto = 'Agregando…';
     descripcion = `Agregando ${nombre}`;
   } else if (resultado === 'agregado') {
@@ -50,12 +55,14 @@ function AddToCartButton({
   return (
     <button
       className={`producto-card-boton producto-card-boton--principal${resultado === 'agregado' ? ' producto-card-boton--agregado' : ''}`}
-      disabled={agregando || cargando}
+      disabled={sinStock || agregando || cargando}
       onClick={() => void agregarAlCarrito()}
       type="button"
       aria-label={descripcion}
     >
-      {!agregando && resultado === '' && <BsCartPlus aria-hidden="true" />}
+      {!sinStock && !agregando && resultado === '' && (
+        <BsCartPlus aria-hidden="true" />
+      )}
       {!agregando && resultado === 'agregado' && (
         <BsCheck2 aria-hidden="true" />
       )}
