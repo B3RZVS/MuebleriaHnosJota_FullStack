@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { formatoPrecio } from "../../utils/formatoPrecio";
-import { useCart } from "../context/useCart";
-import "../cart.css";
+import { useEffect } from 'react';
+import { formatoPrecio } from '../../utils/formatoPrecio';
+import { useCart } from '../context/useCart';
+import '../cart.css';
 
 interface CartModalProps {
   abierto: boolean;
@@ -24,11 +24,11 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
     if (!abierto) return;
 
     const cerrarConEscape = (evento: KeyboardEvent) => {
-      if (evento.key === "Escape") onCerrar();
+      if (evento.key === 'Escape') onCerrar();
     };
 
-    document.addEventListener("keydown", cerrarConEscape);
-    return () => document.removeEventListener("keydown", cerrarConEscape);
+    document.addEventListener('keydown', cerrarConEscape);
+    return () => document.removeEventListener('keydown', cerrarConEscape);
   }, [abierto, onCerrar]);
 
   if (!abierto) return null;
@@ -115,7 +115,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                             ? void quitar(item.productoId)
                             : void cambiarCantidad(
                                 item.productoId,
-                                item.cantidad - 1,
+                                item.cantidad - 1
                               )
                         }
                         type="button"
@@ -129,7 +129,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                         onClick={() =>
                           void cambiarCantidad(
                             item.productoId,
-                            item.cantidad + 1,
+                            item.cantidad + 1
                           )
                         }
                         type="button"

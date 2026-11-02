@@ -1,7 +1,7 @@
-import type { Producto } from "../types/producto";
-import { API_PRODUCTOS } from "../utils/urls";
+import type { Producto } from '../types/producto';
+import { API_PRODUCTOS } from '../utils/urls';
 
-type NuevoProducto = Omit<Producto, "id">;
+type NuevoProducto = Omit<Producto, 'id'>;
 
 // al editar, un campo opcional en null queda vacío
 export type CambiosProducto = {
@@ -9,45 +9,47 @@ export type CambiosProducto = {
 };
 
 const esProducto = (datos: unknown): datos is Producto =>
-  typeof datos === "object" &&
+  typeof datos === 'object' &&
   datos !== null &&
-  "id" in datos &&
-  typeof datos.id === "string" &&
-  "nombre" in datos &&
-  typeof datos.nombre === "string" &&
-  "precio" in datos &&
-  typeof datos.precio === "number";
+  'id' in datos &&
+  typeof datos.id === 'string' &&
+  'nombre' in datos &&
+  typeof datos.nombre === 'string' &&
+  'precio' in datos &&
+  typeof datos.precio === 'number';
 
 export const crearProducto = async (
-  nuevoProducto: NuevoProducto,
+  nuevoProducto: NuevoProducto
 ): Promise<Producto> => {
   const respuesta = await fetch(API_PRODUCTOS, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(nuevoProducto),
   });
   const datos: unknown = await respuesta.json();
 
   if (!respuesta.ok) {
     const mensaje =
-      typeof datos === "object" &&
+      typeof datos === 'object' &&
       datos !== null &&
-      "mensaje" in datos &&
-      typeof datos.mensaje === "string"
+      'mensaje' in datos &&
+      typeof datos.mensaje === 'string'
         ? datos.mensaje
         : `El servidor respondió ${respuesta.status}`;
     throw new Error(mensaje);
   }
 
   if (!esProducto(datos)) {
-    throw new Error("La respuesta no contiene un producto válido");
+    throw new Error('La respuesta no contiene un producto válido');
   }
 
   return datos;
 };
 
 // Si el producto no existe (404) devuelve null, para mostrar "no encontramos esta pieza"
-export const obtenerProductoId = async (id: string): Promise<Producto | null> => {
+export const obtenerProductoId = async (
+  id: string
+): Promise<Producto | null> => {
   const respuesta = await fetch(`${API_PRODUCTOS}/${id}`);
 
   if (respuesta.status === 404) {
@@ -76,13 +78,13 @@ export const obtenerProductos = async (): Promise<Producto[]> => {
 
   // Si la respuesta no es una lista, se trata como error para no dejar la página en blanco
   if (!Array.isArray(datos)) {
-    throw new Error("La respuesta no es una lista de productos");
+    throw new Error('La respuesta no es una lista de productos');
   }
   return datos as Producto[];
 };
 
 export const eliminarProducto = async (id: string): Promise<void> => {
-  const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, { method: "DELETE" });
+  const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, { method: 'DELETE' });
 
   if (!respuesta.ok) {
     throw new Error(`El servidor respondió ${respuesta.status}`);
@@ -91,11 +93,11 @@ export const eliminarProducto = async (id: string): Promise<void> => {
 
 export const actualizarProducto = async (
   id: string,
-  cambios: CambiosProducto,
+  cambios: CambiosProducto
 ): Promise<Producto> => {
   const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(cambios),
   });
   // si no llega JSON (ej: Render caído) queda en null y se muestra el status
@@ -103,17 +105,17 @@ export const actualizarProducto = async (
 
   if (!respuesta.ok) {
     const mensaje =
-      typeof datos === "object" &&
+      typeof datos === 'object' &&
       datos !== null &&
-      "mensaje" in datos &&
-      typeof datos.mensaje === "string"
+      'mensaje' in datos &&
+      typeof datos.mensaje === 'string'
         ? datos.mensaje
         : `El servidor respondió ${respuesta.status}`;
     throw new Error(mensaje);
   }
 
   if (!esProducto(datos)) {
-    throw new Error("La respuesta no contiene un producto válido");
+    throw new Error('La respuesta no contiene un producto válido');
   }
 
   return datos;

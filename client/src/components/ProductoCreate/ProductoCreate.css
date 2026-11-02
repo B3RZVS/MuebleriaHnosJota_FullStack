@@ -84,7 +84,7 @@
   box-shadow: 0 0 0 3px rgb(160 82 45 / 12%);
 }
 
-.producto-create__field [aria-invalid="true"] {
+.producto-create__field [aria-invalid='true'] {
   border-color: #a83232;
 }
 
