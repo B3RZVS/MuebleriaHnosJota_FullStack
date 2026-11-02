@@ -91,7 +91,12 @@ function ProductContent({ producto }: { producto: Producto }) {
   const [cantidad, setCantidad] = useState(1);
   const [confirmacion, setConfirmacion] = useState('');
   const [falloAlAgregar, setFalloAlAgregar] = useState(false);
-  const { agregar, productosAgregando, cargando: cargandoCarrito } = useCart();
+  const {
+    agregar,
+    productosAgregando,
+    cargando: cargandoCarrito,
+    error: errorCarrito,
+  } = useCart();
   const agregando = productosAgregando.includes(producto.id);
   const navigate = useNavigate();
   const eliminacion = useEliminarProducto();
@@ -194,10 +199,10 @@ function ProductContent({ producto }: { producto: Producto }) {
           {confirmacion && (
             <p className="purchase-feedback--success">{confirmacion}</p>
           )}
-          {/* Mensaje fijo: el error del carrito puede ser técnico o venir en inglés */}
           {falloAlAgregar && (
             <p className="purchase-feedback--error">
-              No pudimos agregar la pieza al carrito. Intentá de nuevo.
+              {errorCarrito ||
+                'No pudimos agregar la pieza al carrito. Intentá de nuevo.'}
             </p>
           )}
         </div>
