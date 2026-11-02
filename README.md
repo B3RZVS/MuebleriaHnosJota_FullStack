@@ -319,9 +319,10 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 ## Limitaciones conocidas y mejoras futuras
 
 - **Carrito no persistente ante reinicios**: la sesión se guarda en la memoria del servidor (store por defecto de `express-session`), por lo que se pierde cuando Render reinicia o duerme el servicio. Una mejora natural es usar un store externo (por ejemplo Redis).
-- **Administración parcial de productos**: el catálogo permite crear productos mediante la API, pero todavía no cuenta con endpoints para editarlos o eliminarlos.
+- **Administración sin login**: cualquiera puede crear, editar o eliminar productos. La autenticación llega en el sprint 7 y 8.
+- **El stock no se descuenta**: se muestra y limita el carrito, pero baja recién cuando existan los pedidos.
 - **Cookies de terceros**: al ser cross-site, algunos navegadores (por ejemplo Safari, o Chrome con bloqueo de cookies de terceros) pueden impedir que el carrito se mantenga. Servir frontend y API bajo un mismo dominio lo resolvería.
 - **Sin checkout ni pagos**: el carrito no llega a una instancia de compra.
-- **Sin tests automatizados.**
+- **Sin tests automatizados en el repo.**
 
 ---
