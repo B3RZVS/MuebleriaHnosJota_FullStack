@@ -1,0 +1,15 @@
+{
+  "name": "muebleria-hnos-jota",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "lint": "npm run lint --prefix backend && npm run lint --prefix client",
+    "format": "npm run format --prefix backend && npm run format --prefix client"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0"
+  }
+}
