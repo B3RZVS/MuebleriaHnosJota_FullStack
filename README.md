@@ -10,7 +10,7 @@ P4 - Ezequiel Monterichel (equiezel)
 | | URL |
 |---|---|
 | **Frontend** (Netlify) | https://quiet-douhua-d3c51b.netlify.app/ |
-| **API** (Render) | https://muebleria-hermanos-jota-ygmi.onrender.com |
+| **API** (Render) | https://muebleriahnosjota-back.onrender.com |
 
 > La API está en el plan gratuito de Render: si estuvo un rato sin uso, la primera petición puede tardar unos segundos mientras el servicio se "despierta".
 
@@ -284,10 +284,10 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 3. Agregar la variable de entorno:
 
    ```
-   VITE_API_URL=https://muebleria-hermanos-jota-ygmi.onrender.com
+   VITE_API_URL=https://muebleriahnosjota-back.onrender.com
    ```
 
-4. El archivo `client/public/_redirects` (`/* /index.html 200`) hace que recargar o entrar directo a rutas como `/productos/aparador-uspallata` funcione en lugar de dar 404.
+4. El archivo `client/public/_redirects` (`/* /index.html 200`) hace que recargar o entrar directo a rutas como `/productos/:id` funcione en lugar de dar 404.
 
 ### Orden recomendado
 
