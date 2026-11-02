@@ -180,7 +180,7 @@ Validaciones: `precio` no puede ser negativo, `stock` tiene que ser un entero ma
 
 ### Carrito
 
-El carrito pertenece a la sesión del visitante, por lo que las peticiones deben enviarse con cookies (`credentials: 'include'`). Todas las respuestas devuelven el carrito completo: `{ items, totalItems, total }`.
+El carrito pertenece a la sesión del visitante, por lo que las peticiones deben enviarse con cookies (`credentials: 'include'`). Todas las respuestas devuelven el carrito completo: `{ items, totalItems, total }`. Cada producto admite hasta 99 unidades y no puede pasar su stock (`400`). Si un producto se elimina del catálogo, sale solo del carrito.
 
 | Método | Ruta | Cuerpo | Descripción |
 |---|---|---|---|
@@ -194,11 +194,11 @@ El carrito pertenece a la sesión del visitante, por lo que las peticiones deben
 
 | Método | Ruta | Cuerpo | Descripción |
 |---|---|---|---|
-| `POST` | `/api/contacto` | `{ nombre, email, mensaje }` | Guarda la consulta en MongoDB y responde `202`. Nombre de al menos 3 caracteres, email válido y mensaje no vacío; si no, `400`. |
+| `POST` | `/api/contacto` | `{ nombre, email, mensaje }` | Guarda la consulta en MongoDB y responde `201`. Nombre de al menos 3 caracteres, email válido y mensaje no vacío; si no, `400`. |
 
 ### Formato de errores
 
-Los errores se devuelven como JSON: `{ "mensaje": "..." }`. En errores `5xx` el mensaje es genérico para no exponer detalles internos.
+Los errores se devuelven como JSON: `{ "mensaje": "..." }`. Los de validación de Mongoose responden `400` y una clave repetida `409`. En errores `5xx` el mensaje es genérico para no exponer detalles internos.
 
 ## Arquitectura y decisiones técnicas
 
