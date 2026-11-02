@@ -102,7 +102,7 @@ cd MuebleriaHnosJota_FullStack
 ```bash
 cd backend
 npm install
-Copy-Item .env.example .env
+cp .env.example .env      # en PowerShell: Copy-Item .env.example .env
 # Completar MONGODB_URI en .env antes de iniciar el servidor
 npm run seed:products     # carga el catálogo una vez, solo si la colección está vacía
 npm run dev               # con recarga automática (nodemon)
@@ -149,6 +149,8 @@ Abrí http://localhost:5173. Sin configuración adicional, el cliente apunta a `
 Si `CLIENT_ORIGIN` no está definida, se permiten `http://localhost:5173` y `http://127.0.0.1:5173`.
 
 ### Frontend (`client/.env`)
+
+Se copia desde `client/.env.example`.
 
 | Variable | Obligatoria | Descripción |
 |---|---|---|
