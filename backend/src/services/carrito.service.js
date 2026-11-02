@@ -25,7 +25,7 @@ const obtener = async (sesion) => {
         cantidad: item.cantidad,
         subtotal: producto.precio * item.cantidad,
       };
-    }),
+    })
   );
 
   return {
@@ -73,7 +73,7 @@ const eliminar = async (sesion, productoId) => {
 
   carritoRepository.guardarItems(
     sesion,
-    items.filter((item) => item.productoId !== productoId),
+    items.filter((item) => item.productoId !== productoId)
   );
   return obtener(sesion);
 };

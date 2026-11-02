@@ -19,7 +19,7 @@ app.use(
   cors({
     origin: clientOrigins,
     credentials: true,
-  }),
+  })
 );
 app.use(express.json());
 app.use(sessionMiddleware);
@@ -29,7 +29,6 @@ app.use('/api/productos', productosRoutes);
 app.use('/api/contacto', contactoRoutes);
 
 app.use('/api/carrito', carritoRoutes);
-
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

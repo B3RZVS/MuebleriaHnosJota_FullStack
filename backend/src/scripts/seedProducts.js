@@ -11,7 +11,7 @@ try {
 
   if (cantidadExistente > 0) {
     throw new Error(
-      `La colección ya contiene ${cantidadExistente} productos; no se modificaron datos.`,
+      `La colección ya contiene ${cantidadExistente} productos; no se modificaron datos.`
     );
   }
 

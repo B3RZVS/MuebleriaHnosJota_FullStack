@@ -26,9 +26,7 @@ const responderConCarrito = async (res, next, operacion) => {
 };
 
 const obtenerCarrito = (req, res, next) =>
-  responderConCarrito(res, next, () =>
-    carritoService.obtener(req.session),
-  );
+  responderConCarrito(res, next, () => carritoService.obtener(req.session));
 
 const agregarItem = (req, res, next) =>
   responderConCarrito(res, next, () => {
@@ -44,25 +42,19 @@ const actualizarCantidad = (req, res, next) =>
     const productoId = validarProductoId(req.params.productoId);
     const cantidad = validarCantidad(req.body?.cantidad);
 
-    return carritoService.actualizarCantidad(
-      req.session,
-      productoId,
-      cantidad,
-    );
+    return carritoService.actualizarCantidad(req.session, productoId, cantidad);
   });
 
 const eliminarItem = (req, res, next) =>
   responderConCarrito(res, next, () =>
     carritoService.eliminar(
       req.session,
-      validarProductoId(req.params.productoId),
-    ),
+      validarProductoId(req.params.productoId)
+    )
   );
 
 const vaciarCarrito = (req, res, next) =>
-  responderConCarrito(res, next, () =>
-    carritoService.vaciar(req.session),
-  );
+  responderConCarrito(res, next, () => carritoService.vaciar(req.session));
 
 export default {
   obtenerCarrito,

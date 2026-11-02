@@ -24,7 +24,7 @@ const consultaSchema = new mongoose.Schema(
   },
   {
     versionKey: false,
-  },
+  }
 );
 
 export default mongoose.model('Consulta', consultaSchema);
