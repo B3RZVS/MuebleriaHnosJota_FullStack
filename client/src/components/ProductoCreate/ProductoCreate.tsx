@@ -74,9 +74,9 @@ function ProductoCreate({
       siguientesErrores.precio =
         'El precio debe ser un número igual o mayor que cero.';
     }
-    if (valores.stock.trim() && (!Number.isFinite(stock) || stock < 0)) {
+    if (valores.stock.trim() && (!Number.isInteger(stock) || stock < 0)) {
       siguientesErrores.stock =
-        'El stock debe ser un número igual o mayor que cero.';
+        'El stock debe ser un número entero igual o mayor que cero.';
     }
 
     if (valores.especificaciones.trim()) {
@@ -238,7 +238,7 @@ function ProductoCreate({
               name="stock"
               type="number"
               min="0"
-              step="any"
+              step="1"
               value={valores.stock}
               onChange={(evento) =>
                 actualizarCampo('stock', evento.target.value)
