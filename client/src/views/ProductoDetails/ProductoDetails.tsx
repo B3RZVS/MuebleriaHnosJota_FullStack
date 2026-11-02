@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BsCartPlus } from 'react-icons/bs';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../../cart/context/useCart';
+import ImagenProducto from '../../components/ImagenProducto/ImagenProducto';
 import { useEliminarProducto } from '../../hooks/useEliminarProducto';
 import { useProductoApi } from '../../hooks/useProductoApi';
 import type { Producto } from '../../types/producto';
@@ -132,7 +133,7 @@ function ProductContent({ producto }: { producto: Producto }) {
   return (
     <article className="product-detail">
       <div className="product-gallery">
-        <img src={producto.imagenUrl} alt={producto.nombre} />
+        <ImagenProducto src={producto.imagenUrl} alt={producto.nombre} />
       </div>
 
       <div className="product-copy">

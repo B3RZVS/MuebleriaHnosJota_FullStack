@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import ImagenProducto from '../../components/ImagenProducto/ImagenProducto';
 import { formatoPrecio } from '../../utils/formatoPrecio';
 import { useCart } from '../context/useCart';
 import '../cart.css';
@@ -95,7 +96,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
             <ul className="lista-carrito">
               {carrito.items.map((item) => (
                 <li className="item-carrito" key={item.productoId}>
-                  <img
+                  <ImagenProducto
                     alt=""
                     className="item-carrito__imagen"
                     src={item.imagen}

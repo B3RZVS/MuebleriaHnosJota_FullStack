@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import ImagenProducto from '../../components/ImagenProducto/ImagenProducto';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import { useProductosApi } from '../../hooks/useProductosApi';
 import './HomeView.css';
@@ -68,7 +69,7 @@ function HomeView() {
           <figure className="home-hero__figura">
             <div className="home-hero__imagen">
               {productoHero ? (
-                <img
+                <ImagenProducto
                   src={productoHero.imagenUrl}
                   alt={productoHero.nombre}
                   width="1024"
