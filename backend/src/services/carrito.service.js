@@ -41,15 +41,15 @@ const obtener = async (sesion) => {
 };
 
 const agregar = async (sesion, productoId, cantidad) => {
-  await buscarProducto(productoId);
+  const producto = await buscarProducto(productoId);
 
   const items = carritoRepository.obtenerItems(sesion);
-  const itemExistente = items.find((item) => item.productoId === productoId);
+  const itemExistente = items.find((item) => item.productoId === producto.id);
 
   if (itemExistente) {
     itemExistente.cantidad += cantidad;
   } else {
-    items.push({ productoId, cantidad });
+    items.push({ productoId: producto.id, cantidad });
   }
 
   carritoRepository.guardarItems(sesion, items);
