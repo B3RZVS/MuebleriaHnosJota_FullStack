@@ -6,6 +6,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Aparador%20Uspallata.png',
     precio: 185000,
+    stock: 4,
     destacado: true,
     especificaciones: {
       medidas: '180 × 45 × 75 cm',
@@ -22,6 +23,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Biblioteca%20Recoleta.png',
     precio: 142000,
+    stock: 6,
     destacado: true,
     especificaciones: {
       medidas: '120 × 35 × 200 cm',
@@ -38,6 +40,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Sofá%20Patagonia.png',
     precio: 298000,
+    stock: 3,
     destacado: true,
     especificaciones: {
       medidas: '220 × 95 × 85 cm',
@@ -54,6 +57,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Mesa%20Comedor%20Pampa.png',
     precio: 215000,
+    stock: 5,
     destacado: true,
     especificaciones: {
       medidas: '160–220 × 90 × 76 cm',
@@ -70,6 +74,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Sillón%20Copacabana.png',
     precio: 168000,
+    stock: 8,
     destacado: false,
     especificaciones: {
       medidas: '75 × 80 × 90 cm',
@@ -86,6 +91,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Escritorio%20Costa.png',
     precio: 98000,
+    stock: 7,
     destacado: false,
     especificaciones: {
       medidas: '120 × 60 × 75 cm',
@@ -102,6 +108,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Mesa%20de%20Centro%20Araucaria.png',
     precio: 72000,
+    stock: 10,
     destacado: false,
     especificaciones: {
       medidas: '110 × 60 × 42 cm',
@@ -118,6 +125,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Mesa%20de%20Noche%20Aconcagua.png',
     precio: 54000,
+    stock: 12,
     destacado: false,
     especificaciones: {
       medidas: '45 × 40 × 55 cm (c/u)',
@@ -134,6 +142,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Butaca%20Mendoza.png',
     precio: 89000,
+    stock: 9,
     destacado: false,
     especificaciones: {
       medidas: '70 × 75 × 85 cm',
@@ -150,6 +159,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Silla%20de%20Trabajo%20Belgrano.png',
     precio: 76000,
+    stock: 15,
     destacado: false,
     especificaciones: {
       medidas: '48 × 52 × 82 cm',
@@ -166,6 +176,7 @@ const productos = [
     imagenUrl:
       'https://b3rzvs.github.io/imagenes_muebleria_hermanosJota/Sillas%20Córdoba.png',
     precio: 112000,
+    stock: 20,
     destacado: false,
     especificaciones: {
       medidas: '45 × 50 × 88 cm (c/u)',
