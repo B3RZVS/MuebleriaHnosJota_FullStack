@@ -34,21 +34,24 @@ async function solicitarCarrito(
   ruta: string,
   opciones: RequestInit = {}
 ): Promise<Carrito> {
-  const respuesta = await fetch(`${API_URL}/api/carrito${ruta}`, {
-    ...opciones,
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...opciones.headers,
-    },
-  });
-
+  let respuesta: Response;
   let datos: unknown;
 
   try {
+    respuesta = await fetch(`${API_URL}/api/carrito${ruta}`, {
+      ...opciones,
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        ...opciones.headers,
+      },
+    });
     datos = await respuesta.json();
   } catch {
-    throw new Error('El servidor respondió con datos que no son JSON.');
+    // sin conexión o sin JSON el error es técnico y en inglés
+    throw new Error(
+      'No pudimos conectar con el servidor. Intentá de nuevo en unos segundos.'
+    );
   }
 
   if (!respuesta.ok) {
