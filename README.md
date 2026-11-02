@@ -236,8 +236,10 @@ El backend separa responsabilidades en cuatro capas: **routes → controllers �
 
 - **Routes**: solo declaran qué ruta llama a qué controlador.
 - **Controllers**: validan la entrada (tipos, cantidades) y traducen el resultado a HTTP.
-- **Services**: contienen las reglas de negocio, como calcular subtotales y totales o verificar que el producto exista.
+- **Services**: contienen las reglas de negocio, como calcular subtotales y totales o verificar que el producto exista y tenga stock.
 - **Repositories**: son el único lugar que sabe de dónde salen los datos.
+
+Los errores llegan todos al mismo middleware, que traduce los de Mongoose a `400` o `409` y responde `{ mensaje }`.
 
 Los productos y las consultas de contacto se persisten en MongoDB mediante Mongoose. La carga inicial del catálogo se ejecuta con `npm run seed:products` y solo se permite cuando la colección está vacía.
 
@@ -260,7 +262,8 @@ Frontend (Netlify) y API (Render) están en dominios diferentes, así que la coo
 - La app **no arranca** en producción sin `SESSION_SECRET`.
 - La cookie es `httpOnly` y expira a las 24 horas.
 - Los errores 500 no revelan el mensaje original.
-- Las entradas del carrito y del formulario de contacto se validan en el servidor.
+- Las entradas de productos, carrito y formulario de contacto se validan en el servidor.
+- El alta y la edición de productos solo toman los campos del esquema, así no se puede elegir el `_id`.
 
 ### Frontend
 
