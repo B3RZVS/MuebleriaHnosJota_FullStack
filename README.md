@@ -28,7 +28,6 @@ P4 - Ezequiel Monterichel (equiezel)
 8. [API REST](#api-rest)
 9. [Arquitectura y decisiones técnicas](#arquitectura-y-decisiones-técnicas)
 10. [Despliegue](#despliegue)
-11. [Limitaciones conocidas y mejoras futuras](#limitaciones-conocidas-y-mejoras-futuras)
 
 ---
 
@@ -315,14 +314,3 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 1. Desplegar primero el backend y copiar su URL.
 2. Desplegar el frontend con esa URL en `VITE_API_URL`.
 3. Volver a Render y completar `CLIENT_ORIGIN` con la URL de Netlify.
-
-## Limitaciones conocidas y mejoras futuras
-
-- **Carrito no persistente ante reinicios**: la sesión se guarda en la memoria del servidor (store por defecto de `express-session`), por lo que se pierde cuando Render reinicia o duerme el servicio. Una mejora natural es usar un store externo (por ejemplo Redis).
-- **Administración sin login**: cualquiera puede crear, editar o eliminar productos. La autenticación llega en el sprint 7 y 8.
-- **El stock no se descuenta**: se muestra y limita el carrito, pero baja recién cuando existan los pedidos.
-- **Cookies de terceros**: al ser cross-site, algunos navegadores (por ejemplo Safari, o Chrome con bloqueo de cookies de terceros) pueden impedir que el carrito se mantenga. Servir frontend y API bajo un mismo dominio lo resolvería.
-- **Sin checkout ni pagos**: el carrito no llega a una instancia de compra.
-- **Sin tests automatizados en el repo.**
-
----
