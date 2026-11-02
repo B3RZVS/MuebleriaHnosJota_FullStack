@@ -53,6 +53,7 @@ Monorepo con dos aplicaciones independientes, cada una con su propio `package.js
 
 ```
 MuebleriaHnosJota_FullStack/
+├── package.json                  # Husky, lint-staged y commitlint
 ├── backend/
 │   ├── server.js                 # Punto de entrada: carga .env y levanta el servidor
 │   ├── .env.example              # Plantilla de variables de entorno
@@ -64,16 +65,16 @@ MuebleriaHnosJota_FullStack/
 │       ├── repositories/         # Acceso a datos (catálogo, carrito en sesión, consultas)
 │       ├── middlewares/          # logger, sesión, validación de contacto, 404 y errores
 │       ├── data/productos.js     # Datos iniciales para cargar el catálogo
-│       ├── models/               # Esquema Product de Mongoose
+│       ├── models/               # Esquemas Product y Consulta de Mongoose
 │       ├── config/database.js    # Conexión con MongoDB
 │       └── scripts/              # Carga inicial del catálogo
 └── client/
     ├── public/_redirects         # Fallback de la SPA para Netlify
     └── src/
-        ├── views/                # Pantallas: Home, Productos, ProductoDetails
-        ├── components/           # Navbar, Footer, ProductCard, ProductList, ContactForm
+        ├── views/                # Pantallas: Home, Productos, ProductoDetails, ProductoEdit, NotFound
+        ├── components/           # Navbar, Footer, ProductCard, ProductList, ProductoCreate, ImagenProducto, ContactForm
         ├── cart/                 # Contexto, componentes, API y tipos del carrito
-        ├── hooks/                # Hooks de React Query para productos
+        ├── hooks/                # Hooks de React Query para productos y avisos de navegación
         ├── services/             # Llamadas fetch a la API
         ├── types/                # Tipos de TypeScript
         └── utils/                # URL de la API y formato de precios
