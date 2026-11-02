@@ -1,6 +1,5 @@
 const productos = [
   {
-    id: 'aparador-uspallata',
     nombre: 'Aparador Uspallata',
     descripcion:
       'Aparador de seis puertas fabricado en nogal sostenible con tiradores metálicos en acabado latón. Su silueta minimalista realza el veteado natural de la madera, creando una pieza que combina funcionalidad y elegancia atemporal para espacios contemporáneos.',
@@ -17,7 +16,6 @@ const productos = [
     },
   },
   {
-    id: 'biblioteca-recoleta',
     nombre: 'Biblioteca Recoleta',
     descripcion:
       'Estantería modular de cinco niveles en algarrobo certificado FSC®, pensada para colecciones que crecen con el tiempo. Cada repisa respeta la curvatura natural de la madera, aportando calidez y orden a salas de lectura y estudios.',
@@ -34,7 +32,6 @@ const productos = [
     },
   },
   {
-    id: 'sofa-patagonia',
     nombre: 'Sofá Patagonia',
     descripcion:
       'Sofá de tres cuerpos con estructura en quebracho y tapizado en lino orgánico tejido localmente. Su profundidad generosa invita al descanso, mientras los acabados ecológicos garantizan una pieza que envejece con gracia en el corazón del hogar.',
@@ -51,7 +48,6 @@ const productos = [
     },
   },
   {
-    id: 'mesa-comedor-pampa',
     nombre: 'Mesa Comedor Pampa',
     descripcion:
       'Mesa extensible para seis comensales, elaborada en caldén de bosques responsables argentinos. Su tablero macizo celebra el veteado natural y se complementa con patas torneadas a mano en nuestro taller de San Cristóbal.',
@@ -68,7 +64,6 @@ const productos = [
     },
   },
   {
-    id: 'sillon-copacabana',
     nombre: 'Sillón Copacabana',
     descripcion:
       'Butaca de diseño retro con respaldo envolvente y base en madera curvada. Una reinterpretación nostálgica de los clásicos años 60, fabricada con materiales recuperados y acabados de bajo impacto ambiental.',
@@ -85,7 +80,6 @@ const productos = [
     },
   },
   {
-    id: 'escritorio-costa',
     nombre: 'Escritorio Costa',
     descripcion:
       'Escritorio compacto con cajón integrado y pasacables oculto. Ideal para espacios de trabajo en casa, combina la solidez del roble certificado con líneas limpias que favorecen la concentración y el orden.',
@@ -102,7 +96,6 @@ const productos = [
     },
   },
   {
-    id: 'mesa-centro-araucaria',
     nombre: 'Mesa de Centro Araucaria',
     descripcion:
       'Mesa baja de líneas suaves con doble nivel, perfecta para living contemporáneos. El nogal claro aporta luminosidad al espacio mientras la producción local reduce la huella de carbono de cada unidad.',
@@ -119,7 +112,6 @@ const productos = [
     },
   },
   {
-    id: 'mesa-noche-aconcagua',
     nombre: 'Mesa de Noche Aconcagua',
     descripcion:
       'Par de mesas de luz con cajón silencioso y repisa superior amplia. Diseñadas en pareja, reflejan la artesanía local con maderas nativas seleccionadas una a una en nuestro proceso de curado.',
@@ -136,7 +128,6 @@ const productos = [
     },
   },
   {
-    id: 'butaca-mendoza',
     nombre: 'Butaca Mendoza',
     descripcion:
       'Butaca tapizada con respaldo medio y patas cónicas en madera torneada. Una pieza versátil que acompaña rincones de lectura y dormitorios con la calidez de la artesanía argentina y fibras naturales.',
@@ -153,7 +144,6 @@ const productos = [
     },
   },
   {
-    id: 'silla-trabajo-belgrano',
     nombre: 'Silla de Trabajo Belgrano',
     descripcion:
       'Silla ergonómica de respaldo curvo y asiento acolchado en lino. Pensada para jornadas prolongadas frente al escritorio, une confort y sustentabilidad con una silueta que honra el diseño mid-century.',
@@ -170,7 +160,6 @@ const productos = [
     },
   },
   {
-    id: 'sillas-cordoba',
     nombre: 'Sillas Córdoba',
     descripcion:
       'Set de cuatro sillas apilables con respaldo de listones verticales. Livianas pero robustas, son el complemento ideal para la Mesa Comedor Pampa y representan la versatilidad de la madera nativa en espacios conviviales.',
