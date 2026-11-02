@@ -15,6 +15,7 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'El precio es obligatorio.'],
       min: [0, 'El precio no puede ser negativo.'],
+      max: [999999999, 'El precio es demasiado alto.'],
     },
     stock: {
       type: Number,
