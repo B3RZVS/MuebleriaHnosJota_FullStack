@@ -10,6 +10,7 @@ export const useEliminarProducto = () => {
       // el producto ya no existe, lo saco de la cache y el catálogo se vuelve a pedir :v
       queryClient.removeQueries({ queryKey: ['producto', id] });
       void queryClient.invalidateQueries({ queryKey: ['productos'] });
+      void queryClient.invalidateQueries({ queryKey: ['carrito'] });
     },
   });
 };
