@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   actualizarProducto,
-  type CambiosProducto,
+  type NuevoProducto,
 } from '../services/producto.api';
 
 type ActualizarVariables = {
   id: string;
-  cambios: CambiosProducto;
+  cambios: NuevoProducto;
 };
 
 export const useActualizarProducto = () => {
