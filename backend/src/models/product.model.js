@@ -20,6 +20,10 @@ const productSchema = new mongoose.Schema(
     stock: {
       type: Number,
       min: [0, 'El stock no puede ser negativo.'],
+      validate: {
+        validator: (valor) => valor == null || Number.isInteger(valor),
+        message: 'El stock debe ser un número entero.',
+      },
     },
     imagenUrl: {
       type: String,
