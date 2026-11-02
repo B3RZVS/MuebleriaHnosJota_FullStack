@@ -79,6 +79,14 @@ function ProductoCreate({
         'El stock debe ser un número entero igual o mayor que cero.';
     }
 
+    if (
+      valores.imagenUrl.trim() &&
+      !/^https?:\/\/\S+$/.test(valores.imagenUrl.trim())
+    ) {
+      siguientesErrores.imagenUrl =
+        'La imagen debe ser una URL que empiece con http o https.';
+    }
+
     if (valores.especificaciones.trim()) {
       try {
         const datos: unknown = JSON.parse(valores.especificaciones);
@@ -269,7 +277,16 @@ function ProductoCreate({
             onChange={(evento) =>
               actualizarCampo('imagenUrl', evento.target.value)
             }
+            aria-invalid={Boolean(errores.imagenUrl)}
+            aria-describedby={
+              errores.imagenUrl ? 'producto-imagen-error' : undefined
+            }
           />
+          {errores.imagenUrl && (
+            <span className="producto-create__error" id="producto-imagen-error">
+              {errores.imagenUrl}
+            </span>
+          )}
         </div>
 
         <div className="producto-create__field">
