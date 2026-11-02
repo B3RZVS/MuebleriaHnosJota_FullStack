@@ -1,12 +1,7 @@
 import type { Producto } from '../types/producto';
 import { API_PRODUCTOS } from '../utils/urls';
 
-type NuevoProducto = Omit<Producto, 'id'>;
-
-// al editar, un campo opcional en null queda vacío
-export type CambiosProducto = {
-  [Campo in keyof NuevoProducto]?: NuevoProducto[Campo] | null;
-};
+export type NuevoProducto = Omit<Producto, 'id'>;
 
 const esProducto = (datos: unknown): datos is Producto =>
   typeof datos === 'object' &&
@@ -93,7 +88,7 @@ export const eliminarProducto = async (id: string): Promise<void> => {
 
 export const actualizarProducto = async (
   id: string,
-  cambios: CambiosProducto
+  cambios: NuevoProducto
 ): Promise<Producto> => {
   const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, {
     method: 'PUT',

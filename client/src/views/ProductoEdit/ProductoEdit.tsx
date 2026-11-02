@@ -29,17 +29,7 @@ export const ProductoEdit = () => {
   const actualizacion = useActualizarProducto();
 
   const guardar = async (datos: Omit<Producto, 'id'>) => {
-    // si se vació un campo opcional va en null, si no el PUT deja el valor viejo :v
-    await actualizacion.mutateAsync({
-      id,
-      cambios: {
-        descripcion: null,
-        stock: null,
-        imagenUrl: null,
-        especificaciones: null,
-        ...datos,
-      },
-    });
+    await actualizacion.mutateAsync({ id, cambios: datos });
     navigate(`/productos/${id}`, { state: { productoEditado: true } });
   };
 

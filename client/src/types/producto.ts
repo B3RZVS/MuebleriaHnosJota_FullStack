@@ -2,10 +2,10 @@
 export type Producto = {
   id: string;
   nombre: string;
-  descripcion?: string;
-  imagenUrl?: string;
+  descripcion?: string | null;
+  imagenUrl?: string | null;
   precio: number;
-  stock?: number;
-  destacado?: boolean;
-  especificaciones?: Record<string, string>;
+  stock?: number | null;
+  destacado?: boolean | null;
+  especificaciones?: Record<string, string> | null;
 };
