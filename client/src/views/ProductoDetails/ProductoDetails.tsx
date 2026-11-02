@@ -95,6 +95,7 @@ function ProductContent({ producto }: { producto: Producto }) {
   const agregando = productosAgregando.includes(producto.id);
   const navigate = useNavigate();
   const eliminacion = useEliminarProducto();
+  const especificaciones = Object.entries(producto.especificaciones ?? {});
 
   const eliminarProducto = () => {
     // confirmación antes de borrar, no se puede deshacer :D
@@ -139,7 +140,9 @@ function ProductContent({ producto }: { producto: Producto }) {
       <div className="product-copy">
         <p className="product-eyebrow">Selección de la casa</p>
         <h1>{producto.nombre}</h1>
-        <p className="product-description">{producto.descripcion}</p>
+        {producto.descripcion && (
+          <p className="product-description">{producto.descripcion}</p>
+        )}
         <p className="product-price">{formatoPrecio.format(producto.precio)}</p>
 
         <div className="purchase-row">
@@ -218,19 +221,19 @@ function ProductContent({ producto }: { producto: Producto }) {
         </div>
       </div>
 
-      <section className="specs" aria-labelledby="specs-title">
-        <h2 id="specs-title">Detalles de la pieza</h2>
-        <dl className="spec-list">
-          {Object.entries(producto.especificaciones ?? {}).map(
-            ([nombre, valor]) => (
+      {especificaciones.length > 0 && (
+        <section className="specs" aria-labelledby="specs-title">
+          <h2 id="specs-title">Detalles de la pieza</h2>
+          <dl className="spec-list">
+            {especificaciones.map(([nombre, valor]) => (
               <div className="spec-list__item" key={nombre}>
                 <dt>{etiquetasEspecificaciones[nombre] ?? nombre}</dt>
                 <dd>{valor}</dd>
               </div>
-            )
-          )}
-        </dl>
-      </section>
+            ))}
+          </dl>
+        </section>
+      )}
     </article>
   );
 }
