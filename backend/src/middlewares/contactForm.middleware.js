@@ -11,12 +11,9 @@ const contactFormMiddleware = (req, res, next) => {
     typeof mensaje !== 'string' ||
     !mensaje.trim()
   ) {
-    return res
-      .status(400)
-      .json({
-        mensaje:
-          'Completá nombre (mínimo 3 caracteres), email válido y mensaje.',
-      });
+    return res.status(400).json({
+      mensaje: 'Completá nombre (mínimo 3 caracteres), email válido y mensaje.',
+    });
   }
 
   req.body = {
