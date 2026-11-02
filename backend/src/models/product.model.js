@@ -1,5 +1,14 @@
 import mongoose from 'mongoose';
 
+// medidas, materiales, etc: un objeto donde todos los valores son texto
+const sonEspecificaciones = (valor) =>
+  valor == null ||
+  (typeof valor === 'object' &&
+    !Array.isArray(valor) &&
+    Object.entries(valor).every(
+      ([clave, texto]) => !clave.startsWith('$') && typeof texto === 'string'
+    ));
+
 const productSchema = new mongoose.Schema(
   {
     nombre: {
@@ -38,6 +47,11 @@ const productSchema = new mongoose.Schema(
     },
     especificaciones: {
       type: mongoose.Schema.Types.Mixed,
+      validate: {
+        validator: sonEspecificaciones,
+        message:
+          'Las especificaciones deben ser un objeto con valores de texto.',
+      },
     },
   },
   {
