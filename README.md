@@ -23,11 +23,12 @@ P4 - Ezequiel Monterichel (equiezel)
 3. [Estructura del proyecto](#estructura-del-proyecto)
 4. [Requisitos](#requisitos)
 5. [Instalación y ejecución local](#instalación-y-ejecución-local)
-6. [Variables de entorno](#variables-de-entorno)
-7. [API REST](#api-rest)
-8. [Arquitectura y decisiones técnicas](#arquitectura-y-decisiones-técnicas)
-9. [Despliegue](#despliegue)
-10. [Limitaciones conocidas y mejoras futuras](#limitaciones-conocidas-y-mejoras-futuras)
+6. [Calidad de código](#calidad-de-código)
+7. [Variables de entorno](#variables-de-entorno)
+8. [API REST](#api-rest)
+9. [Arquitectura y decisiones técnicas](#arquitectura-y-decisiones-técnicas)
+10. [Despliegue](#despliegue)
+11. [Limitaciones conocidas y mejoras futuras](#limitaciones-conocidas-y-mejoras-futuras)
 
 ---
 
@@ -133,6 +134,18 @@ Abrí http://localhost:5173. Sin configuración adicional, el cliente apunta a `
 | `npm run build` | Chequea tipos (`tsc -b`) y genera el build de producción en `client/dist` |
 | `npm run preview` | Sirve localmente el build generado |
 | `npm run lint` | Ejecuta ESLint |
+
+## Calidad de código
+
+Desde la raíz del repositorio:
+
+```bash
+npm install       # activa los hooks de git
+npm run lint      # ESLint en backend y client
+npm run format    # Prettier en backend y client
+```
+
+Cada commit pasa por Husky: lint-staged corre ESLint y Prettier sobre los archivos preparados, y commitlint controla que el mensaje siga Conventional Commits (por ejemplo `fix: corrige el total del carrito`).
 
 ## Variables de entorno
 
