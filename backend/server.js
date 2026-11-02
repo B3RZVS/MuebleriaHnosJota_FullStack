@@ -15,5 +15,5 @@ try {
     'No se pudo iniciar el servidor por un error de conexión con MongoDB:',
     error
   );
-  process.exitCode = 1;
+  process.exit(1);
 }
