@@ -140,6 +140,7 @@ Abrí http://localhost:5173. Sin configuración adicional, el cliente apunta a `
 | `npm run build` | Chequea tipos (`tsc -b`) y genera el build de producción en `client/dist` |
 | `npm run preview` | Sirve localmente el build generado |
 | `npm run lint` | Ejecuta ESLint |
+| `npm run format` | Ordena el código con Prettier |
 
 ## Calidad de código
 
