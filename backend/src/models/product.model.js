@@ -28,6 +28,10 @@ const productSchema = new mongoose.Schema(
     imagenUrl: {
       type: String,
       trim: true,
+      match: [
+        /^https?:\/\/\S+$/,
+        'La imagen debe ser una URL que empiece con http o https.',
+      ],
     },
     destacado: {
       type: Boolean,
