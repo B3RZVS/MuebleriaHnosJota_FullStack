@@ -169,10 +169,14 @@ Base URL: `http://localhost:3000` (local) o la URL de Render (producción).
 | `GET` | `/api/productos` | Lista todos los productos |
 | `GET` | `/api/productos/:id` | Detalle de un producto (`400` si el id no es válido, `404` si no existe) |
 | `POST` | `/api/productos` | Crea y persiste un producto (`201`); requiere `nombre` y `precio`, y devuelve `400` ante errores de validación |
+| `PUT` | `/api/productos/:id` | Reemplaza el producto completo (`200`); `400` si el id o los datos no son válidos, `404` si no existe |
+| `DELETE` | `/api/productos/:id` | Elimina el producto y lo devuelve (`200`); `400` si el id no es válido, `404` si no existe |
 
-Los productos devuelven un `id` de MongoDB como texto y los campos `nombre`, `descripcion`, `precio`, `stock` e `imagenUrl`. `destacado` y `especificaciones` son opcionales para mantener la interfaz actual.
+Los productos devuelven un `id` de MongoDB como texto y los campos `nombre`, `descripcion`, `precio`, `stock` e `imagenUrl`. `destacado` y `especificaciones` son opcionales para mantener la interfaz actual. Los productos nuevos también traen `createdAt` y `updatedAt`.
 
-El cuerpo de `POST /api/productos` es un objeto JSON con `nombre` y `precio` obligatorios. También admite los campos opcionales `descripcion`, `stock`, `imagenUrl`, `destacado` y `especificaciones`.
+El cuerpo de `POST` y `PUT` es un objeto JSON con `nombre` y `precio` obligatorios. También admite los campos opcionales `descripcion`, `stock`, `imagenUrl`, `destacado` y `especificaciones`; cualquier otro campo se ignora. En el `PUT`, el opcional que no se envía queda vacío.
+
+Validaciones: `precio` no puede ser negativo, `stock` tiene que ser un entero mayor o igual a cero, `imagenUrl` una URL que empiece con `http` o `https`, y `especificaciones` un objeto con valores de texto.
 
 ### Carrito
 
