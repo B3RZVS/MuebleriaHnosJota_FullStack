@@ -1,31 +1,32 @@
-import { useEffect, useState } from "react";
-import { BsCartPlus } from "react-icons/bs";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useCart } from "../../cart/context/useCart";
-import { useEliminarProducto } from "../../hooks/useEliminarProducto";
-import { useProductoApi } from "../../hooks/useProductoApi";
-import type { Producto } from "../../types/producto";
-import { formatoPrecio } from "../../utils/formatoPrecio";
-import "./ProductoDetails.css";
+import { useEffect, useState } from 'react';
+import { BsCartPlus } from 'react-icons/bs';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useCart } from '../../cart/context/useCart';
+import ImagenProducto from '../../components/ImagenProducto/ImagenProducto';
+import { useEliminarProducto } from '../../hooks/useEliminarProducto';
+import { useEstadoNavegacion } from '../../hooks/useEstadoNavegacion';
+import { useProductoApi } from '../../hooks/useProductoApi';
+import type { Producto } from '../../types/producto';
+import { formatoPrecio } from '../../utils/formatoPrecio';
+import './ProductoDetails.css';
 
 const etiquetasEspecificaciones: Record<string, string> = {
-  medidas: "Medidas",
-  materiales: "Materiales",
-  acabado: "Acabado",
-  peso: "Peso",
-  capacidad: "Capacidad",
+  medidas: 'Medidas',
+  materiales: 'Materiales',
+  acabado: 'Acabado',
+  peso: 'Peso',
+  capacidad: 'Capacidad',
 };
 
 export const ProductoDetails = () => {
   const { id } = useParams();
-  const location = useLocation();
-  const estado = location.state as {
+  const estado = useEstadoNavegacion<{
     productoCreado?: boolean;
     productoEditado?: boolean;
-  } | null;
+  }>();
   const productoCreado = estado?.productoCreado === true;
   const productoEditado = estado?.productoEditado === true;
-  const { data: producto, isLoading, error } = useProductoApi(id ?? "");
+  const { data: producto, isLoading, error } = useProductoApi(id ?? '');
 
   // React Router no vuelve arriba al cambiar de página; depende de id por si se pasa de una pieza a otra
   useEffect(() => {
@@ -72,45 +73,58 @@ export const ProductoDetails = () => {
         <section className="product-error" role="alert">
           <p className="product-eyebrow">Pieza no encontrada</p>
           <h1>No encontramos esta pieza</h1>
-          <p>Puede que el enlace esté mal escrito o que ya no esté en el catálogo.</p>
+          <p>
+            Puede que el enlace esté mal escrito o que ya no esté en el
+            catálogo.
+          </p>
         </section>
       )}
 
-      {!isLoading && !error && producto && <ProductContent producto={producto} />}
+      {!isLoading && !error && producto && (
+        <ProductContent producto={producto} />
+      )}
     </div>
   );
 };
 
 function ProductContent({ producto }: { producto: Producto }) {
   const [cantidad, setCantidad] = useState(1);
-  const [confirmacion, setConfirmacion] = useState("");
+  const [confirmacion, setConfirmacion] = useState('');
   const [falloAlAgregar, setFalloAlAgregar] = useState(false);
-  const { agregar, productosAgregando, cargando: cargandoCarrito } = useCart();
+  const {
+    agregar,
+    productosAgregando,
+    cargando: cargandoCarrito,
+    error: errorCarrito,
+  } = useCart();
   const agregando = productosAgregando.includes(producto.id);
   const navigate = useNavigate();
   const eliminacion = useEliminarProducto();
+  const especificaciones = Object.entries(producto.especificaciones ?? {});
+  const sinStock = producto.stock === 0;
+  const cantidadMaxima = Math.min(99, producto.stock ?? 99);
 
   const eliminarProducto = () => {
     // confirmación antes de borrar, no se puede deshacer :D
     const confirmado = window.confirm(
-      `¿Querés eliminar "${producto.nombre}"? No se puede deshacer.`,
+      `¿Querés eliminar "${producto.nombre}"? No se puede deshacer.`
     );
     if (!confirmado) return;
 
     eliminacion.mutate(producto.id, {
       onSuccess: () =>
-        navigate("/productos", { state: { productoEliminado: true } }),
+        navigate('/productos', { state: { productoEliminado: true } }),
     });
   };
 
   const cambiarCantidad = (nuevaCantidad: number) => {
-    setCantidad(Math.min(99, Math.max(1, nuevaCantidad)));
-    setConfirmacion("");
+    setCantidad(Math.min(cantidadMaxima, Math.max(1, nuevaCantidad)));
+    setConfirmacion('');
     setFalloAlAgregar(false);
   };
 
   const agregarAlCarrito = async () => {
-    setConfirmacion("");
+    setConfirmacion('');
     setFalloAlAgregar(false);
     const agregado = await agregar(producto.id, cantidad);
     setFalloAlAgregar(!agregado);
@@ -118,8 +132,8 @@ function ProductContent({ producto }: { producto: Producto }) {
     if (agregado) {
       setConfirmacion(
         cantidad === 1
-          ? "Producto agregado al carrito."
-          : `${cantidad} unidades agregadas al carrito.`,
+          ? 'Producto agregado al carrito.'
+          : `${cantidad} unidades agregadas al carrito.`
       );
     }
   };
@@ -127,14 +141,22 @@ function ProductContent({ producto }: { producto: Producto }) {
   return (
     <article className="product-detail">
       <div className="product-gallery">
-        <img src={producto.imagenUrl} alt={producto.nombre} />
+        <ImagenProducto src={producto.imagenUrl} alt={producto.nombre} />
       </div>
 
       <div className="product-copy">
         <p className="product-eyebrow">Selección de la casa</p>
         <h1>{producto.nombre}</h1>
-        <p className="product-description">{producto.descripcion}</p>
+        {producto.descripcion && (
+          <p className="product-description">{producto.descripcion}</p>
+        )}
         <p className="product-price">{formatoPrecio.format(producto.precio)}</p>
+
+        {producto.stock != null && (
+          <p className="product-stock">
+            {sinStock ? 'Sin stock por ahora' : `Stock: ${producto.stock}`}
+          </p>
+        )}
 
         <div className="purchase-row">
           <div className="quantity-control" aria-label="Cantidad">
@@ -154,7 +176,7 @@ function ProductContent({ producto }: { producto: Producto }) {
               className="quantity-control__button"
               type="button"
               aria-label="Agregar una unidad"
-              disabled={cantidad === 99 || agregando}
+              disabled={cantidad >= cantidadMaxima || agregando}
               onClick={() => cambiarCantidad(cantidad + 1)}
             >
               +
@@ -164,11 +186,12 @@ function ProductContent({ producto }: { producto: Producto }) {
           <button
             className="add-button"
             type="button"
-            disabled={agregando || cargandoCarrito}
+            disabled={sinStock || agregando || cargandoCarrito}
             onClick={() => void agregarAlCarrito()}
           >
-            {!agregando && <BsCartPlus aria-hidden="true" />}
-            {agregando ? "Agregando…" : "Agregar al carrito"}
+            {!sinStock && !agregando && <BsCartPlus aria-hidden="true" />}
+            {sinStock && 'Sin stock'}
+            {!sinStock && (agregando ? 'Agregando…' : 'Agregar al carrito')}
           </button>
         </div>
 
@@ -176,10 +199,10 @@ function ProductContent({ producto }: { producto: Producto }) {
           {confirmacion && (
             <p className="purchase-feedback--success">{confirmacion}</p>
           )}
-          {/* Mensaje fijo: el error del carrito puede ser técnico o venir en inglés */}
           {falloAlAgregar && (
             <p className="purchase-feedback--error">
-              No pudimos agregar la pieza al carrito. Intentá de nuevo.
+              {errorCarrito ||
+                'No pudimos agregar la pieza al carrito. Intentá de nuevo.'}
             </p>
           )}
         </div>
@@ -202,7 +225,7 @@ function ProductContent({ producto }: { producto: Producto }) {
             disabled={eliminacion.isPending}
             onClick={eliminarProducto}
           >
-            {eliminacion.isPending ? "Eliminando…" : "Eliminar producto"}
+            {eliminacion.isPending ? 'Eliminando…' : 'Eliminar producto'}
           </button>
           {eliminacion.isError && (
             <p className="product-admin__error" role="alert">
@@ -212,17 +235,19 @@ function ProductContent({ producto }: { producto: Producto }) {
         </div>
       </div>
 
-      <section className="specs" aria-labelledby="specs-title">
-        <h2 id="specs-title">Detalles de la pieza</h2>
-        <dl className="spec-list">
-          {Object.entries(producto.especificaciones ?? {}).map(([nombre, valor]) => (
-            <div className="spec-list__item" key={nombre}>
-              <dt>{etiquetasEspecificaciones[nombre] ?? nombre}</dt>
-              <dd>{valor}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+      {especificaciones.length > 0 && (
+        <section className="specs" aria-labelledby="specs-title">
+          <h2 id="specs-title">Detalles de la pieza</h2>
+          <dl className="spec-list">
+            {especificaciones.map(([nombre, valor]) => (
+              <div className="spec-list__item" key={nombre}>
+                <dt>{etiquetasEspecificaciones[nombre] ?? nombre}</dt>
+                <dd>{valor}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
     </article>
   );
 }

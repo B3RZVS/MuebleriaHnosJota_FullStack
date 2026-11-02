@@ -60,7 +60,9 @@
   list-style: none;
 }
 
-.site-footer__bloque li + li { margin-top: 0.4rem; }
+.site-footer__bloque li + li {
+  margin-top: 0.4rem;
+}
 
 .site-footer__bloque a {
   color: inherit;
@@ -85,10 +87,14 @@
   font-size: 0.75rem;
 }
 
-.site-footer__creditos p { margin: 0; }
+.site-footer__creditos p {
+  margin: 0;
+}
 
 @media (max-width: 800px) {
-  .site-footer__inner { grid-template-columns: repeat(2, 1fr); }
+  .site-footer__inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 520px) {

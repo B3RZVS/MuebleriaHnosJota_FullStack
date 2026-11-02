@@ -17,14 +17,11 @@ const consultaSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    fecha: {
-      type: Date,
-      default: Date.now,
-    },
   },
   {
     versionKey: false,
-  },
+    timestamps: true,
+  }
 );
 
 export default mongoose.model('Consulta', consultaSchema);

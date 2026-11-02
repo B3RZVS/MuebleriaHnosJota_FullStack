@@ -1,8 +1,8 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { crearProducto } from "../../services/producto.api";
-import type { Producto } from "../../types/producto";
-import "./ProductoCreate.css";
+import { useEffect, useState, type FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { crearProducto } from '../../services/producto.api';
+import type { Producto } from '../../types/producto';
+import './ProductoCreate.css';
 
 export type ValoresFormulario = {
   nombre: string;
@@ -18,13 +18,13 @@ type CampoFormulario = keyof ValoresFormulario;
 type ErroresFormulario = Partial<Record<CampoFormulario, string>>;
 
 const valoresVacios: ValoresFormulario = {
-  nombre: "",
-  descripcion: "",
-  precio: "",
-  stock: "",
-  imagenUrl: "",
+  nombre: '',
+  descripcion: '',
+  precio: '',
+  stock: '',
+  imagenUrl: '',
   destacado: false,
-  especificaciones: "",
+  especificaciones: '',
 };
 
 // con estas props el mismo form sirve para editar :D
@@ -32,19 +32,19 @@ type ProductoCreateProps = {
   valoresIniciales?: ValoresFormulario;
   titulo?: string;
   textoBoton?: string;
-  onGuardar?: (producto: Omit<Producto, "id">) => Promise<void>;
+  onGuardar?: (producto: Omit<Producto, 'id'>) => Promise<void>;
 };
 
 function ProductoCreate({
   valoresIniciales = valoresVacios,
-  titulo = "Agregar un producto",
-  textoBoton = "Crear producto",
+  titulo = 'Agregar un producto',
+  textoBoton = 'Crear producto',
   onGuardar,
 }: ProductoCreateProps) {
   const navigate = useNavigate();
   const [valores, setValores] = useState(valoresIniciales);
   const [errores, setErrores] = useState<ErroresFormulario>({});
-  const [errorEnvio, setErrorEnvio] = useState("");
+  const [errorEnvio, setErrorEnvio] = useState('');
   const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
@@ -53,11 +53,11 @@ function ProductoCreate({
 
   const actualizarCampo = <Campo extends CampoFormulario>(
     campo: Campo,
-    valor: ValoresFormulario[Campo],
+    valor: ValoresFormulario[Campo]
   ) => {
     setValores((actuales) => ({ ...actuales, [campo]: valor }));
     setErrores((actuales) => ({ ...actuales, [campo]: undefined }));
-    setErrorEnvio("");
+    setErrorEnvio('');
   };
 
   const validar = () => {
@@ -67,36 +67,43 @@ function ProductoCreate({
     const precio = Number(valores.precio);
     const stock = Number(valores.stock);
 
-    if (!nombre) siguientesErrores.nombre = "Ingresá el nombre del producto.";
+    if (!nombre) siguientesErrores.nombre = 'Ingresá el nombre del producto.';
     if (!valores.precio.trim()) {
-      siguientesErrores.precio = "Ingresá el precio.";
+      siguientesErrores.precio = 'Ingresá el precio.';
     } else if (!Number.isFinite(precio) || precio < 0) {
-      siguientesErrores.precio = "El precio debe ser un número igual o mayor que cero.";
+      siguientesErrores.precio =
+        'El precio debe ser un número igual o mayor que cero.';
     }
+    if (valores.stock.trim() && (!Number.isInteger(stock) || stock < 0)) {
+      siguientesErrores.stock =
+        'El stock debe ser un número entero igual o mayor que cero.';
+    }
+
     if (
-      valores.stock.trim() &&
-      (!Number.isFinite(stock) || stock < 0)
+      valores.imagenUrl.trim() &&
+      !/^https?:\/\/\S+$/.test(valores.imagenUrl.trim())
     ) {
-      siguientesErrores.stock = "El stock debe ser un número igual o mayor que cero.";
+      siguientesErrores.imagenUrl =
+        'La imagen debe ser una URL que empiece con http o https.';
     }
 
     if (valores.especificaciones.trim()) {
       try {
         const datos: unknown = JSON.parse(valores.especificaciones);
         if (
-          typeof datos !== "object" ||
+          typeof datos !== 'object' ||
           datos === null ||
           Array.isArray(datos) ||
-          Object.values(datos).some((valor) => typeof valor !== "string")
+          Object.values(datos).some((valor) => typeof valor !== 'string')
         ) {
           siguientesErrores.especificaciones =
-            "Las especificaciones deben ser un objeto JSON con valores de texto.";
+            'Las especificaciones deben ser un objeto JSON con valores de texto.';
         } else {
           especificaciones = datos as Record<string, string>;
         }
       } catch {
         siguientesErrores.especificaciones =
-          "Ingresá un objeto JSON válido para las especificaciones.";
+          'Ingresá un objeto JSON válido para las especificaciones.';
       }
     }
 
@@ -105,13 +112,13 @@ function ProductoCreate({
 
   const enviarFormulario = async (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault();
-    setErrorEnvio("");
+    setErrorEnvio('');
 
     const { errores: siguientesErrores, especificaciones } = validar();
     setErrores(siguientesErrores);
     if (Object.keys(siguientesErrores).length > 0) return;
 
-    const nuevoProducto: Omit<Producto, "id"> = {
+    const nuevoProducto: Omit<Producto, 'id'> = {
       nombre: valores.nombre.trim(),
       precio: Number(valores.precio),
       destacado: valores.destacado,
@@ -139,7 +146,7 @@ function ProductoCreate({
       setErrorEnvio(
         error instanceof Error
           ? error.message
-          : "No pudimos guardar el producto. Intentá nuevamente.",
+          : 'No pudimos guardar el producto. Intentá nuevamente.'
       );
     } finally {
       setEnviando(false);
@@ -147,28 +154,40 @@ function ProductoCreate({
   };
 
   return (
-    <section className="producto-create" aria-labelledby="producto-create-title">
+    <section
+      className="producto-create"
+      aria-labelledby="producto-create-title"
+    >
       <div className="producto-create__intro">
         <p className="producto-create__eyebrow">Administración del catálogo</p>
         <h1 id="producto-create-title">{titulo}</h1>
         <p>
-          Completá los datos de la pieza. El nombre y el precio son obligatorios.
+          Completá los datos de la pieza. El nombre y el precio son
+          obligatorios.
         </p>
         <Link className="producto-create__back" to="/productos">
           ← Volver al catálogo
         </Link>
       </div>
 
-      <form className="producto-create__form" onSubmit={enviarFormulario} noValidate>
+      <form
+        className="producto-create__form"
+        onSubmit={enviarFormulario}
+        noValidate
+      >
         <div className="producto-create__field">
           <label htmlFor="producto-nombre">Nombre *</label>
           <input
             id="producto-nombre"
             name="nombre"
             value={valores.nombre}
-            onChange={(evento) => actualizarCampo("nombre", evento.target.value)}
+            onChange={(evento) =>
+              actualizarCampo('nombre', evento.target.value)
+            }
             aria-invalid={Boolean(errores.nombre)}
-            aria-describedby={errores.nombre ? "producto-nombre-error" : undefined}
+            aria-describedby={
+              errores.nombre ? 'producto-nombre-error' : undefined
+            }
             required
           />
           {errores.nombre && (
@@ -186,7 +205,7 @@ function ProductoCreate({
             rows={4}
             value={valores.descripcion}
             onChange={(evento) =>
-              actualizarCampo("descripcion", evento.target.value)
+              actualizarCampo('descripcion', evento.target.value)
             }
           />
         </div>
@@ -201,13 +220,20 @@ function ProductoCreate({
               min="0"
               step="any"
               value={valores.precio}
-              onChange={(evento) => actualizarCampo("precio", evento.target.value)}
+              onChange={(evento) =>
+                actualizarCampo('precio', evento.target.value)
+              }
               aria-invalid={Boolean(errores.precio)}
-              aria-describedby={errores.precio ? "producto-precio-error" : undefined}
+              aria-describedby={
+                errores.precio ? 'producto-precio-error' : undefined
+              }
               required
             />
             {errores.precio && (
-              <span className="producto-create__error" id="producto-precio-error">
+              <span
+                className="producto-create__error"
+                id="producto-precio-error"
+              >
                 {errores.precio}
               </span>
             )}
@@ -220,14 +246,21 @@ function ProductoCreate({
               name="stock"
               type="number"
               min="0"
-              step="any"
+              step="1"
               value={valores.stock}
-              onChange={(evento) => actualizarCampo("stock", evento.target.value)}
+              onChange={(evento) =>
+                actualizarCampo('stock', evento.target.value)
+              }
               aria-invalid={Boolean(errores.stock)}
-              aria-describedby={errores.stock ? "producto-stock-error" : undefined}
+              aria-describedby={
+                errores.stock ? 'producto-stock-error' : undefined
+              }
             />
             {errores.stock && (
-              <span className="producto-create__error" id="producto-stock-error">
+              <span
+                className="producto-create__error"
+                id="producto-stock-error"
+              >
                 {errores.stock}
               </span>
             )}
@@ -241,12 +274,25 @@ function ProductoCreate({
             name="imagenUrl"
             type="url"
             value={valores.imagenUrl}
-            onChange={(evento) => actualizarCampo("imagenUrl", evento.target.value)}
+            onChange={(evento) =>
+              actualizarCampo('imagenUrl', evento.target.value)
+            }
+            aria-invalid={Boolean(errores.imagenUrl)}
+            aria-describedby={
+              errores.imagenUrl ? 'producto-imagen-error' : undefined
+            }
           />
+          {errores.imagenUrl && (
+            <span className="producto-create__error" id="producto-imagen-error">
+              {errores.imagenUrl}
+            </span>
+          )}
         </div>
 
         <div className="producto-create__field">
-          <label htmlFor="producto-especificaciones">Especificaciones (JSON)</label>
+          <label htmlFor="producto-especificaciones">
+            Especificaciones (JSON)
+          </label>
           <textarea
             id="producto-especificaciones"
             name="especificaciones"
@@ -254,13 +300,13 @@ function ProductoCreate({
             placeholder={'{\n  "medidas": "120 × 60 × 75 cm"\n}'}
             value={valores.especificaciones}
             onChange={(evento) =>
-              actualizarCampo("especificaciones", evento.target.value)
+              actualizarCampo('especificaciones', evento.target.value)
             }
             aria-invalid={Boolean(errores.especificaciones)}
             aria-describedby={
               errores.especificaciones
-                ? "producto-especificaciones-error"
-                : "producto-especificaciones-ayuda"
+                ? 'producto-especificaciones-error'
+                : 'producto-especificaciones-ayuda'
             }
           />
           <span
@@ -285,14 +331,17 @@ function ProductoCreate({
             type="checkbox"
             checked={valores.destacado}
             onChange={(evento) =>
-              actualizarCampo("destacado", evento.target.checked)
+              actualizarCampo('destacado', evento.target.checked)
             }
           />
           <span>Destacar este producto</span>
         </label>
 
         {errorEnvio && (
-          <p className="producto-create__feedback producto-create__feedback--error" role="alert">
+          <p
+            className="producto-create__feedback producto-create__feedback--error"
+            role="alert"
+          >
             {errorEnvio}
           </p>
         )}
@@ -302,7 +351,7 @@ function ProductoCreate({
           type="submit"
           disabled={enviando}
         >
-          {enviando ? "Guardando…" : textoBoton}
+          {enviando ? 'Guardando…' : textoBoton}
         </button>
       </form>
     </section>

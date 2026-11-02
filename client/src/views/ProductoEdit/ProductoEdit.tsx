@@ -1,45 +1,35 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ProductoCreate, {
   type ValoresFormulario,
-} from "../../components/ProductoCreate/ProductoCreate";
-import { useActualizarProducto } from "../../hooks/useActualizarProducto";
-import { useProductoApi } from "../../hooks/useProductoApi";
-import type { Producto } from "../../types/producto";
-import "./ProductoEdit.css";
+} from '../../components/ProductoCreate/ProductoCreate';
+import { useActualizarProducto } from '../../hooks/useActualizarProducto';
+import { useProductoApi } from '../../hooks/useProductoApi';
+import type { Producto } from '../../types/producto';
+import './ProductoEdit.css';
 
 // el form trabaja con texto, por eso precio y stock van como string
 const aValoresFormulario = (producto: Producto): ValoresFormulario => ({
   nombre: producto.nombre,
-  descripcion: producto.descripcion ?? "",
+  descripcion: producto.descripcion ?? '',
   precio: String(producto.precio),
-  stock: String(producto.stock ?? ""),
-  imagenUrl: producto.imagenUrl ?? "",
+  stock: String(producto.stock ?? ''),
+  imagenUrl: producto.imagenUrl ?? '',
   destacado: producto.destacado ?? false,
   especificaciones:
     producto.especificaciones &&
     Object.keys(producto.especificaciones).length > 0
       ? JSON.stringify(producto.especificaciones, null, 2)
-      : "",
+      : '',
 });
 
 export const ProductoEdit = () => {
-  const { id = "" } = useParams();
+  const { id = '' } = useParams();
   const navigate = useNavigate();
   const { data: producto, isLoading, error } = useProductoApi(id);
   const actualizacion = useActualizarProducto();
 
-  const guardar = async (datos: Omit<Producto, "id">) => {
-    // si se vació un campo opcional va en null, si no el PUT deja el valor viejo :v
-    await actualizacion.mutateAsync({
-      id,
-      cambios: {
-        descripcion: null,
-        stock: null,
-        imagenUrl: null,
-        especificaciones: null,
-        ...datos,
-      },
-    });
+  const guardar = async (datos: Omit<Producto, 'id'>) => {
+    await actualizacion.mutateAsync({ id, cambios: datos });
     navigate(`/productos/${id}`, { state: { productoEditado: true } });
   };
 

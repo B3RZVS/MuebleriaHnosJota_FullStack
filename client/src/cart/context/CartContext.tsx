@@ -3,14 +3,14 @@ import {
   useMutationState,
   useQuery,
   useQueryClient,
-} from "@tanstack/react-query";
-import { useMemo, type ReactNode } from "react";
-import { carritoApi } from "../services/carritoApi";
-import type { Carrito } from "../types";
-import { CartContext, type CartContextValue } from "./cart-context";
+} from '@tanstack/react-query';
+import { useMemo, type ReactNode } from 'react';
+import { carritoApi } from '../services/carritoApi';
+import type { Carrito } from '../types';
+import { CartContext, type CartContextValue } from './cart-context';
 
-const CARRITO_QUERY_KEY = ["carrito"] as const;
-const AGREGAR_MUTATION_KEY = ["carrito", "agregar"] as const;
+const CARRITO_QUERY_KEY = ['carrito'] as const;
+const AGREGAR_MUTATION_KEY = ['carrito', 'agregar'] as const;
 
 const carritoVacio: Carrito = {
   items: [],
@@ -31,7 +31,7 @@ type CantidadVariables = {
 const mensajeError = (error: unknown) =>
   error instanceof Error
     ? error.message
-    : "Ocurrió un error al comunicarse con el servidor.";
+    : 'Ocurrió un error al comunicarse con el servidor.';
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
@@ -53,20 +53,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
   });
 
   const cambiarCantidadMutation = useMutation({
-    mutationKey: ["carrito", "cambiar-cantidad"],
+    mutationKey: ['carrito', 'cambiar-cantidad'],
     mutationFn: ({ productoId, cantidad }: CantidadVariables) =>
       carritoApi.cambiarCantidad(productoId, cantidad),
     onSuccess: guardarCarrito,
   });
 
   const quitarMutation = useMutation({
-    mutationKey: ["carrito", "quitar"],
+    mutationKey: ['carrito', 'quitar'],
     mutationFn: (productoId: string) => carritoApi.quitar(productoId),
     onSuccess: guardarCarrito,
   });
 
   const vaciarMutation = useMutation({
-    mutationKey: ["carrito", "vaciar"],
+    mutationKey: ['carrito', 'vaciar'],
     mutationFn: carritoApi.vaciar,
     onSuccess: guardarCarrito,
   });
@@ -74,7 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const productosAgregando = useMutationState<string>({
     filters: {
       mutationKey: AGREGAR_MUTATION_KEY,
-      status: "pending",
+      status: 'pending',
     },
     select: (mutation) =>
       (mutation.state.variables as AgregarVariables).productoId,
@@ -96,7 +96,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       cargando: consultaCarrito.isPending,
       actualizando,
       productosAgregando,
-      error: error ? mensajeError(error) : "",
+      error: error ? mensajeError(error) : '',
       agregar: async (productoId, cantidad = 1) => {
         try {
           await agregarMutation.mutateAsync({ productoId, cantidad });
@@ -147,7 +147,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       productosAgregando,
       quitarMutation,
       vaciarMutation,
-    ],
+    ]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

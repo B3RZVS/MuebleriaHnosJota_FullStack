@@ -11,13 +11,12 @@ try {
 
   if (cantidadExistente > 0) {
     throw new Error(
-      `La colección ya contiene ${cantidadExistente} productos; no se modificaron datos.`,
+      `La colección ya contiene ${cantidadExistente} productos; no se modificaron datos.`
     );
   }
 
-  const productosIniciales = productos.map(({ id, ...producto }) => producto);
-  await Product.insertMany(productosIniciales);
-  console.log(`Se cargaron ${productosIniciales.length} productos iniciales.`);
+  await Product.insertMany(productos);
+  console.log(`Se cargaron ${productos.length} productos iniciales.`);
 } catch (error) {
   console.error('No se pudo cargar el catálogo inicial:', error);
   process.exitCode = 1;

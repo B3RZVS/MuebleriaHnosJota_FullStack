@@ -1,6 +1,6 @@
 # Mueblería Hermanos Jota
 
-Aplicación web para una mueblería, sprint 3 y 4: catálogo de productos, detalle de cada pieza, carrito de compras y formulario de contacto.
+Aplicación web para una mueblería, sprint 5 y 6: catálogo guardado en MongoDB con alta, edición y baja de productos, detalle de cada pieza, carrito de compras y formulario de contacto.
 Integrantes
 P1 - Ramiro Berruezo (B3RZVS)
 P2 - Augusto Freire (Guss-dev-py)
@@ -10,7 +10,7 @@ P4 - Ezequiel Monterichel (equiezel)
 | | URL |
 |---|---|
 | **Frontend** (Netlify) | https://quiet-douhua-d3c51b.netlify.app/ |
-| **API** (Render) | https://muebleria-hermanos-jota-ygmi.onrender.com |
+| **API** (Render) | https://muebleriahnosjota-back.onrender.com |
 
 > La API está en el plan gratuito de Render: si estuvo un rato sin uso, la primera petición puede tardar unos segundos mientras el servicio se "despierta".
 
@@ -23,20 +23,22 @@ P4 - Ezequiel Monterichel (equiezel)
 3. [Estructura del proyecto](#estructura-del-proyecto)
 4. [Requisitos](#requisitos)
 5. [Instalación y ejecución local](#instalación-y-ejecución-local)
-6. [Variables de entorno](#variables-de-entorno)
-7. [API REST](#api-rest)
-8. [Arquitectura y decisiones técnicas](#arquitectura-y-decisiones-técnicas)
-9. [Despliegue](#despliegue)
-10. [Limitaciones conocidas y mejoras futuras](#limitaciones-conocidas-y-mejoras-futuras)
+6. [Calidad de código](#calidad-de-código)
+7. [Variables de entorno](#variables-de-entorno)
+8. [API REST](#api-rest)
+9. [Arquitectura y decisiones técnicas](#arquitectura-y-decisiones-técnicas)
+10. [Despliegue](#despliegue)
+11. [Limitaciones conocidas y mejoras futuras](#limitaciones-conocidas-y-mejoras-futuras)
 
 ---
 
 ## Funcionalidades
 
-- Catálogo de productos con listado y vista de detalle (especificaciones, materiales, medidas).
-- Carrito de compras: agregar, cambiar cantidad, quitar y vaciar. Se mantiene entre visitas mediante sesión.
+- Catálogo de productos con listado y vista de detalle (stock, especificaciones, materiales, medidas).
+- Administración del catálogo: crear, editar y eliminar productos desde formularios.
+- Carrito de compras: agregar, cambiar cantidad, quitar y vaciar, sin pasarse del stock. Se mantiene entre visitas mediante sesión.
 - Formulario de contacto con validación en el servidor.
-- Navegación SPA con rutas: `/`, `/productos`, `/productos/:id` y `/contacto`.
+- Navegación SPA con rutas: `/`, `/productos`, `/productos/:id`, `/contacto`, `/admin/crear-producto` y `/admin/editar-producto/:id`. Cualquier otra muestra una página 404.
 
 ## Stack tecnológico
 
@@ -52,6 +54,7 @@ Monorepo con dos aplicaciones independientes, cada una con su propio `package.js
 
 ```
 MuebleriaHnosJota_FullStack/
+├── package.json                  # Husky, lint-staged y commitlint
 ├── backend/
 │   ├── server.js                 # Punto de entrada: carga .env y levanta el servidor
 │   ├── .env.example              # Plantilla de variables de entorno
@@ -63,16 +66,16 @@ MuebleriaHnosJota_FullStack/
 │       ├── repositories/         # Acceso a datos (catálogo, carrito en sesión, consultas)
 │       ├── middlewares/          # logger, sesión, validación de contacto, 404 y errores
 │       ├── data/productos.js     # Datos iniciales para cargar el catálogo
-│       ├── models/               # Esquema Product de Mongoose
+│       ├── models/               # Esquemas Product y Consulta de Mongoose
 │       ├── config/database.js    # Conexión con MongoDB
 │       └── scripts/              # Carga inicial del catálogo
 └── client/
     ├── public/_redirects         # Fallback de la SPA para Netlify
     └── src/
-        ├── views/                # Pantallas: Home, Productos, ProductoDetails
-        ├── components/           # Navbar, Footer, ProductCard, ProductList, ContactForm
+        ├── views/                # Pantallas: Home, Productos, ProductoDetails, ProductoEdit, NotFound
+        ├── components/           # Navbar, Footer, ProductCard, ProductList, ProductoCreate, ImagenProducto, ContactForm
         ├── cart/                 # Contexto, componentes, API y tipos del carrito
-        ├── hooks/                # Hooks de React Query para productos
+        ├── hooks/                # Hooks de React Query para productos y avisos de navegación
         ├── services/             # Llamadas fetch a la API
         ├── types/                # Tipos de TypeScript
         └── utils/                # URL de la API y formato de precios
@@ -100,7 +103,7 @@ cd MuebleriaHnosJota_FullStack
 ```bash
 cd backend
 npm install
-Copy-Item .env.example .env
+cp .env.example .env      # en PowerShell: Copy-Item .env.example .env
 # Completar MONGODB_URI en .env antes de iniciar el servidor
 npm run seed:products     # carga el catálogo una vez, solo si la colección está vacía
 npm run dev               # con recarga automática (nodemon)
@@ -132,6 +135,18 @@ Abrí http://localhost:5173. Sin configuración adicional, el cliente apunta a `
 | `npm run preview` | Sirve localmente el build generado |
 | `npm run lint` | Ejecuta ESLint |
 
+## Calidad de código
+
+Desde la raíz del repositorio:
+
+```bash
+npm install       # activa los hooks de git
+npm run lint      # ESLint en backend y client
+npm run format    # Prettier en backend y client
+```
+
+Cada commit pasa por Husky: lint-staged corre ESLint y Prettier sobre los archivos preparados, y commitlint controla que el mensaje siga Conventional Commits (por ejemplo `fix: corrige el total del carrito`).
+
 ## Variables de entorno
 
 ### Backend (`backend/.env`)
@@ -147,6 +162,8 @@ Abrí http://localhost:5173. Sin configuración adicional, el cliente apunta a `
 Si `CLIENT_ORIGIN` no está definida, se permiten `http://localhost:5173` y `http://127.0.0.1:5173`.
 
 ### Frontend (`client/.env`)
+
+Se copia desde `client/.env.example`.
 
 | Variable | Obligatoria | Descripción |
 |---|---|---|
@@ -165,14 +182,18 @@ Base URL: `http://localhost:3000` (local) o la URL de Render (producción).
 | `GET` | `/api/productos` | Lista todos los productos |
 | `GET` | `/api/productos/:id` | Detalle de un producto (`400` si el id no es válido, `404` si no existe) |
 | `POST` | `/api/productos` | Crea y persiste un producto (`201`); requiere `nombre` y `precio`, y devuelve `400` ante errores de validación |
+| `PUT` | `/api/productos/:id` | Reemplaza el producto completo (`200`); `400` si el id o los datos no son válidos, `404` si no existe |
+| `DELETE` | `/api/productos/:id` | Elimina el producto y lo devuelve (`200`); `400` si el id no es válido, `404` si no existe |
 
-Los productos devuelven un `id` de MongoDB como texto y los campos `nombre`, `descripcion`, `precio`, `stock` e `imagenUrl`. `destacado` y `especificaciones` son opcionales para mantener la interfaz actual.
+Los productos devuelven un `id` de MongoDB como texto y los campos `nombre`, `descripcion`, `precio`, `stock` e `imagenUrl`. `destacado` y `especificaciones` son opcionales para mantener la interfaz actual. Los productos nuevos también traen `createdAt` y `updatedAt`.
 
-El cuerpo de `POST /api/productos` es un objeto JSON con `nombre` y `precio` obligatorios. También admite los campos opcionales `descripcion`, `stock`, `imagenUrl`, `destacado` y `especificaciones`.
+El cuerpo de `POST` y `PUT` es un objeto JSON con `nombre` y `precio` obligatorios. También admite los campos opcionales `descripcion`, `stock`, `imagenUrl`, `destacado` y `especificaciones`; cualquier otro campo se ignora. En el `PUT`, el opcional que no se envía queda vacío.
+
+Validaciones: `precio` no puede ser negativo, `stock` tiene que ser un entero mayor o igual a cero, `imagenUrl` una URL que empiece con `http` o `https`, y `especificaciones` un objeto con valores de texto.
 
 ### Carrito
 
-El carrito pertenece a la sesión del visitante, por lo que las peticiones deben enviarse con cookies (`credentials: 'include'`). Todas las respuestas devuelven el carrito completo: `{ items, totalItems, total }`.
+El carrito pertenece a la sesión del visitante, por lo que las peticiones deben enviarse con cookies (`credentials: 'include'`). Todas las respuestas devuelven el carrito completo: `{ items, totalItems, total }`. Cada producto admite hasta 99 unidades y no puede pasar su stock (`400`). Si un producto se elimina del catálogo, sale solo del carrito.
 
 | Método | Ruta | Cuerpo | Descripción |
 |---|---|---|---|
@@ -186,11 +207,11 @@ El carrito pertenece a la sesión del visitante, por lo que las peticiones deben
 
 | Método | Ruta | Cuerpo | Descripción |
 |---|---|---|---|
-| `POST` | `/api/contacto` | `{ nombre, email, mensaje }` | Guarda la consulta en MongoDB y responde `202`. Nombre de al menos 3 caracteres, email válido y mensaje no vacío; si no, `400`. |
+| `POST` | `/api/contacto` | `{ nombre, email, mensaje }` | Guarda la consulta en MongoDB y responde `201`. Nombre de al menos 3 caracteres, email válido y mensaje no vacío; si no, `400`. |
 
 ### Formato de errores
 
-Los errores se devuelven como JSON: `{ "mensaje": "..." }`. En errores `5xx` el mensaje es genérico para no exponer detalles internos.
+Los errores se devuelven como JSON: `{ "mensaje": "..." }`. Los de validación de Mongoose responden `400` y una clave repetida `409`. En errores `5xx` el mensaje es genérico para no exponer detalles internos.
 
 ## Arquitectura y decisiones técnicas
 
@@ -284,10 +305,10 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 3. Agregar la variable de entorno:
 
    ```
-   VITE_API_URL=https://muebleria-hermanos-jota-ygmi.onrender.com
+   VITE_API_URL=https://muebleriahnosjota-back.onrender.com
    ```
 
-4. El archivo `client/public/_redirects` (`/* /index.html 200`) hace que recargar o entrar directo a rutas como `/productos/aparador-uspallata` funcione en lugar de dar 404.
+4. El archivo `client/public/_redirects` (`/* /index.html 200`) hace que recargar o entrar directo a rutas como `/productos/:id` funcione en lugar de dar 404.
 
 ### Orden recomendado
 
@@ -298,9 +319,10 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 ## Limitaciones conocidas y mejoras futuras
 
 - **Carrito no persistente ante reinicios**: la sesión se guarda en la memoria del servidor (store por defecto de `express-session`), por lo que se pierde cuando Render reinicia o duerme el servicio. Una mejora natural es usar un store externo (por ejemplo Redis).
-- **Administración parcial de productos**: el catálogo permite crear productos mediante la API, pero todavía no cuenta con endpoints para editarlos o eliminarlos.
+- **Administración sin login**: cualquiera puede crear, editar o eliminar productos. La autenticación llega en el sprint 7 y 8.
+- **El stock no se descuenta**: se muestra y limita el carrito, pero baja recién cuando existan los pedidos.
 - **Cookies de terceros**: al ser cross-site, algunos navegadores (por ejemplo Safari, o Chrome con bloqueo de cookies de terceros) pueden impedir que el carrito se mantenga. Servir frontend y API bajo un mismo dominio lo resolvería.
 - **Sin checkout ni pagos**: el carrito no llega a una instancia de compra.
-- **Sin tests automatizados.**
+- **Sin tests automatizados en el repo.**
 
 ---

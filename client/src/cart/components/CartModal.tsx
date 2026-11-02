@@ -1,7 +1,8 @@
-import { useEffect } from "react";
-import { formatoPrecio } from "../../utils/formatoPrecio";
-import { useCart } from "../context/useCart";
-import "../cart.css";
+import { useEffect } from 'react';
+import ImagenProducto from '../../components/ImagenProducto/ImagenProducto';
+import { formatoPrecio } from '../../utils/formatoPrecio';
+import { useCart } from '../context/useCart';
+import '../cart.css';
 
 interface CartModalProps {
   abierto: boolean;
@@ -24,11 +25,11 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
     if (!abierto) return;
 
     const cerrarConEscape = (evento: KeyboardEvent) => {
-      if (evento.key === "Escape") onCerrar();
+      if (evento.key === 'Escape') onCerrar();
     };
 
-    document.addEventListener("keydown", cerrarConEscape);
-    return () => document.removeEventListener("keydown", cerrarConEscape);
+    document.addEventListener('keydown', cerrarConEscape);
+    return () => document.removeEventListener('keydown', cerrarConEscape);
   }, [abierto, onCerrar]);
 
   if (!abierto) return null;
@@ -95,7 +96,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
             <ul className="lista-carrito">
               {carrito.items.map((item) => (
                 <li className="item-carrito" key={item.productoId}>
-                  <img
+                  <ImagenProducto
                     alt=""
                     className="item-carrito__imagen"
                     src={item.imagen}
@@ -115,7 +116,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                             ? void quitar(item.productoId)
                             : void cambiarCantidad(
                                 item.productoId,
-                                item.cantidad - 1,
+                                item.cantidad - 1
                               )
                         }
                         type="button"
@@ -125,11 +126,14 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                       <span>{item.cantidad}</span>
                       <button
                         aria-label={`Sumar una unidad de ${item.nombre}`}
-                        disabled={actualizando}
+                        disabled={
+                          actualizando ||
+                          item.cantidad >= Math.min(99, item.stock ?? 99)
+                        }
                         onClick={() =>
                           void cambiarCantidad(
                             item.productoId,
-                            item.cantidad + 1,
+                            item.cantidad + 1
                           )
                         }
                         type="button"

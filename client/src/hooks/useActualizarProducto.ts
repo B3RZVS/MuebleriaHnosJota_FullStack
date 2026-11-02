@@ -1,12 +1,12 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   actualizarProducto,
-  type CambiosProducto,
-} from "../services/producto.api";
+  type NuevoProducto,
+} from '../services/producto.api';
 
 type ActualizarVariables = {
   id: string;
-  cambios: CambiosProducto;
+  cambios: NuevoProducto;
 };
 
 export const useActualizarProducto = () => {
@@ -17,8 +17,10 @@ export const useActualizarProducto = () => {
       actualizarProducto(id, cambios),
     onSuccess: (producto) => {
       // el detalle ya muestra lo que devolvió el PUT, sin volver a pedirlo
-      queryClient.setQueryData(["producto", producto.id], producto);
-      void queryClient.invalidateQueries({ queryKey: ["productos"] });
+      queryClient.setQueryData(['producto', producto.id], producto);
+      void queryClient.invalidateQueries({ queryKey: ['productos'] });
+      // el carrito también muestra el nombre y el precio
+      void queryClient.invalidateQueries({ queryKey: ['carrito'] });
     },
   });
 };

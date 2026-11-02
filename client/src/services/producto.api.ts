@@ -1,56 +1,71 @@
-import type { Producto } from "../types/producto";
-import { API_PRODUCTOS } from "../utils/urls";
+import type { Producto } from '../types/producto';
+import { API_PRODUCTOS } from '../utils/urls';
 
-type NuevoProducto = Omit<Producto, "id">;
-
-// al editar, un campo opcional en null queda vacío
-export type CambiosProducto = {
-  [Campo in keyof NuevoProducto]?: NuevoProducto[Campo] | null;
-};
+export type NuevoProducto = Omit<Producto, 'id'>;
 
 const esProducto = (datos: unknown): datos is Producto =>
-  typeof datos === "object" &&
+  typeof datos === 'object' &&
   datos !== null &&
-  "id" in datos &&
-  typeof datos.id === "string" &&
-  "nombre" in datos &&
-  typeof datos.nombre === "string" &&
-  "precio" in datos &&
-  typeof datos.precio === "number";
+  'id' in datos &&
+  typeof datos.id === 'string' &&
+  'nombre' in datos &&
+  typeof datos.nombre === 'string' &&
+  'precio' in datos &&
+  typeof datos.precio === 'number';
 
-export const crearProducto = async (
-  nuevoProducto: NuevoProducto,
+const SIN_SERVIDOR =
+  'No pudimos conectar con el servidor. Intentá de nuevo en unos segundos.';
+
+// crear y editar responden igual: el producto, o un { mensaje } con el error
+const guardarProducto = async (
+  url: string,
+  metodo: 'POST' | 'PUT',
+  producto: NuevoProducto
 ): Promise<Producto> => {
-  const respuesta = await fetch(API_PRODUCTOS, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(nuevoProducto),
-  });
-  const datos: unknown = await respuesta.json();
+  let respuesta: Response;
+
+  try {
+    respuesta = await fetch(url, {
+      method: metodo,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(producto),
+    });
+  } catch {
+    // sin conexión el error de fetch es técnico y en inglés
+    throw new Error(SIN_SERVIDOR);
+  }
+
+  // si Render está caído no llega JSON y queda en null
+  const datos: unknown = await respuesta.json().catch(() => null);
 
   if (!respuesta.ok) {
     const mensaje =
-      typeof datos === "object" &&
+      typeof datos === 'object' &&
       datos !== null &&
-      "mensaje" in datos &&
-      typeof datos.mensaje === "string"
+      'mensaje' in datos &&
+      typeof datos.mensaje === 'string'
         ? datos.mensaje
-        : `El servidor respondió ${respuesta.status}`;
+        : SIN_SERVIDOR;
     throw new Error(mensaje);
   }
 
   if (!esProducto(datos)) {
-    throw new Error("La respuesta no contiene un producto válido");
+    throw new Error(SIN_SERVIDOR);
   }
 
   return datos;
 };
 
-// Si el producto no existe (404) devuelve null, para mostrar "no encontramos esta pieza"
-export const obtenerProductoId = async (id: string): Promise<Producto | null> => {
+export const crearProducto = (nuevoProducto: NuevoProducto) =>
+  guardarProducto(API_PRODUCTOS, 'POST', nuevoProducto);
+
+// Si el id está mal escrito (400) o el producto no existe (404) devuelve null, para mostrar "no encontramos esta pieza"
+export const obtenerProductoId = async (
+  id: string
+): Promise<Producto | null> => {
   const respuesta = await fetch(`${API_PRODUCTOS}/${id}`);
 
-  if (respuesta.status === 404) {
+  if (respuesta.status === 400 || respuesta.status === 404) {
     return null;
   }
 
@@ -76,45 +91,18 @@ export const obtenerProductos = async (): Promise<Producto[]> => {
 
   // Si la respuesta no es una lista, se trata como error para no dejar la página en blanco
   if (!Array.isArray(datos)) {
-    throw new Error("La respuesta no es una lista de productos");
+    throw new Error('La respuesta no es una lista de productos');
   }
   return datos as Producto[];
 };
 
 export const eliminarProducto = async (id: string): Promise<void> => {
-  const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, { method: "DELETE" });
+  const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, { method: 'DELETE' });
 
   if (!respuesta.ok) {
     throw new Error(`El servidor respondió ${respuesta.status}`);
   }
 };
 
-export const actualizarProducto = async (
-  id: string,
-  cambios: CambiosProducto,
-): Promise<Producto> => {
-  const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(cambios),
-  });
-  // si no llega JSON (ej: Render caído) queda en null y se muestra el status
-  const datos: unknown = await respuesta.json().catch(() => null);
-
-  if (!respuesta.ok) {
-    const mensaje =
-      typeof datos === "object" &&
-      datos !== null &&
-      "mensaje" in datos &&
-      typeof datos.mensaje === "string"
-        ? datos.mensaje
-        : `El servidor respondió ${respuesta.status}`;
-    throw new Error(mensaje);
-  }
-
-  if (!esProducto(datos)) {
-    throw new Error("La respuesta no contiene un producto válido");
-  }
-
-  return datos;
-};
+export const actualizarProducto = (id: string, cambios: NuevoProducto) =>
+  guardarProducto(`${API_PRODUCTOS}/${id}`, 'PUT', cambios);

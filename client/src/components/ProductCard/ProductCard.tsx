@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
-import AddToCartButton from "../../cart/components/AddToCartButton.tsx";
-import type { Producto } from "../../types/producto.ts";
-import { formatoPrecio } from "../../utils/formatoPrecio.ts";
-import "./ProductCard.css";
+import { Link } from 'react-router-dom';
+import AddToCartButton from '../../cart/components/AddToCartButton.tsx';
+import ImagenProducto from '../ImagenProducto/ImagenProducto.tsx';
+import type { Producto } from '../../types/producto.ts';
+import { formatoPrecio } from '../../utils/formatoPrecio.ts';
+import './ProductCard.css';
 
 type ProductCardProps = {
   producto: Producto;
@@ -21,7 +22,7 @@ function ProductCard({ producto }: ProductCardProps) {
         {producto.destacado && (
           <span className="producto-card-etiqueta">Destacado</span>
         )}
-        <img
+        <ImagenProducto
           className="producto-card-imagen"
           src={producto.imagenUrl}
           alt=""
@@ -44,7 +45,11 @@ function ProductCard({ producto }: ProductCardProps) {
         </p>
 
         <div className="producto-card-acciones">
-          <AddToCartButton productoId={producto.id} nombre={producto.nombre} />
+          <AddToCartButton
+            productoId={producto.id}
+            nombre={producto.nombre}
+            sinStock={producto.stock === 0}
+          />
           <Link
             className="producto-card-boton producto-card-boton--secundario"
             to={detalleUrl}

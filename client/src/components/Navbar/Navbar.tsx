@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import "./Navbar.css";
+import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import './Navbar.css';
 
 interface NavbarProps {
   cantidadCarrito: number;
@@ -10,17 +10,17 @@ interface NavbarProps {
 function Navbar({ cantidadCarrito, onAbrirCarrito }: NavbarProps) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const etiquetaCantidad =
-    cantidadCarrito === 1 ? "1 producto" : `${cantidadCarrito} productos`;
+    cantidadCarrito === 1 ? '1 producto' : `${cantidadCarrito} productos`;
 
   useEffect(() => {
     if (!menuAbierto) return;
 
     const cerrarConEscape = (evento: KeyboardEvent) => {
-      if (evento.key === "Escape") setMenuAbierto(false);
+      if (evento.key === 'Escape') setMenuAbierto(false);
     };
 
-    document.addEventListener("keydown", cerrarConEscape);
-    return () => document.removeEventListener("keydown", cerrarConEscape);
+    document.addEventListener('keydown', cerrarConEscape);
+    return () => document.removeEventListener('keydown', cerrarConEscape);
   }, [menuAbierto]);
 
   return (
@@ -38,7 +38,7 @@ function Navbar({ cantidadCarrito, onAbrirCarrito }: NavbarProps) {
 
       <nav
         id="navegacion-principal"
-        className={`barra__links${menuAbierto ? " barra__links--abierto" : ""}`}
+        className={`barra__links${menuAbierto ? ' barra__links--abierto' : ''}`}
         aria-label="Navegación principal"
       >
         <NavLink className="link" to="/" onClick={() => setMenuAbierto(false)}>
@@ -86,9 +86,9 @@ function Navbar({ cantidadCarrito, onAbrirCarrito }: NavbarProps) {
         </button>
 
         <button
-          className={`boton-menu${menuAbierto ? " boton-menu--abierto" : ""}`}
+          className={`boton-menu${menuAbierto ? ' boton-menu--abierto' : ''}`}
           type="button"
-          aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
+          aria-label={menuAbierto ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={menuAbierto}
           aria-controls="navegacion-principal"
           onClick={() => setMenuAbierto((abierto) => !abierto)}

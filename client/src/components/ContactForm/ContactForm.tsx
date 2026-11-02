@@ -1,6 +1,6 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { API_URL } from "../../utils/urls";
-import "./ContactForm.css";
+import { useEffect, useState, type FormEvent } from 'react';
+import { API_URL } from '../../utils/urls';
+import './ContactForm.css';
 
 type ContactValues = {
   nombre: string;
@@ -11,15 +11,15 @@ type ContactValues = {
 type ContactErrors = Partial<ContactValues>;
 
 const initialValues: ContactValues = {
-  nombre: "",
-  email: "",
-  mensaje: "",
+  nombre: '',
+  email: '',
+  mensaje: '',
 };
 
 function ContactForm() {
   const [values, setValues] = useState<ContactValues>(initialValues);
   const [errors, setErrors] = useState<ContactErrors>({});
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // React Router no vuelve arriba al cambiar de página: sin esto se abre a mitad del scroll
@@ -30,30 +30,30 @@ function ContactForm() {
   const updateField = (field: keyof ContactValues, value: string) => {
     setValues((currentValues) => ({ ...currentValues, [field]: value }));
     setErrors((currentErrors) => ({ ...currentErrors, [field]: undefined }));
-    setFeedback("");
+    setFeedback('');
   };
 
   const validate = () => {
     const nextErrors: ContactErrors = {};
 
     if (!values.nombre.trim()) {
-      nextErrors.nombre = "Ingresá tu nombre.";
+      nextErrors.nombre = 'Ingresá tu nombre.';
     } else if (values.nombre.trim().length < 3) {
-      nextErrors.nombre = "El nombre tiene que tener al menos 3 caracteres.";
+      nextErrors.nombre = 'El nombre tiene que tener al menos 3 caracteres.';
     }
     if (!values.email.trim()) {
-      nextErrors.email = "Ingresá tu email.";
+      nextErrors.email = 'Ingresá tu email.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
-      nextErrors.email = "Ingresá un email válido.";
+      nextErrors.email = 'Ingresá un email válido.';
     }
-    if (!values.mensaje.trim()) nextErrors.mensaje = "Escribí tu consulta.";
+    if (!values.mensaje.trim()) nextErrors.mensaje = 'Escribí tu consulta.';
 
     return nextErrors;
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFeedback("");
+    setFeedback('');
 
     const nextErrors = validate();
     setErrors(nextErrors);
@@ -63,8 +63,8 @@ function ContactForm() {
 
     try {
       const response = await fetch(`${API_URL}/api/contacto`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nombre: values.nombre.trim(),
           email: values.email.trim(),
@@ -74,16 +74,16 @@ function ContactForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        setFeedback(result.mensaje || "No pudimos enviar tu consulta.");
+        setFeedback(result.mensaje || 'No pudimos enviar tu consulta.');
         return;
       }
 
       setValues(initialValues);
       setErrors({});
-      setFeedback(result.mensaje || "Recibimos tu consulta. ¡Gracias!");
+      setFeedback(result.mensaje || 'Recibimos tu consulta. ¡Gracias!');
     } catch {
       // Llega acá si el servidor no responde: el error del navegador es técnico y en inglés
-      setFeedback("No pudimos enviar tu consulta. Intentá nuevamente.");
+      setFeedback('No pudimos enviar tu consulta. Intentá nuevamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -124,7 +124,11 @@ function ContactForm() {
                   ventas@hermanosjota.com.ar
                 </a>
                 <br />
-                <a href="https://wa.me/541145678900" target="_blank" rel="noreferrer">
+                <a
+                  href="https://wa.me/541145678900"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   WhatsApp +54 11 4567-8900
                 </a>
               </p>
@@ -157,9 +161,9 @@ function ContactForm() {
             type="text"
             autoComplete="name"
             value={values.nombre}
-            onChange={(event) => updateField("nombre", event.target.value)}
+            onChange={(event) => updateField('nombre', event.target.value)}
             aria-invalid={Boolean(errors.nombre)}
-            aria-describedby={errors.nombre ? "contact-name-error" : undefined}
+            aria-describedby={errors.nombre ? 'contact-name-error' : undefined}
             required
           />
           {errors.nombre && (
@@ -177,9 +181,9 @@ function ContactForm() {
             type="email"
             autoComplete="email"
             value={values.email}
-            onChange={(event) => updateField("email", event.target.value)}
+            onChange={(event) => updateField('email', event.target.value)}
             aria-invalid={Boolean(errors.email)}
-            aria-describedby={errors.email ? "contact-email-error" : undefined}
+            aria-describedby={errors.email ? 'contact-email-error' : undefined}
             required
           />
           {errors.email && (
@@ -196,10 +200,10 @@ function ContactForm() {
             name="mensaje"
             rows={5}
             value={values.mensaje}
-            onChange={(event) => updateField("mensaje", event.target.value)}
+            onChange={(event) => updateField('mensaje', event.target.value)}
             aria-invalid={Boolean(errors.mensaje)}
             aria-describedby={
-              errors.mensaje ? "contact-message-error" : undefined
+              errors.mensaje ? 'contact-message-error' : undefined
             }
             required
           />
@@ -215,7 +219,7 @@ function ContactForm() {
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Enviando…" : "Enviar consulta"}
+          {isSubmitting ? 'Enviando…' : 'Enviar consulta'}
         </button>
         <p className="contact-form__feedback" aria-live="polite" role="status">
           {feedback}

@@ -1,25 +1,26 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-import ProductCard from "../../components/ProductCard/ProductCard";
-import { useProductosApi } from "../../hooks/useProductosApi";
-import "./HomeView.css";
+import ImagenProducto from '../../components/ImagenProducto/ImagenProducto';
+import ProductCard from '../../components/ProductCard/ProductCard';
+import { useProductosApi } from '../../hooks/useProductosApi';
+import './HomeView.css';
 
 const compromisos = [
   {
-    titulo: "Madera con origen",
+    titulo: 'Madera con origen',
     texto:
-      "Algarrobo, quebracho y caldén certificados FSC®, provenientes de bosques responsables argentinos.",
+      'Algarrobo, quebracho y caldén certificados FSC®, provenientes de bosques responsables argentinos.',
   },
   {
-    titulo: "Herencia viva",
+    titulo: 'Herencia viva',
     texto:
-      "Diez años de garantía en estructura y cinco en acabados. Restauramos piezas para extender su historia.",
+      'Diez años de garantía en estructura y cinco en acabados. Restauramos piezas para extender su historia.',
   },
   {
-    titulo: "Hecho en el taller",
+    titulo: 'Hecho en el taller',
     texto:
-      "Cada mueble se tornea, arma y embala en San Cristóbal, con acabados naturales de bajo impacto.",
+      'Cada mueble se tornea, arma y embala en San Cristóbal, con acabados naturales de bajo impacto.',
   },
 ];
 
@@ -46,8 +47,8 @@ function HomeView() {
             <p className="home-hero__bajada">
               Trabajamos maderas de bosques argentinos certificados y las
               terminamos con aceite de lino y cera de abejas. Muebles que
-              recuerdan el optimismo de los años 60, hechos con la conciencia
-              de hoy.
+              recuerdan el optimismo de los años 60, hechos con la conciencia de
+              hoy.
             </p>
             <div className="home-acciones">
               <Link
@@ -68,7 +69,7 @@ function HomeView() {
           <figure className="home-hero__figura">
             <div className="home-hero__imagen">
               {productoHero ? (
-                <img
+                <ImagenProducto
                   src={productoHero.imagenUrl}
                   alt={productoHero.nombre}
                   width="1024"
@@ -92,10 +93,7 @@ function HomeView() {
         </div>
       </section>
 
-      <section
-        className="home-compromiso"
-        aria-labelledby="compromiso-titulo"
-      >
+      <section className="home-compromiso" aria-labelledby="compromiso-titulo">
         <div className="home-contenedor">
           <div className="home-monograma" aria-hidden="true">
             HJ
@@ -112,10 +110,7 @@ function HomeView() {
         </div>
       </section>
 
-      <section
-        className="home-destacados"
-        aria-labelledby="destacados-titulo"
-      >
+      <section className="home-destacados" aria-labelledby="destacados-titulo">
         <div className="home-contenedor">
           <header className="home-destacados__encabezado">
             <p className="home-eyebrow">Selección de la casa</p>
@@ -158,10 +153,7 @@ function HomeView() {
           )}
 
           <div className="home-destacados__pie">
-            <Link
-              className="home-boton home-boton--secundario"
-              to="/productos"
-            >
+            <Link className="home-boton home-boton--secundario" to="/productos">
               Ver todas las piezas
             </Link>
           </div>

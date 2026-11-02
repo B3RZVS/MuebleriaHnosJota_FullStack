@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { Route, Routes } from "react-router-dom";
-import { ProductoDetails } from "./views/ProductoDetails/ProductoDetails.tsx";
-import { ProductosView } from "./views/ProductosView/ProductosView.tsx";
-import ContactForm from "./components/ContactForm/ContactForm.tsx";
-import ProductoCreate from "./components/ProductoCreate/ProductoCreate.tsx";
-import { ProductoEdit } from "./views/ProductoEdit/ProductoEdit.tsx";
-import HomeView from "./views/HomeView/HomeView.tsx";
-import Navbar from "./components/Navbar/Navbar.tsx";
-import Footer from "./components/Footer/Footer.tsx";
-import CartModal from "./cart/components/CartModal.tsx";
-import { useCart } from "./cart/context/useCart.ts";
+import { useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { ProductoDetails } from './views/ProductoDetails/ProductoDetails.tsx';
+import { ProductosView } from './views/ProductosView/ProductosView.tsx';
+import ContactForm from './components/ContactForm/ContactForm.tsx';
+import ProductoCreate from './components/ProductoCreate/ProductoCreate.tsx';
+import { ProductoEdit } from './views/ProductoEdit/ProductoEdit.tsx';
+import HomeView from './views/HomeView/HomeView.tsx';
+import { NotFoundView } from './views/NotFoundView/NotFoundView.tsx';
+import Navbar from './components/Navbar/Navbar.tsx';
+import Footer from './components/Footer/Footer.tsx';
+import CartModal from './cart/components/CartModal.tsx';
+import { useCart } from './cart/context/useCart.ts';
 
 function App() {
   const { carrito } = useCart();
@@ -30,6 +31,7 @@ function App() {
           <Route path="/admin/crear-producto" element={<ProductoCreate />} />
           <Route path="/admin/editar-producto/:id" element={<ProductoEdit />} />
           <Route path="/contacto" element={<ContactForm />} />
+          <Route path="*" element={<NotFoundView />} />
         </Routes>
       </main>
       <CartModal

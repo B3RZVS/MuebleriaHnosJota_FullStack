@@ -1,6 +1,6 @@
-import type { Producto } from "../../types/producto.ts";
-import ProductCard from "../ProductCard/ProductCard.tsx";
-import "./ProductList.css";
+import type { Producto } from '../../types/producto.ts';
+import ProductCard from '../ProductCard/ProductCard.tsx';
+import './ProductList.css';
 
 type ProductListProps = {
   productos: Producto[];
