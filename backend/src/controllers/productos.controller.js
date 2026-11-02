@@ -1,5 +1,4 @@
 import createError from 'http-errors';
-import mongoose from 'mongoose';
 import productosService from '../services/productos.service.js';
 
 const crearProducto = async (req, res, next) => {
@@ -14,10 +13,6 @@ const crearProducto = async (req, res, next) => {
 
     return res.status(201).json(producto);
   } catch (error) {
-    if (error instanceof mongoose.Error.ValidationError) {
-      return next(createError(400, error.message));
-    }
-
     return next(error);
   }
 };
