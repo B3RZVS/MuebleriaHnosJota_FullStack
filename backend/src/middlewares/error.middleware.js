@@ -19,6 +19,10 @@ const traducirError = (error) => {
     return { status: 409, mensaje: 'Ya existe un registro con esos datos.' };
   }
 
+  if (error.type === 'entity.parse.failed') {
+    return { status: 400, mensaje: 'El cuerpo no es un JSON válido.' };
+  }
+
   const status = error.status || 500;
 
   // En un error 500 no se manda el mensaje real: puede mostrar datos internos, como rutas de archivos
