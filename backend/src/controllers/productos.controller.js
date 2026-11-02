@@ -1,6 +1,29 @@
 import createError from 'http-errors';
 import productosService from '../services/productos.service.js';
 
+const camposEditables = [
+  'nombre',
+  'descripcion',
+  'precio',
+  'stock',
+  'imagenUrl',
+  'destacado',
+  'especificaciones',
+];
+
+// solo pasan los campos del producto, nada de _id ni cosas raras
+const tomarCamposEditables = (cuerpo) => {
+  const datos = {};
+
+  camposEditables.forEach((campo) => {
+    if (cuerpo[campo] !== undefined) {
+      datos[campo] = cuerpo[campo];
+    }
+  });
+
+  return datos;
+};
+
 const crearProducto = async (req, res, next) => {
   const cuerpo = req.body;
 
@@ -9,7 +32,7 @@ const crearProducto = async (req, res, next) => {
   }
 
   try {
-    const producto = await productosService.crear(cuerpo);
+    const producto = await productosService.crear(tomarCamposEditables(cuerpo));
 
     return res.status(201).json(producto);
   } catch (error) {
@@ -39,29 +62,6 @@ const obtenerProductoPorId = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-};
-
-const camposEditables = [
-  'nombre',
-  'descripcion',
-  'precio',
-  'stock',
-  'imagenUrl',
-  'destacado',
-  'especificaciones',
-];
-
-// solo pasan los campos del producto, nada de _id ni cosas raras
-const tomarCamposEditables = (cuerpo) => {
-  const datos = {};
-
-  camposEditables.forEach((campo) => {
-    if (cuerpo[campo] !== undefined) {
-      datos[campo] = cuerpo[campo];
-    }
-  });
-
-  return datos;
 };
 
 const actualizarProducto = async (req, res, next) => {
