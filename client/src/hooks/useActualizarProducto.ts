@@ -19,6 +19,8 @@ export const useActualizarProducto = () => {
       // el detalle ya muestra lo que devolvió el PUT, sin volver a pedirlo
       queryClient.setQueryData(['producto', producto.id], producto);
       void queryClient.invalidateQueries({ queryKey: ['productos'] });
+      // el carrito también muestra el nombre y el precio
+      void queryClient.invalidateQueries({ queryKey: ['carrito'] });
     },
   });
 };
