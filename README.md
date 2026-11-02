@@ -47,6 +47,7 @@ Aplicación web para una mueblería, sprint 5 y 6: catálogo guardado en MongoDB
 |---|---|
 | **Backend** | Node.js, Express 5, Mongoose, MongoDB, `express-session`, `cors`, `dotenv`, `http-errors` (ES Modules) |
 | **Frontend** | React 19, TypeScript, Vite, React Router 7, TanStack Query 5, react-icons |
+| **Calidad** | ESLint, Prettier, Husky, lint-staged, commitlint |
 | **Despliegue** | Render (API) y Netlify (frontend) |
 
 ## Estructura del proyecto
@@ -56,6 +57,9 @@ Monorepo con dos aplicaciones independientes, cada una con su propio `package.js
 ```
 MuebleriaHnosJota_FullStack/
 ├── package.json                  # Husky, lint-staged y commitlint
+├── commitlint.config.cjs         # Reglas de los mensajes de commit
+├── .prettierrc                   # Formato del código
+├── .husky/                       # Hooks de git
 ├── backend/
 │   ├── server.js                 # Punto de entrada: carga .env y levanta el servidor
 │   ├── .env.example              # Plantilla de variables de entorno
@@ -71,6 +75,7 @@ MuebleriaHnosJota_FullStack/
 │       ├── config/database.js    # Conexión con MongoDB
 │       └── scripts/              # Carga inicial del catálogo
 └── client/
+    ├── .env.example              # Plantilla de variables de entorno
     ├── public/_redirects         # Fallback de la SPA para Netlify
     └── src/
         ├── views/                # Pantallas: Home, Productos, ProductoDetails, ProductoEdit, NotFound
