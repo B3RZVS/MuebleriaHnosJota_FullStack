@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { BsCartPlus } from 'react-icons/bs';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../../cart/context/useCart';
 import ImagenProducto from '../../components/ImagenProducto/ImagenProducto';
 import { useEliminarProducto } from '../../hooks/useEliminarProducto';
+import { useEstadoNavegacion } from '../../hooks/useEstadoNavegacion';
 import { useProductoApi } from '../../hooks/useProductoApi';
 import type { Producto } from '../../types/producto';
 import { formatoPrecio } from '../../utils/formatoPrecio';
@@ -19,11 +20,10 @@ const etiquetasEspecificaciones: Record<string, string> = {
 
 export const ProductoDetails = () => {
   const { id } = useParams();
-  const location = useLocation();
-  const estado = location.state as {
+  const estado = useEstadoNavegacion<{
     productoCreado?: boolean;
     productoEditado?: boolean;
-  } | null;
+  }>();
   const productoCreado = estado?.productoCreado === true;
   const productoEditado = estado?.productoEditado === true;
   const { data: producto, isLoading, error } = useProductoApi(id ?? '');
