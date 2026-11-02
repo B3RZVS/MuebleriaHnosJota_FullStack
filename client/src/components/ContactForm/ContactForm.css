@@ -139,7 +139,7 @@
   box-shadow: 0 0 0 3px rgba(160, 82, 45, 0.12);
 }
 
-.contact-form__field [aria-invalid="true"] {
+.contact-form__field [aria-invalid='true'] {
   border-color: #a83232;
 }
 

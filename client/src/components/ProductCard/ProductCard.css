@@ -7,7 +7,10 @@
   border-radius: 12px;
   background: var(--color-superficie);
   box-shadow: 0 4px 16px rgb(62 42 31 / 5%);
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
 }
 
 .producto-card:hover {
@@ -132,7 +135,11 @@
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
-  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
 }
 
 .producto-card-boton svg {
@@ -185,5 +192,7 @@
 @media (prefers-reduced-motion: reduce) {
   .producto-card,
   .producto-card-imagen,
-  .producto-card-boton { transition: none; }
+  .producto-card-boton {
+    transition: none;
+  }
 }

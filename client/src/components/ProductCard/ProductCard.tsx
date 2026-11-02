@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-import AddToCartButton from "../../cart/components/AddToCartButton.tsx";
-import type { Producto } from "../../types/producto.ts";
-import { formatoPrecio } from "../../utils/formatoPrecio.ts";
-import "./ProductCard.css";
+import { Link } from 'react-router-dom';
+import AddToCartButton from '../../cart/components/AddToCartButton.tsx';
+import type { Producto } from '../../types/producto.ts';
+import { formatoPrecio } from '../../utils/formatoPrecio.ts';
+import './ProductCard.css';
 
 type ProductCardProps = {
   producto: Producto;
