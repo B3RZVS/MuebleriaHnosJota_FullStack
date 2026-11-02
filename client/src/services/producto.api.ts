@@ -46,13 +46,13 @@ export const crearProducto = async (
   return datos;
 };
 
-// Si el producto no existe (404) devuelve null, para mostrar "no encontramos esta pieza"
+// Si el id está mal escrito (400) o el producto no existe (404) devuelve null, para mostrar "no encontramos esta pieza"
 export const obtenerProductoId = async (
   id: string
 ): Promise<Producto | null> => {
   const respuesta = await fetch(`${API_PRODUCTOS}/${id}`);
 
-  if (respuesta.status === 404) {
+  if (respuesta.status === 400 || respuesta.status === 404) {
     return null;
   }
 
