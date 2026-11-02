@@ -6,6 +6,7 @@ import ContactForm from './components/ContactForm/ContactForm.tsx';
 import ProductoCreate from './components/ProductoCreate/ProductoCreate.tsx';
 import { ProductoEdit } from './views/ProductoEdit/ProductoEdit.tsx';
 import HomeView from './views/HomeView/HomeView.tsx';
+import { NotFoundView } from './views/NotFoundView/NotFoundView.tsx';
 import Navbar from './components/Navbar/Navbar.tsx';
 import Footer from './components/Footer/Footer.tsx';
 import CartModal from './cart/components/CartModal.tsx';
@@ -30,6 +31,7 @@ function App() {
           <Route path="/admin/crear-producto" element={<ProductoCreate />} />
           <Route path="/admin/editar-producto/:id" element={<ProductoEdit />} />
           <Route path="/contacto" element={<ContactForm />} />
+          <Route path="*" element={<NotFoundView />} />
         </Routes>
       </main>
       <CartModal
