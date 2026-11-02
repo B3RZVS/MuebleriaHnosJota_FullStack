@@ -267,11 +267,12 @@ Frontend (Netlify) y API (Render) están en dominios diferentes, así que la coo
 
 ### Frontend
 
-- **TanStack Query** gestiona la carga de productos (estados de carga, error y reintentos). Se configuró con un solo reintento para que los errores aparezcan rápido.
+- **TanStack Query** gestiona la carga de productos (estados de carga, error y reintentos). Se configuró con un solo reintento para que los errores aparezcan rápido. Al editar o eliminar un producto vuelve a pedir el catálogo y el carrito.
 - **Context API** maneja el estado del carrito, que es global a toda la aplicación.
 - La respuesta del carrito se **valida en tiempo de ejecución** (`esCarrito`) antes de usarla, para que un formato inesperado produzca un error claro y no una pantalla rota.
 - La URL de la API se centraliza en `utils/urls.ts` y se configura con `VITE_API_URL`.
-- Un hook por recurso (`useProductosApi`, `useProductoApi`) mantiene los componentes simples.
+- Un hook por operación (`useProductosApi`, `useProductoApi`, `useActualizarProducto`, `useEliminarProducto`) mantiene los componentes simples.
+- El mismo formulario (`ProductoCreate`) sirve para crear y para editar.
 
 ### Imágenes
 
