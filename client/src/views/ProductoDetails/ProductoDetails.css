@@ -199,6 +199,11 @@
   color: #9b2c20;
 }
 
+.product-stock {
+  margin: 0 0 16px;
+  font-size: 0.85rem;
+}
+
 .purchase-note {
   margin: 0;
   padding-top: 14px;

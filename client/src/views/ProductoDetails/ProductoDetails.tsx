@@ -96,6 +96,8 @@ function ProductContent({ producto }: { producto: Producto }) {
   const navigate = useNavigate();
   const eliminacion = useEliminarProducto();
   const especificaciones = Object.entries(producto.especificaciones ?? {});
+  const sinStock = producto.stock === 0;
+  const cantidadMaxima = Math.min(99, producto.stock ?? 99);
 
   const eliminarProducto = () => {
     // confirmación antes de borrar, no se puede deshacer :D
@@ -111,7 +113,7 @@ function ProductContent({ producto }: { producto: Producto }) {
   };
 
   const cambiarCantidad = (nuevaCantidad: number) => {
-    setCantidad(Math.min(99, Math.max(1, nuevaCantidad)));
+    setCantidad(Math.min(cantidadMaxima, Math.max(1, nuevaCantidad)));
     setConfirmacion('');
     setFalloAlAgregar(false);
   };
@@ -145,6 +147,12 @@ function ProductContent({ producto }: { producto: Producto }) {
         )}
         <p className="product-price">{formatoPrecio.format(producto.precio)}</p>
 
+        {producto.stock != null && (
+          <p className="product-stock">
+            {sinStock ? 'Sin stock por ahora' : `Stock: ${producto.stock}`}
+          </p>
+        )}
+
         <div className="purchase-row">
           <div className="quantity-control" aria-label="Cantidad">
             <button
@@ -163,7 +171,7 @@ function ProductContent({ producto }: { producto: Producto }) {
               className="quantity-control__button"
               type="button"
               aria-label="Agregar una unidad"
-              disabled={cantidad === 99 || agregando}
+              disabled={cantidad >= cantidadMaxima || agregando}
               onClick={() => cambiarCantidad(cantidad + 1)}
             >
               +
@@ -173,11 +181,12 @@ function ProductContent({ producto }: { producto: Producto }) {
           <button
             className="add-button"
             type="button"
-            disabled={agregando || cargandoCarrito}
+            disabled={sinStock || agregando || cargandoCarrito}
             onClick={() => void agregarAlCarrito()}
           >
-            {!agregando && <BsCartPlus aria-hidden="true" />}
-            {agregando ? 'Agregando…' : 'Agregar al carrito'}
+            {!sinStock && !agregando && <BsCartPlus aria-hidden="true" />}
+            {sinStock && 'Sin stock'}
+            {!sinStock && (agregando ? 'Agregando…' : 'Agregar al carrito')}
           </button>
         </div>
 
