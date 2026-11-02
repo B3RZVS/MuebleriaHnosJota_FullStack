@@ -13,20 +13,25 @@ const buscarProducto = async (productoId) => {
 };
 
 const obtener = async (sesion) => {
-  const items = await Promise.all(
-    carritoRepository.obtenerItems(sesion).map(async (item) => {
-      const producto = await buscarProducto(item.productoId);
-
-      return {
-        productoId: producto.id,
-        nombre: producto.nombre,
-        imagen: producto.imagenUrl ?? '',
-        precio: producto.precio,
-        cantidad: item.cantidad,
-        subtotal: producto.precio * item.cantidad,
-      };
-    })
+  const guardados = carritoRepository.obtenerItems(sesion);
+  const productos = await Promise.all(
+    guardados.map((item) => productosRepository.obtenerPorId(item.productoId))
   );
+
+  // si un producto se borró del catálogo lo saco del carrito, no tiene que romper todo :v
+  const vigentes = guardados.filter((item, indice) => productos[indice]);
+  if (vigentes.length !== guardados.length) {
+    carritoRepository.guardarItems(sesion, vigentes);
+  }
+
+  const items = productos.filter(Boolean).map((producto, indice) => ({
+    productoId: producto.id,
+    nombre: producto.nombre,
+    imagen: producto.imagenUrl ?? '',
+    precio: producto.precio,
+    cantidad: vigentes[indice].cantidad,
+    subtotal: producto.precio * vigentes[indice].cantidad,
+  }));
 
   return {
     items,
