@@ -126,7 +126,10 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                       <span>{item.cantidad}</span>
                       <button
                         aria-label={`Sumar una unidad de ${item.nombre}`}
-                        disabled={actualizando}
+                        disabled={
+                          actualizando ||
+                          item.cantidad >= Math.min(99, item.stock ?? 99)
+                        }
                         onClick={() =>
                           void cambiarCantidad(
                             item.productoId,
