@@ -1,6 +1,6 @@
 # Mueblería Hermanos Jota
 
-Aplicación web para una mueblería, sprint 5 y 6: catálogo guardado en MongoDB con alta, edición y baja de productos, detalle de cada pieza, carrito de compras y formulario de contacto.
+Aplicación web full stack (MERN) para una mueblería: catálogo guardado en MongoDB con alta, edición y baja de productos, detalle de cada pieza, carrito de compras y formulario de contacto.
 
 **Integrantes**
 
