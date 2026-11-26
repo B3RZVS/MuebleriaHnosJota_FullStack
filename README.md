@@ -89,7 +89,7 @@ MuebleriaHnosJota_FullStack/
 
 ## Requisitos
 
-- **Node.js 20.19 o superior** (o 22.12+). Lo exige Vite 8 en el frontend; el backend funciona desde Node 18.
+- **Node.js 22 (desde 22.12) o 24.** Son las versiones que declara `engines` en el backend, y Render las usa para elegir con cuál correr. También cumplen lo que pide Vite 8 en el frontend.
 - **npm** (incluido con Node).
 - Git.
 
