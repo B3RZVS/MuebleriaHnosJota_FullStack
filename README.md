@@ -48,7 +48,7 @@ Aplicación web full stack (MERN) para una mueblería: catálogo guardado en Mon
 | **Backend** | Node.js, Express 5, Mongoose, MongoDB, `express-session`, `cors`, `dotenv`, `http-errors` (ES Modules) |
 | **Frontend** | React 19, TypeScript, Vite, React Router 7, TanStack Query 5, react-icons |
 | **Calidad** | ESLint, Prettier, Husky, lint-staged, commitlint |
-| **Despliegue** | Render (API) y Netlify (frontend) |
+| **Despliegue** | Render (API), Netlify (frontend) y MongoDB Atlas (base de datos) |
 
 ## Estructura del proyecto
 
@@ -227,7 +227,7 @@ flowchart LR
     U[Navegador] -->|HTML / JS / CSS| N[Netlify<br/>React SPA]
     U -->|fetch + cookie de sesión| R[Render<br/>API Express]
     R --> S[(Sesión<br/>carrito)]
-    R --> P[(MongoDB<br/>productos y consultas)]
+    R --> P[(MongoDB Atlas<br/>productos y consultas)]
 ```
 
 ### Backend en capas
@@ -280,6 +280,21 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 
 ## Despliegue
 
+### Base de datos en MongoDB Atlas
+
+1. Crear un cluster gratuito (M0).
+2. En **Database Access**, crear un usuario de base de datos con contraseña.
+3. En **Network Access**, permitir `0.0.0.0/0` para que Render pueda conectarse.
+4. En **Connect → Drivers**, copiar la URI, reemplazar `<password>` y agregar el nombre de la base antes del `?`:
+
+   ```
+   mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/<base>?retryWrites=true&w=majority
+   ```
+
+5. Usar esa URI como `MONGODB_URI` en Render. Para cargar el catálogo, correr una vez `npm run seed:products` en local con la misma URI.
+
+Para desarrollo conviene usar otra base del mismo cluster (otro nombre en la URI), así las pruebas locales no tocan los datos de producción.
+
 ### Backend en Render
 
 1. Crear un **Web Service** y conectar el repositorio.
@@ -323,6 +338,7 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 
 ### Orden recomendado
 
-1. Desplegar primero el backend y copiar su URL.
-2. Desplegar el frontend con esa URL en `VITE_API_URL`.
-3. Volver a Render y completar `CLIENT_ORIGIN` con la URL de Netlify.
+1. Crear la base en Atlas y copiar su URI.
+2. Desplegar el backend con esa URI en `MONGODB_URI` y copiar su URL.
+3. Desplegar el frontend con esa URL en `VITE_API_URL`.
+4. Volver a Render y completar `CLIENT_ORIGIN` con la URL de Netlify.
