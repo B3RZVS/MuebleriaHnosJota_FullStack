@@ -108,19 +108,19 @@ function RegistroView() {
         <p className="auth-section__eyebrow">Tu cuenta</p>
         <h1 id="registro-title">Creá tu cuenta</h1>
         <p className="auth-section__description">
-          Registrate para guardar tu progreso en la tienda. Si ya tenés una
-          cuenta, podés iniciar sesión.
+          Registrate en nuestra mueblería y arma tu carritos de compras. Si ya
+          tenés una cuenta, podés iniciar sesión.
         </p>
       </div>
 
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
         <div className="auth-form__heading">
-          <h2>Datos de registro</h2>
+          <h2>Datos de registro </h2>
           <p>Los campos marcados con * son obligatorios.</p>
         </div>
 
         <div className="auth-form__field">
-          <label htmlFor="registro-nombre">Nombre Completo *</label>
+          <label htmlFor="registro-nombre">Nombre completo *</label>
           <input
             id="registro-nombre"
             name="nombre"

@@ -1,7 +1,10 @@
+export type RolUsuario = 'cliente' | 'admin';
+
 export type UsuarioAuth = {
   id: string;
   nombre: string;
   email: string;
+  rol: RolUsuario;
 };
 
 export type RegistroPayload = {

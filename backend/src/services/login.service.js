@@ -6,7 +6,7 @@ import {
   EMAIL_VALIDO,
   normalizarEmail,
   usuarioPublico,
-} from '../../utils/auth.utils.js';
+} from '../utils/auth.utils.js';
 
 const validarDatos = ({ email, password }) => {
   if (
@@ -26,13 +26,6 @@ const validarDatos = ({ email, password }) => {
 const iniciarSesion = async ({ email, password }) => {
   validarDatos({ email, password });
 
-  const jwtSecret = process.env.JWT_SECRET;
-
-  if (!jwtSecret) {
-    console.error('Falta configurar la variable de entorno JWT_SECRET.');
-    throw createError(500, 'Error interno del servidor');
-  }
-
   const emailNormalizado = normalizarEmail(email);
   const usuario =
     await usuariosRepository.buscarPorEmailConPassword(emailNormalizado);
@@ -47,9 +40,17 @@ const iniciarSesion = async ({ email, password }) => {
     throw createError(401, 'Correo electrónico o contraseña incorrectos');
   }
 
-  const token = jwt.sign({ id: usuario._id.toString() }, jwtSecret, {
-    expiresIn: '24h',
-  });
+  const rol = usuario.rol || 'cliente';
+  const token = jwt.sign(
+    {
+      id: usuario._id.toString(),
+      rol,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: '24h',
+    }
+  );
 
   return {
     mensaje: 'Inicio de sesión exitoso.',

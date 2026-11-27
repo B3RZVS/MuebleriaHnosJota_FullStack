@@ -6,7 +6,7 @@ import {
   PASSWORD_MIN,
   normalizarEmail,
   usuarioPublico,
-} from '../../utils/auth.utils.js';
+} from '../utils/auth.utils.js';
 
 const SALT_ROUNDS = 10;
 

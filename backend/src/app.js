@@ -9,6 +9,7 @@ import loggerMiddleware from './middlewares/logger.middleware.js';
 import notFoundMiddleware from './middlewares/notFound.middleware.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import sessionMiddleware from './middlewares/session.middleware.js';
+import jwtSecretMiddleware from './middlewares/jwtSecret.middleware.js';
 
 const app = express();
 const clientOrigins = process.env.CLIENT_ORIGIN
@@ -24,6 +25,7 @@ app.use(
 );
 app.use(express.json());
 app.use(sessionMiddleware);
+app.use(jwtSecretMiddleware);
 
 app.use('/api/productos', productosRoutes);
 

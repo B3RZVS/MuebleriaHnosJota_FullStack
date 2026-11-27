@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { EMAIL_VALIDO } from '../utils/auth.utils.js';
 
 const userSchema = new mongoose.Schema(
   {
@@ -16,13 +16,20 @@ const userSchema = new mongoose.Schema(
       unique: true,
       trim: true,
       lowercase: true,
-      match: [emailValido, 'El correo electrónico no es válido.'],
+      match: [EMAIL_VALIDO, 'El correo electrónico no es válido.'],
     },
     password: {
       type: String,
       required: [true, 'La contraseña es obligatoria.'],
-      minlength: [6, 'La contraseña debe tener al menos 6 caracteres.'],
       select: false,
+    },
+    rol: {
+      type: String,
+      enum: {
+        values: ['cliente', 'admin'],
+        message: 'El rol debe ser cliente o admin.',
+      },
+      default: 'cliente',
     },
   },
   {
