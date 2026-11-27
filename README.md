@@ -227,9 +227,9 @@ Los errores se devuelven como JSON: `{ "mensaje": "..." }`. Los de validación d
 ```mermaid
 flowchart LR
     U[Navegador] -->|HTML / JS / CSS| N[Netlify<br/>React SPA]
-    U -->|fetch + cookie de sesión| R[Render<br/>API Express]
+    U -->|fetch + cookie de sesión + token JWT| R[Render<br/>API Express]
     R --> S[(Sesión<br/>carrito)]
-    R --> P[(MongoDB Atlas<br/>productos y consultas)]
+    R --> P[(MongoDB Atlas<br/>productos, consultas y usuarios)]
 ```
 
 ### Backend en capas
