@@ -1,0 +1,179 @@
+import { useEffect, useState, type FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEstadoNavegacion } from '../../hooks/useEstadoNavegacion';
+import { useLogin } from '../../hooks/useLogin';
+import './LoginView.css';
+
+type LoginValues = {
+  email: string;
+  password: string;
+};
+
+type LoginErrors = Partial<LoginValues>;
+
+type LoginLocationState = {
+  mensaje?: string;
+};
+
+const initialValues: LoginValues = {
+  email: '',
+  password: '',
+};
+
+function LoginView() {
+  const navigate = useNavigate();
+  const login = useLogin();
+  const estadoNavegacion = useEstadoNavegacion<LoginLocationState>();
+  const mensajeRegistro = estadoNavegacion?.mensaje;
+
+  const [values, setValues] = useState<LoginValues>(initialValues);
+  const [errors, setErrors] = useState<LoginErrors>({});
+  const [mensajeExito, setMensajeExito] = useState(mensajeRegistro ?? '');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const updateField = (field: keyof LoginValues, value: string) => {
+    setValues((currentValues) => ({ ...currentValues, [field]: value }));
+    setErrors((currentErrors) => ({ ...currentErrors, [field]: undefined }));
+    setMensajeExito('');
+    if (login.isError) login.reset();
+  };
+
+  const validate = () => {
+    const nextErrors: LoginErrors = {};
+
+    if (!values.email.trim()) {
+      nextErrors.email = 'Ingresá tu correo electrónico.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
+      nextErrors.email = 'Ingresá un correo electrónico válido.';
+    }
+
+    if (!values.password) {
+      nextErrors.password = 'Ingresá tu contraseña.';
+    }
+
+    return nextErrors;
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setMensajeExito('');
+    if (login.isError) login.reset();
+
+    const nextErrors = validate();
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    login.mutate(
+      {
+        email: values.email.trim(),
+        password: values.password,
+      },
+      {
+        onSuccess: (resultado) => {
+          // TODO Tarea 2 — AuthContext:
+          // Cuando exista el contexto, llamar acá a su login() con
+          // resultado.token y resultado.usuario (además de la cache de RQ).
+          setMensajeExito(resultado.mensaje || 'Inicio de sesión exitoso.');
+          navigate('/');
+        },
+      }
+    );
+  };
+
+  const mensajeError =
+    login.error instanceof Error
+      ? login.error.message
+      : login.isError
+        ? 'No pudimos iniciar sesión. Intentá nuevamente.'
+        : '';
+
+  const feedback = mensajeError || mensajeExito;
+  const esExito = Boolean(mensajeExito) && !mensajeError;
+
+  return (
+    <section className="auth-section" aria-labelledby="login-title">
+      <div className="auth-section__intro">
+        <p className="auth-section__eyebrow">Tu cuenta</p>
+        <h1 id="login-title">Iniciá sesión</h1>
+        <p className="auth-section__description">
+          Entrá con tu correo y contraseña para continuar. Si todavía no tenés
+          cuenta, podés registrarte en unos minutos.
+        </p>
+      </div>
+
+      <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        <div className="auth-form__heading">
+          <h2>Datos de acceso</h2>
+          <p>Los campos marcados con * son obligatorios.</p>
+        </div>
+
+        <div className="auth-form__field">
+          <label htmlFor="login-email">Correo electrónico *</label>
+          <input
+            id="login-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            value={values.email}
+            onChange={(event) => updateField('email', event.target.value)}
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? 'login-email-error' : undefined}
+            required
+          />
+          {errors.email && (
+            <span className="auth-form__error" id="login-email-error">
+              {errors.email}
+            </span>
+          )}
+        </div>
+
+        <div className="auth-form__field">
+          <label htmlFor="login-password">Contraseña *</label>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            value={values.password}
+            onChange={(event) => updateField('password', event.target.value)}
+            aria-invalid={Boolean(errors.password)}
+            aria-describedby={
+              errors.password ? 'login-password-error' : undefined
+            }
+            required
+          />
+          {errors.password && (
+            <span className="auth-form__error" id="login-password-error">
+              {errors.password}
+            </span>
+          )}
+        </div>
+
+        <button
+          className="auth-form__submit"
+          type="submit"
+          disabled={login.isPending}
+        >
+          {login.isPending ? 'Ingresando…' : 'Iniciar sesión'}
+        </button>
+
+        <p
+          className={`auth-form__feedback${esExito ? ' auth-form__feedback--ok' : feedback ? ' auth-form__feedback--error' : ''}`}
+          aria-live="polite"
+          role="status"
+        >
+          {feedback}
+        </p>
+
+        <p className="auth-form__link">
+          ¿No tenés una cuenta? <Link to="/registro">Registrate</Link>
+        </p>
+      </form>
+    </section>
+  );
+}
+
+export default LoginView;

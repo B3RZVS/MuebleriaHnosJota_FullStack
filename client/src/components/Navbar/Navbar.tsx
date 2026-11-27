@@ -65,9 +65,23 @@ function Navbar({ cantidadCarrito, onAbrirCarrito }: NavbarProps) {
         >
           Contacto
         </NavLink>
+        <NavLink
+          className="link link--sesion"
+          to="/login"
+          onClick={() => setMenuAbierto(false)}
+        >
+          Iniciar sesión
+        </NavLink>
       </nav>
 
       <div className="barra__acciones">
+        <NavLink
+          className="boton-sesion"
+          to="/login"
+          aria-label="Iniciar sesión"
+        >
+          Iniciar sesión
+        </NavLink>
         <button
           aria-label={`Abrir carrito, ${etiquetaCantidad}`}
           className="boton-carrito"

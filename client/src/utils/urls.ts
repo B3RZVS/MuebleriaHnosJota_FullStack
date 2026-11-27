@@ -2,3 +2,4 @@
 // (ej: VITE_API_URL=https://mi-api.com, sin "/" al final). Si no está definida, se usa el servidor local
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 export const API_PRODUCTOS = `${API_URL}/api/productos`;
+export const API_AUTH = `${API_URL}/api/auth`;

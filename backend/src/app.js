@@ -3,6 +3,7 @@ import cors from 'cors';
 import productosRoutes from './routes/productos.routes.js';
 import contactoRoutes from './routes/contacto.routes.js';
 import carritoRoutes from './routes/carrito.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 import loggerMiddleware from './middlewares/logger.middleware.js';
 import notFoundMiddleware from './middlewares/notFound.middleware.js';
@@ -29,6 +30,8 @@ app.use('/api/productos', productosRoutes);
 app.use('/api/contacto', contactoRoutes);
 
 app.use('/api/carrito', carritoRoutes);
+
+app.use('/api/auth', authRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
