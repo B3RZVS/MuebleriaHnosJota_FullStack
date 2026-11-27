@@ -1,26 +1,13 @@
 import type {
   LoginPayload,
   LoginRespuesta,
+  PerfilRespuesta,
   RegistroPayload,
   RegistroRespuesta,
+  UsuarioAuth,
 } from '../types/auth';
 import { API_AUTH } from '../utils/urls';
-
-const SIN_SERVIDOR =
-  'No pudimos conectar con el servidor. Intentá de nuevo en unos segundos.';
-
-const leerMensajeError = (datos: unknown, fallback: string) => {
-  if (
-    typeof datos === 'object' &&
-    datos !== null &&
-    'mensaje' in datos &&
-    typeof datos.mensaje === 'string'
-  ) {
-    return datos.mensaje;
-  }
-
-  return fallback;
-};
+import { ErrorApi, SIN_SERVIDOR, fetchConAuth, leerJson } from './apiClient';
 
 const postAuth = async <T>(
   ruta: string,
@@ -35,16 +22,10 @@ const postAuth = async <T>(
       body: JSON.stringify(cuerpo),
     });
   } catch {
-    throw new Error(SIN_SERVIDOR);
+    throw new ErrorApi(SIN_SERVIDOR, 0);
   }
 
-  const datos: unknown = await respuesta.json().catch(() => null);
-
-  if (!respuesta.ok) {
-    throw new Error(leerMensajeError(datos, SIN_SERVIDOR));
-  }
-
-  return datos as T;
+  return leerJson<T>(respuesta, SIN_SERVIDOR);
 };
 
 export const registrarUsuario = (datos: RegistroPayload) =>
@@ -52,3 +33,13 @@ export const registrarUsuario = (datos: RegistroPayload) =>
 
 export const iniciarSesion = (datos: LoginPayload) =>
   postAuth<LoginRespuesta>('/login', datos);
+
+export const obtenerPerfil = async (token?: string): Promise<UsuarioAuth> => {
+  const respuesta = await fetchConAuth(`${API_AUTH}/perfil`, {}, token);
+  const datos = await leerJson<PerfilRespuesta>(
+    respuesta,
+    'No pudimos validar la sesión.'
+  );
+
+  return datos.usuario;
+};

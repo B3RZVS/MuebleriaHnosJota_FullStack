@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useRegistro } from '../../hooks/useRegistro';
+import { useAuth } from '../../auth/context/useAuth';
 import './RegistroView.css';
 
 type RegistroValues = {
@@ -24,12 +25,18 @@ const initialValues: RegistroValues = {
 function RegistroView() {
   const navigate = useNavigate();
   const registro = useRegistro();
+  const { estaAutenticado, cargando } = useAuth();
   const [values, setValues] = useState<RegistroValues>(initialValues);
   const [errors, setErrors] = useState<RegistroErrors>({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Con sesión iniciada no tiene sentido mostrar el registro.
+  if (estaAutenticado && !cargando) {
+    return <Navigate to="/" replace />;
+  }
 
   const updateField = (field: keyof RegistroValues, value: string) => {
     setValues((currentValues) => ({ ...currentValues, [field]: value }));

@@ -1,0 +1,9 @@
+.ruta-protegida {
+  display: grid;
+  min-height: 40vh;
+  place-items: center;
+  margin: 0;
+  padding: 48px 20px;
+  color: var(--color-siena);
+  font-size: 1rem;
+}

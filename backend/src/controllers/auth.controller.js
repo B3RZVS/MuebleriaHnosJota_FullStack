@@ -19,4 +19,7 @@ const login = async (req, res, next) => {
   }
 };
 
-export default { registro, login };
+// El middleware de autenticación ya dejó al usuario en req.usuario
+const perfil = (req, res) => res.status(200).json({ usuario: req.usuario });
+
+export default { registro, login, perfil };

@@ -28,3 +28,7 @@ export type LoginRespuesta = {
   token: string;
   usuario: UsuarioAuth;
 };
+
+export type PerfilRespuesta = {
+  usuario: UsuarioAuth;
+};

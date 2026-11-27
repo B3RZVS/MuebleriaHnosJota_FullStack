@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BsCartPlus } from 'react-icons/bs';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../../auth/context/useAuth';
 import { useCart } from '../../cart/context/useCart';
 import ImagenProducto from '../../components/ImagenProducto/ImagenProducto';
 import { useEliminarProducto } from '../../hooks/useEliminarProducto';
@@ -99,6 +100,8 @@ function ProductContent({ producto }: { producto: Producto }) {
   } = useCart();
   const agregando = productosAgregando.includes(producto.id);
   const navigate = useNavigate();
+  const { usuario } = useAuth();
+  const esAdmin = usuario?.rol === 'admin';
   const eliminacion = useEliminarProducto();
   const especificaciones = Object.entries(producto.especificaciones ?? {});
   const sinStock = producto.stock === 0;
@@ -212,27 +215,29 @@ function ProductContent({ producto }: { producto: Producto }) {
           Casa Taller.
         </p>
 
-        <div className="product-admin">
-          <Link
-            className="product-admin__edit"
-            to={`/admin/editar-producto/${producto.id}`}
-          >
-            Editar producto
-          </Link>
-          <button
-            className="product-admin__delete"
-            type="button"
-            disabled={eliminacion.isPending}
-            onClick={eliminarProducto}
-          >
-            {eliminacion.isPending ? 'Eliminando…' : 'Eliminar producto'}
-          </button>
-          {eliminacion.isError && (
-            <p className="product-admin__error" role="alert">
-              No pudimos eliminar el producto. Intentá de nuevo.
-            </p>
-          )}
-        </div>
+        {esAdmin && (
+          <div className="product-admin">
+            <Link
+              className="product-admin__edit"
+              to={`/admin/editar-producto/${producto.id}`}
+            >
+              Editar producto
+            </Link>
+            <button
+              className="product-admin__delete"
+              type="button"
+              disabled={eliminacion.isPending}
+              onClick={eliminarProducto}
+            >
+              {eliminacion.isPending ? 'Eliminando…' : 'Eliminar producto'}
+            </button>
+            {eliminacion.isError && (
+              <p className="product-admin__error" role="alert">
+                No pudimos eliminar el producto. Intentá de nuevo.
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       {especificaciones.length > 0 && (

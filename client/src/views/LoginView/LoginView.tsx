@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useEstadoNavegacion } from '../../hooks/useEstadoNavegacion';
 import { useLogin } from '../../hooks/useLogin';
+import { useAuth } from '../../auth/context/useAuth';
 import './LoginView.css';
 
 type LoginValues = {
@@ -13,6 +14,7 @@ type LoginErrors = Partial<LoginValues>;
 
 type LoginLocationState = {
   mensaje?: string;
+  from?: string;
 };
 
 const initialValues: LoginValues = {
@@ -22,9 +24,11 @@ const initialValues: LoginValues = {
 
 function LoginView() {
   const navigate = useNavigate();
-  const login = useLogin();
+  const loginMutation = useLogin();
+  const { login, estaAutenticado, cargando } = useAuth();
   const estadoNavegacion = useEstadoNavegacion<LoginLocationState>();
   const mensajeRegistro = estadoNavegacion?.mensaje;
+  const destino = estadoNavegacion?.from ?? '/';
 
   const [values, setValues] = useState<LoginValues>(initialValues);
   const [errors, setErrors] = useState<LoginErrors>({});
@@ -38,7 +42,7 @@ function LoginView() {
     setValues((currentValues) => ({ ...currentValues, [field]: value }));
     setErrors((currentErrors) => ({ ...currentErrors, [field]: undefined }));
     setMensajeExito('');
-    if (login.isError) login.reset();
+    if (loginMutation.isError) loginMutation.reset();
   };
 
   const validate = () => {
@@ -60,38 +64,41 @@ function LoginView() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setMensajeExito('');
-    if (login.isError) login.reset();
+    if (loginMutation.isError) loginMutation.reset();
 
     const nextErrors = validate();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    login.mutate(
+    loginMutation.mutate(
       {
         email: values.email.trim(),
         password: values.password,
       },
       {
         onSuccess: (resultado) => {
-          // TODO Tarea 2 — AuthContext:
-          // Cuando exista el contexto, llamar acá a su login() con
-          // resultado.token y resultado.usuario (además de la cache de RQ).
-          setMensajeExito(resultado.mensaje || 'Inicio de sesión exitoso.');
-          navigate('/');
+          login(resultado.token, resultado.usuario);
+          navigate(destino, { replace: true });
         },
       }
     );
   };
 
   const mensajeError =
-    login.error instanceof Error
-      ? login.error.message
-      : login.isError
+    loginMutation.error instanceof Error
+      ? loginMutation.error.message
+      : loginMutation.isError
         ? 'No pudimos iniciar sesión. Intentá nuevamente.'
         : '';
 
   const feedback = mensajeError || mensajeExito;
   const esExito = Boolean(mensajeExito) && !mensajeError;
+
+  // Si ya hay sesión, el formulario no tiene sentido.
+  // Se exceptúa el render posterior al login, que todavía está navegando.
+  if (estaAutenticado && !cargando && !loginMutation.isSuccess) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <section className="auth-section" aria-labelledby="login-title">
@@ -155,9 +162,9 @@ function LoginView() {
         <button
           className="auth-form__submit"
           type="submit"
-          disabled={login.isPending}
+          disabled={loginMutation.isPending}
         >
-          {login.isPending ? 'Ingresando…' : 'Iniciar sesión'}
+          {loginMutation.isPending ? 'Ingresando…' : 'Iniciar sesión'}
         </button>
 
         <p

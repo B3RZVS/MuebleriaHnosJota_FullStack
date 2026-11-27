@@ -1,5 +1,6 @@
 import type { Producto } from '../types/producto';
 import { API_PRODUCTOS } from '../utils/urls';
+import { fetchConAuth, leerMensajeError } from './apiClient';
 
 export type NuevoProducto = Omit<Producto, 'id'>;
 
@@ -20,33 +21,26 @@ const SIN_SERVIDOR =
 const guardarProducto = async (
   url: string,
   metodo: 'POST' | 'PUT',
-  producto: NuevoProducto
+  producto: NuevoProducto,
+  token: string | null
 ): Promise<Producto> => {
-  let respuesta: Response;
-
-  try {
-    respuesta = await fetch(url, {
+  const respuesta = await fetchConAuth(
+    url,
+    {
       method: metodo,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(producto),
-    });
-  } catch {
-    // sin conexión el error de fetch es técnico y en inglés
-    throw new Error(SIN_SERVIDOR);
-  }
+    },
+    token
+  );
 
   // si Render está caído no llega JSON y queda en null
   const datos: unknown = await respuesta.json().catch(() => null);
 
   if (!respuesta.ok) {
-    const mensaje =
-      typeof datos === 'object' &&
-      datos !== null &&
-      'mensaje' in datos &&
-      typeof datos.mensaje === 'string'
-        ? datos.mensaje
-        : SIN_SERVIDOR;
-    throw new Error(mensaje);
+    throw new Error(
+      leerMensajeError(datos, `El servidor respondió ${respuesta.status}`)
+    );
   }
 
   if (!esProducto(datos)) {
@@ -56,8 +50,10 @@ const guardarProducto = async (
   return datos;
 };
 
-export const crearProducto = (nuevoProducto: NuevoProducto) =>
-  guardarProducto(API_PRODUCTOS, 'POST', nuevoProducto);
+export const crearProducto = (
+  nuevoProducto: NuevoProducto,
+  token: string | null
+) => guardarProducto(API_PRODUCTOS, 'POST', nuevoProducto, token);
 
 // Si el id está mal escrito (400) o el producto no existe (404) devuelve null, para mostrar "no encontramos esta pieza"
 export const obtenerProductoId = async (
@@ -96,13 +92,26 @@ export const obtenerProductos = async (): Promise<Producto[]> => {
   return datos as Producto[];
 };
 
-export const eliminarProducto = async (id: string): Promise<void> => {
-  const respuesta = await fetch(`${API_PRODUCTOS}/${id}`, { method: 'DELETE' });
+export const eliminarProducto = async (
+  id: string,
+  token: string | null
+): Promise<void> => {
+  const respuesta = await fetchConAuth(
+    `${API_PRODUCTOS}/${id}`,
+    { method: 'DELETE' },
+    token
+  );
 
   if (!respuesta.ok) {
-    throw new Error(`El servidor respondió ${respuesta.status}`);
+    const datos: unknown = await respuesta.json().catch(() => null);
+    throw new Error(
+      leerMensajeError(datos, `El servidor respondió ${respuesta.status}`)
+    );
   }
 };
 
-export const actualizarProducto = (id: string, cambios: NuevoProducto) =>
-  guardarProducto(`${API_PRODUCTOS}/${id}`, 'PUT', cambios);
+export const actualizarProducto = (
+  id: string,
+  cambios: NuevoProducto,
+  token: string | null
+) => guardarProducto(`${API_PRODUCTOS}/${id}`, 'PUT', cambios, token);
