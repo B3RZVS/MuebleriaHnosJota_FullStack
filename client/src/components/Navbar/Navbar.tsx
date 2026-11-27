@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../auth/context/useAuth';
 import './Navbar.css';
 
 interface NavbarProps {
@@ -8,6 +9,8 @@ interface NavbarProps {
 }
 
 function Navbar({ cantidadCarrito, onAbrirCarrito }: NavbarProps) {
+  const { usuario, estaAutenticado, logout } = useAuth();
+  const navigate = useNavigate();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const etiquetaCantidad =
     cantidadCarrito === 1 ? '1 producto' : `${cantidadCarrito} productos`;
@@ -22,6 +25,14 @@ function Navbar({ cantidadCarrito, onAbrirCarrito }: NavbarProps) {
     document.addEventListener('keydown', cerrarConEscape);
     return () => document.removeEventListener('keydown', cerrarConEscape);
   }, [menuAbierto]);
+
+  const cerrarMenu = () => setMenuAbierto(false);
+
+  const cerrarSesion = () => {
+    cerrarMenu();
+    logout();
+    navigate('/', { replace: true });
+  };
 
   return (
     <header className="barra">
@@ -41,47 +52,96 @@ function Navbar({ cantidadCarrito, onAbrirCarrito }: NavbarProps) {
         className={`barra__links${menuAbierto ? ' barra__links--abierto' : ''}`}
         aria-label="Navegación principal"
       >
-        <NavLink className="link" to="/" onClick={() => setMenuAbierto(false)}>
+        <NavLink className="link" to="/" onClick={cerrarMenu}>
           Inicio
         </NavLink>
-        <NavLink
-          className="link"
-          to="/productos"
-          onClick={() => setMenuAbierto(false)}
-        >
+        <NavLink className="link" to="/productos" onClick={cerrarMenu}>
           Catálogo
         </NavLink>
-        <NavLink
-          className="link"
-          to="/admin/crear-producto"
-          onClick={() => setMenuAbierto(false)}
-        >
-          Crear producto
-        </NavLink>
-        <NavLink
-          className="link"
-          to="/contacto"
-          onClick={() => setMenuAbierto(false)}
-        >
+        {usuario?.rol === 'admin' && (
+          <NavLink
+            className="link"
+            to="/admin/crear-producto"
+            onClick={cerrarMenu}
+          >
+            Crear producto
+          </NavLink>
+        )}
+        <NavLink className="link" to="/contacto" onClick={cerrarMenu}>
           Contacto
         </NavLink>
-        <NavLink
-          className="link link--sesion"
-          to="/login"
-          onClick={() => setMenuAbierto(false)}
-        >
-          Iniciar sesión
-        </NavLink>
+
+        {estaAutenticado ? (
+          <>
+            <NavLink className="link" to="/mis-pedidos" onClick={cerrarMenu}>
+              Mis pedidos
+            </NavLink>
+            <NavLink
+              className="link link--sesion"
+              to="/perfil"
+              onClick={cerrarMenu}
+            >
+              Mi perfil
+            </NavLink>
+            <button
+              className="link link--sesion link--boton"
+              type="button"
+              onClick={cerrarSesion}
+            >
+              Cerrar sesión
+            </button>
+          </>
+        ) : (
+          <>
+            <NavLink
+              className="link link--sesion"
+              to="/login"
+              onClick={cerrarMenu}
+            >
+              Iniciar sesión
+            </NavLink>
+            <NavLink
+              className="link link--sesion"
+              to="/registro"
+              onClick={cerrarMenu}
+            >
+              Registrarse
+            </NavLink>
+          </>
+        )}
       </nav>
 
       <div className="barra__acciones">
-        <NavLink
-          className="boton-sesion"
-          to="/login"
-          aria-label="Iniciar sesión"
-        >
-          Iniciar sesión
-        </NavLink>
+        {estaAutenticado ? (
+          <>
+            <NavLink className="barra__usuario" to="/perfil">
+              Hola, {usuario?.nombre}
+            </NavLink>
+            <button
+              className="boton-sesion boton-sesion--salir"
+              type="button"
+              onClick={cerrarSesion}
+            >
+              Cerrar sesión
+            </button>
+          </>
+        ) : (
+          <>
+            <NavLink
+              className="boton-sesion boton-sesion--secundario"
+              to="/registro"
+            >
+              Registrarse
+            </NavLink>
+            <NavLink
+              className="boton-sesion"
+              to="/login"
+              aria-label="Iniciar sesión"
+            >
+              Iniciar sesión
+            </NavLink>
+          </>
+        )}
         <button
           aria-label={`Abrir carrito, ${etiquetaCantidad}`}
           className="boton-carrito"

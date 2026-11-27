@@ -9,6 +9,9 @@ import HomeView from './views/HomeView/HomeView.tsx';
 import { NotFoundView } from './views/NotFoundView/NotFoundView.tsx';
 import RegistroView from './views/RegistroView/RegistroView.tsx';
 import LoginView from './views/LoginView/LoginView.tsx';
+import { PerfilView } from './views/PerfilView/PerfilView.tsx';
+import { MisPedidosView } from './views/MisPedidosView/MisPedidosView.tsx';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute.tsx';
 import Navbar from './components/Navbar/Navbar.tsx';
 import Footer from './components/Footer/Footer.tsx';
 import CartModal from './cart/components/CartModal.tsx';
@@ -30,11 +33,41 @@ function App() {
           <Route path="/" element={<HomeView />} />
           <Route path="/productos" element={<ProductosView />} />
           <Route path="/productos/:id" element={<ProductoDetails />} />
-          <Route path="/admin/crear-producto" element={<ProductoCreate />} />
-          <Route path="/admin/editar-producto/:id" element={<ProductoEdit />} />
+          <Route
+            path="/admin/crear-producto"
+            element={
+              <ProtectedRoute soloAdmin>
+                <ProductoCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/editar-producto/:id"
+            element={
+              <ProtectedRoute soloAdmin>
+                <ProductoEdit />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/contacto" element={<ContactForm />} />
           <Route path="/registro" element={<RegistroView />} />
           <Route path="/login" element={<LoginView />} />
+          <Route
+            path="/perfil"
+            element={
+              <ProtectedRoute>
+                <PerfilView />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mis-pedidos"
+            element={
+              <ProtectedRoute>
+                <MisPedidosView />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundView />} />
         </Routes>
       </main>

@@ -39,7 +39,8 @@ Aplicación web para una mueblería, sprint 5 y 6: catálogo guardado en MongoDB
 - Administración del catálogo: crear, editar y eliminar productos desde formularios.
 - Carrito de compras: agregar, cambiar cantidad, quitar y vaciar, sin pasarse del stock. Se mantiene entre visitas mediante sesión.
 - Formulario de contacto con validación en el servidor.
-- Navegación SPA con rutas: `/`, `/productos`, `/productos/:id`, `/contacto`, `/admin/crear-producto` y `/admin/editar-producto/:id`. Cualquier otra muestra una página 404.
+- Sesión con JWT: registro, login, persistencia al recargar, perfil y rutas privadas protegidas.
+- Navegación SPA con rutas: `/`, `/productos`, `/productos/:id`, `/contacto`, `/login`, `/registro`, `/perfil`, `/mis-pedidos`, `/admin/crear-producto` y `/admin/editar-producto/:id`. Cualquier otra muestra una página 404.
 
 ## Stack tecnológico
 
@@ -112,6 +113,7 @@ npm install
 cp .env.example .env      # en PowerShell: Copy-Item .env.example .env
 # Completar MONGODB_URI en .env antes de iniciar el servidor
 npm run seed:products     # carga el catálogo una vez, solo si la colección está vacía
+npm run promote:admin -- correo@ejemplo.com   # opcional: asigna rol admin a un usuario
 npm run dev               # con recarga automática (nodemon)
 ```
 
@@ -163,6 +165,7 @@ Cada commit pasa por Husky: lint-staged corre ESLint y Prettier sobre los archiv
 | `PORT` | No (default `3000`) | Puerto del servidor. Render lo inyecta automáticamente. |
 | `CLIENT_ORIGIN` | No en local, **sí en producción** | Origen(es) del frontend autorizados por CORS, separados por coma. Sin `/` al final. Ej: `https://quiet-douhua-d3c51b.netlify.app` |
 | `SESSION_SECRET` | **Sí si `NODE_ENV=production`** | Texto largo y secreto para firmar la cookie de sesión. |
+| `JWT_SECRET` | **Sí** | Texto largo y secreto para firmar y verificar los JWT del login. |
 | `MONGODB_URI` | **Sí** | URI de conexión a MongoDB. Mantenerla privada y no subir `.env` al repositorio. |
 | `NODE_ENV` | En producción | Debe ser `production` para activar la cookie segura. |
 
@@ -182,6 +185,14 @@ Se copia desde `client/.env.example`.
 
 Base URL: `http://localhost:3000` (local) o la URL de Render (producción).
 
+### Autenticación
+
+| Método | Ruta | Cuerpo | Descripción |
+|---|---|---|---|
+| `POST` | `/api/auth/registro` | `{ nombre, email, password }` | Crea el usuario y responde `201`. La contraseña se guarda hasheada. |
+| `POST` | `/api/auth/login` | `{ email, password }` | Valida las credenciales y devuelve `{ mensaje, token, usuario }`. El token vence a las 24 horas. |
+| `GET` | `/api/auth/perfil` | — | Devuelve `{ usuario }` de la sesión. Requiere `Authorization: Bearer <token>`; responde `401` si el token falta, es inválido o expiró. |
+
 ### Productos
 
 | Método | Ruta | Descripción |
@@ -191,6 +202,8 @@ Base URL: `http://localhost:3000` (local) o la URL de Render (producción).
 | `POST` | `/api/productos` | Crea y persiste un producto (`201`); requiere `nombre` y `precio`, y devuelve `400` ante errores de validación |
 | `PUT` | `/api/productos/:id` | Reemplaza el producto completo (`200`); `400` si el id o los datos no son válidos, `404` si no existe |
 | `DELETE` | `/api/productos/:id` | Elimina el producto y lo devuelve (`200`); `400` si el id no es válido, `404` si no existe |
+
+Los `GET` son públicos. Las rutas `POST`, `PUT` y `DELETE` requieren `Authorization: Bearer <token>` de un usuario con rol `admin`; si falta el token responden `401` y si el usuario no es admin, `403`.
 
 Los productos devuelven un `id` de MongoDB como texto y los campos `nombre`, `descripcion`, `precio`, `stock` e `imagenUrl`. `destacado` y `especificaciones` son opcionales para mantener la interfaz actual. Los productos nuevos también traen `createdAt` y `updatedAt`.
 
@@ -260,6 +273,8 @@ Frontend (Netlify) y API (Render) están en dominios diferentes, así que la coo
 ### Seguridad básica
 
 - La app **no arranca** en producción sin `SESSION_SECRET`.
+- Los JWT se firman con `JWT_SECRET` y expiran a las 24 horas; las rutas privadas de la API se validan con un middleware.
+- El alta, la edición y la baja de productos requieren rol `admin`; el registro crea usuarios con rol `cliente`.
 - La cookie es `httpOnly` y expira a las 24 horas.
 - Los errores 500 no revelan el mensaje original.
 - Las entradas de productos, carrito y formulario de contacto se validan en el servidor.
@@ -296,6 +311,7 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
    ```
    NODE_ENV=production
    SESSION_SECRET=<texto largo y aleatorio>
+   JWT_SECRET=<texto largo y aleatorio>
    CLIENT_ORIGIN=https://quiet-douhua-d3c51b.netlify.app
    MONGODB_URI=<URI privada de MongoDB Atlas>
    ```

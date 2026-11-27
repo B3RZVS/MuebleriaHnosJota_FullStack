@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../auth/context/useAuth';
 import { crearProducto } from '../../services/producto.api';
 import type { Producto } from '../../types/producto';
 import './ProductoCreate.css';
@@ -42,6 +43,7 @@ function ProductoCreate({
   onGuardar,
 }: ProductoCreateProps) {
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [valores, setValores] = useState(valoresIniciales);
   const [errores, setErrores] = useState<ErroresFormulario>({});
   const [errorEnvio, setErrorEnvio] = useState('');
@@ -137,7 +139,7 @@ function ProductoCreate({
       if (onGuardar) {
         await onGuardar(nuevoProducto);
       } else {
-        const producto = await crearProducto(nuevoProducto);
+        const producto = await crearProducto(nuevoProducto, token);
         navigate(`/productos/${producto.id}`, {
           state: { productoCreado: true },
         });
