@@ -65,26 +65,28 @@ MuebleriaHnosJota_FullStack/
 │   ├── .env.example              # Plantilla de variables de entorno
 │   └── src/
 │       ├── app.js                # Configuración de Express, CORS, sesión y rutas
-│       ├── routes/               # Definición de endpoints (productos, carrito, contacto)
+│       ├── routes/               # Definición de endpoints (auth, productos, carrito, contacto)
 │       ├── controllers/          # Validan la entrada y arman la respuesta HTTP
-│       ├── services/             # Lógica de negocio (carrito, productos)
-│       ├── repositories/         # Acceso a datos (catálogo, carrito en sesión, consultas)
-│       ├── middlewares/          # logger, sesión, validación de contacto, 404 y errores
+│       ├── services/             # Lógica de negocio (registro, login, carrito, productos)
+│       ├── repositories/         # Acceso a datos (catálogo, carrito en sesión, consultas, usuarios)
+│       ├── middlewares/          # logger, sesión, token JWT, rol admin, validación de contacto, 404 y errores
 │       ├── data/productos.js     # Datos iniciales para cargar el catálogo
-│       ├── models/               # Esquemas Product y Consulta de Mongoose
+│       ├── models/               # Esquemas Product, Consulta y User de Mongoose
+│       ├── utils/auth.utils.js   # Validación del mail y datos públicos del usuario
 │       ├── config/database.js    # Conexión con MongoDB
-│       └── scripts/              # Carga inicial del catálogo
+│       └── scripts/              # Carga inicial del catálogo y asignación del rol admin
 └── client/
     ├── .env.example              # Plantilla de variables de entorno
     ├── public/_redirects         # Fallback de la SPA para Netlify
     └── src/
-        ├── views/                # Pantallas: Home, Productos, ProductoDetails, ProductoEdit, NotFound
-        ├── components/           # Navbar, Footer, ProductCard, ProductList, ProductoCreate, ImagenProducto, ContactForm
+        ├── views/                # Pantallas: Home, Productos, ProductoDetails, ProductoEdit, Login, Registro, Perfil, MisPedidos, NotFound
+        ├── components/           # Navbar, Footer, ProductCard, ProductList, ProductoCreate, ImagenProducto, ContactForm, ProtectedRoute
+        ├── auth/                 # Contexto de autenticación (AuthContext y useAuth)
         ├── cart/                 # Contexto, componentes, API y tipos del carrito
-        ├── hooks/                # Hooks de React Query para productos y avisos de navegación
-        ├── services/             # Llamadas fetch a la API
+        ├── hooks/                # Hooks de React Query para productos, login, registro y avisos de navegación
+        ├── services/             # Llamadas fetch a la API (apiClient suma el token en las privadas)
         ├── types/                # Tipos de TypeScript
-        └── utils/                # URL de la API y formato de precios
+        └── utils/                # URL de la API, formato de precios y sesión guardada en el navegador
 ```
 
 ## Requisitos
