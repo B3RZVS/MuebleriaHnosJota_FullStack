@@ -1,6 +1,6 @@
 # Mueblería Hermanos Jota
 
-Aplicación web para una mueblería, sprint 5 y 6: catálogo guardado en MongoDB con alta, edición y baja de productos, detalle de cada pieza, carrito de compras y formulario de contacto.
+Aplicación web full stack (MERN) para una mueblería: catálogo guardado en MongoDB con alta, edición y baja de productos, detalle de cada pieza, carrito de compras y formulario de contacto.
 
 **Integrantes**
 
@@ -46,10 +46,10 @@ Aplicación web para una mueblería, sprint 5 y 6: catálogo guardado en MongoDB
 
 | Capa | Tecnologías |
 |---|---|
-| **Backend** | Node.js, Express 5, Mongoose, MongoDB, `express-session`, `cors`, `dotenv`, `http-errors` (ES Modules) |
+| **Backend** | Node.js, Express 5, Mongoose, MongoDB, `express-session`, `bcrypt`, `jsonwebtoken`, `cors`, `dotenv`, `http-errors` (ES Modules) |
 | **Frontend** | React 19, TypeScript, Vite, React Router 7, TanStack Query 5, react-icons |
 | **Calidad** | ESLint, Prettier, Husky, lint-staged, commitlint |
-| **Despliegue** | Render (API) y Netlify (frontend) |
+| **Despliegue** | Render (API), Netlify (frontend) y MongoDB Atlas (base de datos) |
 
 ## Estructura del proyecto
 
@@ -66,31 +66,33 @@ MuebleriaHnosJota_FullStack/
 │   ├── .env.example              # Plantilla de variables de entorno
 │   └── src/
 │       ├── app.js                # Configuración de Express, CORS, sesión y rutas
-│       ├── routes/               # Definición de endpoints (productos, carrito, contacto)
+│       ├── routes/               # Definición de endpoints (auth, productos, carrito, contacto)
 │       ├── controllers/          # Validan la entrada y arman la respuesta HTTP
-│       ├── services/             # Lógica de negocio (carrito, productos)
-│       ├── repositories/         # Acceso a datos (catálogo, carrito en sesión, consultas)
-│       ├── middlewares/          # logger, sesión, validación de contacto, 404 y errores
+│       ├── services/             # Lógica de negocio (registro, login, carrito, productos)
+│       ├── repositories/         # Acceso a datos (catálogo, carrito en sesión, consultas, usuarios)
+│       ├── middlewares/          # logger, sesión, token JWT, rol admin, validación de contacto, 404 y errores
 │       ├── data/productos.js     # Datos iniciales para cargar el catálogo
-│       ├── models/               # Esquemas Product y Consulta de Mongoose
+│       ├── models/               # Esquemas Product, Consulta y User de Mongoose
+│       ├── utils/auth.utils.js   # Validación del mail y datos públicos del usuario
 │       ├── config/database.js    # Conexión con MongoDB
-│       └── scripts/              # Carga inicial del catálogo
+│       └── scripts/              # Carga inicial del catálogo y asignación del rol admin
 └── client/
     ├── .env.example              # Plantilla de variables de entorno
     ├── public/_redirects         # Fallback de la SPA para Netlify
     └── src/
-        ├── views/                # Pantallas: Home, Productos, ProductoDetails, ProductoEdit, NotFound
-        ├── components/           # Navbar, Footer, ProductCard, ProductList, ProductoCreate, ImagenProducto, ContactForm
+        ├── views/                # Pantallas: Home, Productos, ProductoDetails, ProductoEdit, Login, Registro, Perfil, MisPedidos, NotFound
+        ├── components/           # Navbar, Footer, ProductCard, ProductList, ProductoCreate, ImagenProducto, ContactForm, ProtectedRoute
+        ├── auth/                 # Contexto de autenticación (AuthContext y useAuth)
         ├── cart/                 # Contexto, componentes, API y tipos del carrito
-        ├── hooks/                # Hooks de React Query para productos y avisos de navegación
-        ├── services/             # Llamadas fetch a la API
+        ├── hooks/                # Hooks de React Query para productos, login, registro y avisos de navegación
+        ├── services/             # Llamadas fetch a la API (apiClient suma el token en las privadas)
         ├── types/                # Tipos de TypeScript
-        └── utils/                # URL de la API y formato de precios
+        └── utils/                # URL de la API, formato de precios y sesión guardada en el navegador
 ```
 
 ## Requisitos
 
-- **Node.js 20.19 o superior** (o 22.12+). Lo exige Vite 8 en el frontend; el backend funciona desde Node 18.
+- **Node.js 22 (desde 22.12) o 24.** Son las versiones que declara `engines` en el backend, y Render las usa para elegir con cuál correr. También cumplen lo que pide Vite 8 en el frontend.
 - **npm** (incluido con Node).
 - Git.
 
@@ -238,9 +240,9 @@ Los errores se devuelven como JSON: `{ "mensaje": "..." }`. Los de validación d
 ```mermaid
 flowchart LR
     U[Navegador] -->|HTML / JS / CSS| N[Netlify<br/>React SPA]
-    U -->|fetch + cookie de sesión| R[Render<br/>API Express]
+    U -->|fetch + cookie de sesión + token JWT| R[Render<br/>API Express]
     R --> S[(Sesión<br/>carrito)]
-    R --> P[(MongoDB<br/>productos y consultas)]
+    R --> P[(MongoDB Atlas<br/>productos, consultas y usuarios)]
 ```
 
 ### Backend en capas
@@ -295,6 +297,21 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 
 ## Despliegue
 
+### Base de datos en MongoDB Atlas
+
+1. Crear un cluster gratuito (M0).
+2. En **Database Access**, crear un usuario de base de datos con contraseña.
+3. En **Network Access**, permitir `0.0.0.0/0` para que Render pueda conectarse.
+4. En **Connect → Drivers**, copiar la URI, reemplazar `<password>` y agregar el nombre de la base antes del `?`:
+
+   ```
+   mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/<base>?retryWrites=true&w=majority
+   ```
+
+5. Usar esa URI como `MONGODB_URI` en Render. Para cargar el catálogo, correr una vez `npm run seed:products` en local con la misma URI.
+
+Para desarrollo conviene usar otra base del mismo cluster (otro nombre en la URI), así las pruebas locales no tocan los datos de producción.
+
 ### Backend en Render
 
 1. Crear un **Web Service** y conectar el repositorio.
@@ -339,6 +356,7 @@ Las imágenes de los productos se sirven desde un repositorio aparte publicado c
 
 ### Orden recomendado
 
-1. Desplegar primero el backend y copiar su URL.
-2. Desplegar el frontend con esa URL en `VITE_API_URL`.
-3. Volver a Render y completar `CLIENT_ORIGIN` con la URL de Netlify.
+1. Crear la base en Atlas y copiar su URI.
+2. Desplegar el backend con esa URI en `MONGODB_URI` y copiar su URL.
+3. Desplegar el frontend con esa URL en `VITE_API_URL`.
+4. Volver a Render y completar `CLIENT_ORIGIN` con la URL de Netlify.
