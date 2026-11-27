@@ -45,7 +45,7 @@ Aplicación web full stack (MERN) para una mueblería: catálogo guardado en Mon
 
 | Capa | Tecnologías |
 |---|---|
-| **Backend** | Node.js, Express 5, Mongoose, MongoDB, `express-session`, `cors`, `dotenv`, `http-errors` (ES Modules) |
+| **Backend** | Node.js, Express 5, Mongoose, MongoDB, `express-session`, `bcrypt`, `jsonwebtoken`, `cors`, `dotenv`, `http-errors` (ES Modules) |
 | **Frontend** | React 19, TypeScript, Vite, React Router 7, TanStack Query 5, react-icons |
 | **Calidad** | ESLint, Prettier, Husky, lint-staged, commitlint |
 | **Despliegue** | Render (API), Netlify (frontend) y MongoDB Atlas (base de datos) |
