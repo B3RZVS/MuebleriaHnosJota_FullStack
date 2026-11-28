@@ -1,0 +1,95 @@
+.cuenta--pedidos {
+  grid-template-columns: minmax(0, 0.7fr) minmax(360px, 1.3fr);
+}
+
+.historial-pedidos {
+  display: grid;
+  gap: 20px;
+}
+
+.historial-pedidos__error {
+  margin: 0;
+  color: var(--color-rosa);
+}
+
+.historial-pedidos__actualizando {
+  margin: 0;
+  color: #5d5750;
+}
+
+.pedido {
+  min-width: 0;
+}
+
+.pedido__encabezado,
+.pedido__producto {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pedido__encabezado {
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgb(62 42 31 / 14%);
+}
+
+.pedido__encabezado h2,
+.pedido__producto h3 {
+  margin: 0 0 6px;
+  color: var(--color-texto);
+  font-size: 1rem;
+}
+
+.pedido__encabezado time,
+.pedido__producto p {
+  color: #5d5750;
+  font-size: 0.9rem;
+}
+
+.pedido__total {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  color: #5d5750;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.pedido__total strong,
+.pedido__producto > strong {
+  color: var(--color-texto);
+}
+
+.pedido__productos {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 20px 0 0;
+  list-style: none;
+}
+
+.pedido__producto {
+  align-items: center;
+}
+
+.pedido__producto p {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .cuenta--pedidos {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .pedido__encabezado,
+  .pedido__producto {
+    flex-direction: column;
+  }
+
+  .pedido__total {
+    text-align: left;
+  }
+}
