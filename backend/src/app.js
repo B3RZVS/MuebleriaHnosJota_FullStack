@@ -4,6 +4,7 @@ import productosRoutes from './routes/productos.routes.js';
 import contactoRoutes from './routes/contacto.routes.js';
 import carritoRoutes from './routes/carrito.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import pedidosRoutes from './routes/pedidos.routes.js';
 
 import loggerMiddleware from './middlewares/logger.middleware.js';
 import notFoundMiddleware from './middlewares/notFound.middleware.js';
@@ -34,6 +35,8 @@ app.use('/api/contacto', contactoRoutes);
 app.use('/api/carrito', carritoRoutes);
 
 app.use('/api/auth', authRoutes);
+
+app.use('/api/pedidos', pedidosRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

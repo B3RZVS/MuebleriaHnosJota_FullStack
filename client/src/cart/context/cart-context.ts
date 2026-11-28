@@ -10,7 +10,7 @@ export interface CartContextValue {
   agregar: (productoId: string, cantidad?: number) => Promise<boolean>;
   cambiarCantidad: (productoId: string, cantidad: number) => Promise<void>;
   quitar: (productoId: string) => Promise<void>;
-  vaciar: () => Promise<void>;
+  vaciar: () => Promise<boolean>;
   limpiarError: () => void;
 }
 

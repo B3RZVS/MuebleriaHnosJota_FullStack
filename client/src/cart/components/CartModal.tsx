@@ -1,5 +1,9 @@
-import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ImagenProducto from '../../components/ImagenProducto/ImagenProducto';
+import { useAuth } from '../../auth/context/useAuth';
+import { crearPedido } from '../../services/pedidos.api';
 import { formatoPrecio } from '../../utils/formatoPrecio';
 import { useCart } from '../context/useCart';
 import '../cart.css';
@@ -10,6 +14,10 @@ interface CartModalProps {
 }
 
 function CartModal({ abierto, onCerrar }: CartModalProps) {
+  const queryClient = useQueryClient();
+  const { estaAutenticado, token } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const {
     carrito,
     cargando,
@@ -20,6 +28,11 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
     error,
     limpiarError,
   } = useCart();
+  const [comprando, setComprando] = useState(false);
+  const [mensajeCompra, setMensajeCompra] = useState<{
+    tipo: 'exito' | 'error';
+    texto: string;
+  } | null>(null);
 
   useEffect(() => {
     if (!abierto) return;
@@ -31,6 +44,54 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
     document.addEventListener('keydown', cerrarConEscape);
     return () => document.removeEventListener('keydown', cerrarConEscape);
   }, [abierto, onCerrar]);
+
+  const finalizarCompra = async () => {
+    if (!estaAutenticado || !token) {
+      onCerrar();
+      navigate('/login', {
+        state: {
+          from: `${location.pathname}${location.search}${location.hash}`,
+        },
+      });
+      return;
+    }
+
+    setMensajeCompra(null);
+    limpiarError();
+    setComprando(true);
+
+    try {
+      await crearPedido(
+        token,
+        carrito.items.map(({ productoId, cantidad }) => ({
+          productoId,
+          cantidad,
+        }))
+      );
+
+      await queryClient.invalidateQueries({
+        queryKey: ['pedidos', 'mis-pedidos'],
+      });
+
+      const carritoVaciado = await vaciar();
+      setMensajeCompra({
+        tipo: 'exito',
+        texto: carritoVaciado
+          ? 'Tu pedido se registró correctamente.'
+          : 'Tu pedido se registró, pero no se pudo vaciar el carrito. Revisá el carrito antes de volver a comprar.',
+      });
+    } catch (error) {
+      setMensajeCompra({
+        tipo: 'error',
+        texto:
+          error instanceof Error
+            ? error.message
+            : 'No se pudo registrar el pedido. Intentá nuevamente.',
+      });
+    } finally {
+      setComprando(false);
+    }
+  };
 
   if (!abierto) return null;
 
@@ -78,6 +139,15 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
           </p>
         )}
 
+        {mensajeCompra && (
+          <p
+            className={`mensaje-compra mensaje-compra--${mensajeCompra.tipo}`}
+            role={mensajeCompra.tipo === 'error' ? 'alert' : 'status'}
+          >
+            {mensajeCompra.texto}
+          </p>
+        )}
+
         {cargando ? (
           <p className="carrito-vacio">Cargando carrito…</p>
         ) : carrito.items.length === 0 ? (
@@ -110,7 +180,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                     >
                       <button
                         aria-label={`Restar una unidad de ${item.nombre}`}
-                        disabled={actualizando}
+                        disabled={actualizando || comprando}
                         onClick={() =>
                           item.cantidad === 1
                             ? void quitar(item.productoId)
@@ -128,6 +198,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                         aria-label={`Sumar una unidad de ${item.nombre}`}
                         disabled={
                           actualizando ||
+                          comprando ||
                           item.cantidad >= Math.min(99, item.stock ?? 99)
                         }
                         onClick={() =>
@@ -146,7 +217,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
                     <strong>{formatoPrecio.format(item.subtotal)}</strong>
                     <button
                       className="enlace-quitar"
-                      disabled={actualizando}
+                      disabled={actualizando || comprando}
                       onClick={() => void quitar(item.productoId)}
                       type="button"
                     >
@@ -160,7 +231,7 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
             <footer className="resumen-carrito">
               <button
                 className="enlace-quitar"
-                disabled={actualizando}
+                disabled={actualizando || comprando}
                 onClick={() => void vaciar()}
                 type="button"
               >
@@ -173,13 +244,14 @@ function CartModal({ abierto, onCerrar }: CartModalProps) {
               <button
                 className="boton boton--principal boton--ancho"
                 type="button"
-                disabled
-                aria-describedby="nota-pago"
+                disabled={actualizando || comprando}
+                onClick={() => void finalizarCompra()}
               >
-                Ir a pagar
+                {comprando ? 'Registrando pedido…' : 'Finalizar compra'}
               </button>
               <p className="resumen-carrito__nota" id="nota-pago">
-                El pago online todavía no está disponible.
+                Se registrará tu pedido. El pago online todavía no está
+                disponible.
               </p>
             </footer>
           </>

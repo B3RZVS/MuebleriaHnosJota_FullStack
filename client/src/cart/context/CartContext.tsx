@@ -123,8 +123,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       vaciar: async () => {
         try {
           await vaciarMutation.mutateAsync();
+          return true;
         } catch {
           // El error se expone mediante el contexto.
+          return false;
         }
       },
       limpiarError: () => {
